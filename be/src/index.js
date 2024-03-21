@@ -16,8 +16,10 @@ try {
     mongoose.connect(process.env.MONGODB_URL, {useUnifiedTopology: true,
         useNewUrlParser: true, });
     logger.info("Connected to MongoDB");
+    console.log("Connected")
 } catch (err) {
     logger.error('Cant connect to MongoDB');
+    console.log("NO")
 }
 
 route(app);
