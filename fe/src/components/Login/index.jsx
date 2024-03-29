@@ -1,18 +1,17 @@
 import * as React from 'react';
-import SendIcon from '@mui/icons-material/Send';
-import Avatar from '@mui/material/Avatar';
+
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import Paper from '@mui/material/Paper';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import background from '../../assets/image/background.svg';
+import { Checkbox } from '@mui/material';
 
 const theme = createTheme();
 
@@ -51,57 +50,64 @@ export default function Login() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container component="main" sx={{ height: '100vh' }}>
-                <CssBaseline />
-                {/* Image random */}
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage: 'url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9f3f9bd9-0673-4276-bb34-71ece2a5820e/dfn5a7p-44e25f03-8419-41c2-973c-58c3c1628353.png/v1/fill/w_1920,h_1920,q_80,strp/portal_to_another_dimension__ai_art__by_3d1viner_dfn5a7p-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTkyMCIsInBhdGgiOiJcL2ZcLzlmM2Y5YmQ5LTA2NzMtNDI3Ni1iYjM0LTcxZWNlMmE1ODIwZVwvZGZuNWE3cC00NGUyNWYwMy04NDE5LTQxYzItOTczYy01OGMzYzE2MjgzNTMucG5nIiwid2lkdGgiOiI8PTE5MjAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.jtvmH-dSaTnulHoZBrIDAuxm2LUWKtNraPpCLgbqmVI)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
+            <Box
+                sx={{
+                    backgroundImage: `url(${background})`,
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    height: '100vh',
+                    width: '100%',
+                    // justifyContent: 'center',
+                    // alignItems: 'center',
+                }}
+            >
+                {/* Nội dung khác của bạn */}
 
-                {/* Login */}
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square sx={{ height: '100vh' }}>
+                <Grid container sx={{ height: '100%' }}>
                     <Box
                         sx={{
-                            my: 8,
-                            mx: 4,
+                            backgroundColor: 'white',
+                            margin: 'auto',
+                            width: '25%',
+                            height: '88%',
+                            paddingX: 5,
                             display: 'flex',
                             flexDirection: 'column',
+
+                            // justifyContent: 'center',
                             alignItems: 'center',
+                            borderRadius: '12px',
                         }}
                     >
-                        <Typography sx={{ fontWeight: '400' }} component="h1" variant="h2" mb={2}>
-                            UETBookManager
+                        <img
+                            src="../../../src/assets/image/logo.svg"
+                            alt="My SVG Image"
+                            style={{ marginTop: '40px', height: '70px' }}
+                        />
+                        <Typography component="h1" variant="h5" mt={5}>
+                            Welcome Back!
                         </Typography>
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Đăng nhập
+                        <Typography
+                            component="h2"
+                            mt={1}
+                            sx={{ color: '#ABABAB', fontSize: 15, fontWeight: 400, marginLeft: '13px' }}
+                        >
+                            Sign in continue to yourDigital Library
                         </Typography>
-                        <ValidatorForm noValidate style={{ width: '100%' }} onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <ValidatorForm noValidate style={{ width: '100%', marginTop: '20px' }} onSubmit={handleSubmit}>
                             <TextValidator
                                 margin="normal"
                                 required
                                 fullWidth
                                 id="email"
-                                label="Email tài khoản"
+                                label="Email"
                                 name="email"
                                 autoComplete="email"
                                 autoFocus
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 validators={['required', 'isEmail']}
-                                errorMessages={['Vui lòng nhập email', 'Email không hợp lệ']}
+                                errorMessages={['Email is required.', 'Invalid email']}
                                 onFocus={() => setError('')}
                             />
                             <TextValidator
@@ -109,12 +115,12 @@ export default function Login() {
                                 required
                                 fullWidth
                                 name="password"
-                                label="Mật khẩu"
+                                label="Password"
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
                                 validators={['required']}
-                                errorMessages={['Vui lòng nhập mật khẩu']}
+                                errorMessages={['Password is required.']}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 onFocus={() => setError('')}
@@ -127,21 +133,36 @@ export default function Login() {
                             >
                                 {error}
                             </Typography>
+                            <FormControlLabel
+                                control={<Checkbox />}
+                                label="Remember me"
+                                labelPlacement="end" // Optionally place label after checkbox
+                                sx={{
+                                    color: 'grey',
+                                }}
+                            />
 
                             <Button
-                                color="secondary"
                                 type="submit"
                                 fullWidth
                                 variant="contained"
-                                startIcon={<SendIcon />}
-                                sx={{ mt: 3, mb: 2, fontSize: 16 }}
+                                sx={{
+                                    mt: 3,
+                                    mb: 2,
+                                    fontSize: 16,
+                                    backgroundColor: '#FA7C22',
+                                    color: 'white',
+                                    '&:hover': {
+                                        backgroundColor: '#D54A1E',
+                                    },
+                                }}
                                 onClick={() => setError('')}
                             >
-                                Đăng nhập
+                                Login
                             </Button>
                         </ValidatorForm>
                         {loading ? (
-                            <Box sx={{marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                            <Box sx={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
                                 <CircularProgress />
                             </Box>
                         ) : (
@@ -149,7 +170,7 @@ export default function Login() {
                         )}
                     </Box>
                 </Grid>
-            </Grid>
+            </Box>
         </ThemeProvider>
     );
 }
