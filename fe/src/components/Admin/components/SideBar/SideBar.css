@@ -1,0 +1,21 @@
+.SideBarAdmin__link {
+  color: #fff;
+  font-size: 1.2rem;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+}
+.SideBarAdmin__link:hover {
+  background-color: #46546c;
+}
+.SideBarAdmin__link .SideBarAdmin__link-icon {
+  font-size: 2rem;
+  margin-right: 4px;
+}
+
+.active {
+  background-color: #46546c;
+}/*# sourceMappingURL=SideBar.css.map */
