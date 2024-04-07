@@ -31,7 +31,7 @@ function AdminLab() {
                 <Box
                     id="style-2"
                     sx={{
-                        backgroundColor: '#fff',
+                        backgroundColor: '#f3f3f7',
                         width: 'calc(100% - var(--default-layout-width-sidebar))',
                         height: 'calc(100vh - var(--default-layout-height-header))',
                         float: 'right',
