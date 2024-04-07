@@ -7,6 +7,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import avatar from '~/assets/image/penalty.png';
 
 function TopBarPenalty() {
+    
     // open profile user
     const [visible, setVisible] = useState(false);
     const show = () => setVisible(true);
