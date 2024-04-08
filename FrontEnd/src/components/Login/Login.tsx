@@ -27,7 +27,7 @@ export default function Login() {
     setPassword(e.target.value);
   };
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+    setUsername(e.target.value);
   };
   const navigate = useNavigate();
 
@@ -113,7 +113,7 @@ export default function Login() {
               <ValidatorForm
                 noValidate
                 style={{ width: "100%", marginTop: "20px" }}
-                onSubmit={() => {}}
+                onSubmit={handleSubmit}
               >
                 <TextValidator
                   margin="normal"
