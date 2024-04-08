@@ -81,7 +81,7 @@ function LibImport() {
             <Box
                 id="style-2"
                 sx={{
-                    backgroundColor: '#f3f3f7',
+                    backgroundColor: '#fff',
                     width: 'calc(100% - var(--default-layout-width-sidebar))',
                     height: 'calc(100vh - var(--default-layout-height-header))',
                     float: 'right',

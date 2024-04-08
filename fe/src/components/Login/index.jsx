@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import background from '../../assets/image/background.svg';
 import { Checkbox } from '@mui/material';
 
 const theme = createTheme();
@@ -51,6 +52,7 @@ export default function Login() {
         <ThemeProvider theme={theme}>
             <Box
                 sx={{
+                    backgroundImage: `url(${background})`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     height: '100vh',
