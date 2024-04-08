@@ -1,20 +1,7 @@
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import logo from "../../../assets/img/poster.jpeg";
-import newarrivals from "../../../assets/img/newarrivals.jpeg";
 
-import {
-  Box,
-  Button,
-  ButtonBase,
-  CardActionArea,
-  Grid,
-  Paper,
-  styled,
-} from "@mui/material";
+import { Box, Button, ButtonBase, Grid, Paper, styled } from "@mui/material";
 import { useState } from "react";
 const Img = styled("img")({
   display: "block",
