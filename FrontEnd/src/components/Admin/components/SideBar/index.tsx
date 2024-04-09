@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 import "./SideBar.scss";
 
 import logo from "../../../../../../FrontEnd/src/assets/img/logo.svg";
-
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import { GiBookshelf } from "react-icons/gi";
 import { IoMdHome } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
@@ -46,11 +47,11 @@ function SideBarAdmin() {
           }}
         >
           <NavLink to="/admin/bookmanagement" className="SideBarAdmin__link">
-            <IoSearchSharp className="SideBarAdmin__link-icon" />
+            <BookmarksIcon className="SideBarAdmin__link-icon" />
             Book
           </NavLink>
           <NavLink to="/admin/accountmanagement" className="SideBarAdmin__link">
-            <IoMdHome className="SideBarAdmin__link-icon" />
+            <GroupAddIcon className="SideBarAdmin__link-icon" />
             Account
           </NavLink>
         </Box>

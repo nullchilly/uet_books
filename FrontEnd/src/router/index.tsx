@@ -36,7 +36,7 @@ const privateAdminRoutes = [
     component: HomePage,
   },
   {
-    path: "/admin/accountmanagement",
+    path: "admin/accountmanagement",
     component: AccountManagementPage,
   },
   {

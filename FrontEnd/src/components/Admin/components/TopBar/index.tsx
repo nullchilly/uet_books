@@ -60,7 +60,7 @@ function TopBarAdmin() {
                 }}
               >
                 <Typography sx={{ fontSize: "0.875rem" }} variant="h6">
-                  Student
+                  Admin
                 </Typography>
                 <Typography
                   sx={{ fontSize: "0.875rem", color: "rgb(99, 115, 129)" }}
