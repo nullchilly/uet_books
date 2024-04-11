@@ -1,3 +1,5 @@
+import AccountManagementPage from "../pages/AdminPage/AccountManager";
+import BookManagementPage from "../pages/AdminPage/BookManager";
 import LoginPage from "../pages/Login/LoginPage";
 import SignUpPage from "../pages/SignUp/SignUpPage";
 import HomePage from "../pages/UserPage/HomePage";
@@ -28,5 +30,18 @@ const privateUserRoutes = [
     component: MyShelfPage,
   },
 ];
-
-export { publicRoutes, privateUserRoutes };
+const privateAdminRoutes = [
+  {
+    path: "/admin/home",
+    component: HomePage,
+  },
+  {
+    path: "admin/accountmanagement",
+    component: AccountManagementPage,
+  },
+  {
+    path: "/admin/bookmanagement",
+    component: BookManagementPage,
+  },
+];
+export { publicRoutes, privateUserRoutes, privateAdminRoutes };
