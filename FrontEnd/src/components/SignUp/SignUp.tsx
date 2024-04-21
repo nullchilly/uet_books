@@ -125,10 +125,10 @@ export default function SignUp() {
               <ValidatorForm
                 noValidate
                 style={{ width: "100%", marginTop: "12px" }}
-                onSubmit={() => {}}
+                onSubmit={() => { }}
               >
                 <TextValidator
-                 margin="dense"
+                  margin="dense"
                   required
                   fullWidth
                   id="fullName"
@@ -143,11 +143,11 @@ export default function SignUp() {
                   onFocus={() => setError("")}
                 />
                 <TextValidator
-                 margin="dense"
-                 required
+                  margin="dense"
+                  required
                   fullWidth
                   id="email"
-                  label="Colleage Email ID"
+                  label="Colleague Email ID"
                   name="email"
                   autoComplete="email"
                   value={username}
@@ -157,8 +157,8 @@ export default function SignUp() {
                   onFocus={() => setError("")}
                 />
                 <TextValidator
-                 margin="dense"
-                 required
+                  margin="dense"
+                  required
                   fullWidth
                   name="password"
                   label="Password"
