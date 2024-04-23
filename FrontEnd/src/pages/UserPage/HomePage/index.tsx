@@ -186,9 +186,9 @@ function HomePage() {
             marginInline: 4,
           }}
         >
-          <Grid container spacing={3}>
+          <Grid container spacing={3} xs={24}>
             {filteredData.map((item, index) => (
-              <Grid key={index} item>
+              <Grid key={index} item xs={2}>
                 {/* Set responsive layout */}
                 <Card sx={{ width: 168, height: 260 }}>
                   <CardMedia
@@ -234,9 +234,9 @@ function HomePage() {
             marginInline: 4,
           }}
         >
-          <Grid container spacing={3}>
+          <Grid container spacing={3} xs={24}>
             {filteredData.map((item, index) => (
-              <Grid key={index} item>
+              <Grid key={index} xs={2} item>
                 {/* Set responsive layout */}
                 <Card sx={{ width: 168, height: 260 }}>
                   <CardMedia

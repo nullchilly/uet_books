@@ -73,6 +73,13 @@ function MyShelfPage() {
       title: "Lizard",
       author: "Steve Krug",
       img: logo,
+      date: "2021-10-10",
+      description: "This is a description",
+    },
+    {
+      title: "Lizard",
+      author: "Steve Krug",
+      img: logo,
       description: "This is a description",
     },
   ];
@@ -142,9 +149,9 @@ function MyShelfPage() {
             marginInline: 4,
           }}
         >
-          <Grid container spacing={3}>
+          <Grid container spacing={3} xs={12}>
             {filteredData.map((item, index) => (
-              <Grid key={index} item>
+              <Grid key={index} item xs={3}>
                 {/* Set responsive layout */}
                 <Paper
                   sx={{

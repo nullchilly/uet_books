@@ -4,6 +4,7 @@ import LoginPage from "../pages/Login/LoginPage";
 import SignUpPage from "../pages/SignUp/SignUpPage";
 import HomePage from "../pages/UserPage/HomePage";
 import MyShelfPage from "../pages/UserPage/MyShelfPage";
+import ProfilePage from "../pages/UserPage/ProfilePage";
 import SearchPage from "../pages/UserPage/SearchPage";
 
 const publicRoutes = [
@@ -29,6 +30,10 @@ const privateUserRoutes = [
     path: "/user/myshelf",
     component: MyShelfPage,
   },
+  {
+    path: "/user/profile",
+    component: ProfilePage,
+  }
 ];
 const privateAdminRoutes = [
   {
@@ -43,5 +48,6 @@ const privateAdminRoutes = [
     path: "/admin/bookmanagement",
     component: BookManagementPage,
   },
+ 
 ];
 export { publicRoutes, privateUserRoutes, privateAdminRoutes };
