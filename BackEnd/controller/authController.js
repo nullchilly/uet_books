@@ -10,16 +10,16 @@ module.exports.Login = async (req, res) => {
             return res.status(400).json({ msg: "Invalid Email" });
         }
 
-        // const user = await sqlConnection.query("SELECT * FROM user WHERE usr_name = ?", [username]);
+        // const user = await sqlConnection.query("SELECT * FROM user WHERE username = ?", [username]);
         const user = await new Promise ((resolve, reject) => {
-            sqlConnection.query("SELECT * FROM user WHERE usr_name = ?", [username], (err, result) => {
+            sqlConnection.query("SELECT * FROM user WHERE username = ?", [username], (err, result) => {
                 if (err) reject(err);
                 resolve(result);
             })
         })
-        // const admin = await sqlConnection.query("SELECT * FROM admin WHERE usr_name = ?", [username]);
+        // const admin = await sqlConnection.query("SELECT * FROM admin WHERE username = ?", [username]);
         const admin = await new Promise ((resolve, reject) => {
-            sqlConnection.query("SELECT * FROM admin WHERE usr_name = ?", [username], (err, result) => {
+            sqlConnection.query("SELECT * FROM admin WHERE username = ?", [username], (err, result) => {
                 if (err) reject(err);
                 resolve(result[0]);
             })
@@ -66,7 +66,7 @@ module.exports.Register = async (req, res) => {
             return res.status(400).json({ msg: "Please enter your password" });
         }
         const existingUser = await new Promise((resolve, reject) => {
-            sqlConnection.query("SELECT * FROM user WHERE usr_name = ?", [username], (error, result) => {
+            sqlConnection.query("SELECT * FROM user WHERE username = ?", [username], (error, result) => {
                 if (error) {
                     console.error("Error executing SQL query:", error);
                     reject(error);
@@ -80,7 +80,7 @@ module.exports.Register = async (req, res) => {
             return res.status(400).json({ msg: "User already exists" });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await sqlConnection.query("INSERT INTO user (usr_name, fullName, password) VALUES (?, ?, ?)", [username, fullName, hashedPassword]);
+        const result = await sqlConnection.query("INSERT INTO user (username, fullName, password) VALUES (?, ?, ?)", [username, fullName, hashedPassword]);
 
         if (result != null) {
             return res.status(200).json({ msg: "Register success" });
@@ -111,6 +111,32 @@ module.exports.DeleteUser = async (req, res) => {
             return res.status(200).json({ msg: "Delete success" });
         } else {
             return res.status(400).json({ msg: "Delete failed" });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: error.message });
+    }
+}
+
+module.exports.UpdateUser = async (req, res) => {
+    try{
+        console.log(req.body);
+        const {id, updateAttribute, updateValue} = req.body;
+        const updatedUser = await new Promise((resolve, reject) => {
+            sqlConnection.query(`UPDATE user SET ${updateAttribute} = ? WHERE id = ?`, [updateValue, id], (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+
+        if (updatedUser != null) {
+            return res.status(200).json({ msg: "Update success" });
+        } else {
+            return res.status(400).json({ msg: "Update failed" });
         }
     } catch (error) {
         console.log(error);
