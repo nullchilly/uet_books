@@ -18,7 +18,7 @@ import { ChangeEvent, Component, useState } from "react";
 const theme = createTheme();
 
 export default function SignUp() {
-  const [username, setUsername] = useState("");
+  const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,11 +26,11 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [confirmError, setConfirmError] = useState("");
 
-  const handleRegNoChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFullNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value);
   };
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+    setUserName(e.target.value);
   };
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -46,30 +46,24 @@ export default function SignUp() {
   };
   const navigate = useNavigate();
 
-  /*    const handleSubmit = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.post('http://localhost:5001/user/login', { username, password });
-            setLoading(false);
-            if (res.data.login) {
-                setUsername('');
-                setPassword('');
-                console.log(res.data);
-                localStorage.setItem('role', res.data.role);
-                localStorage.setItem('id', res.data.id);
-                localStorage.setItem('name', res.data.username);
-                localStorage.setItem('email', res.data.email);
-                localStorage.setItem('idPage', res.data.idPage);
-                navigate(`/${res.data.role}`);
-                window.location.reload();
-            } else {
-                setError(res.data.msg);
-                setPassword('');
-            }
-        } catch (err) {
-            console.log('Login fe failed: ' + err.message);
-        }
-    }; */
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:3000/register", {
+        username: userName,
+        fullName: fullName,
+        password: password,
+      });
+      setLoading(false);
+      if (res.data.success) {
+        console.log("Registration successful:", res.data.message);
+      } else {
+        console.error("Registration failed:", res.data.message);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -125,37 +119,38 @@ export default function SignUp() {
               <ValidatorForm
                 noValidate
                 style={{ width: "100%", marginTop: "12px" }}
-                onSubmit={() => { }}
+                onSubmit={() => handleSubmit()}
               >
                 <TextValidator
                   margin="dense"
                   required
                   fullWidth
-                  id="fullName"
-                  label="Reg No."
+                  id="email"
+                  label="Full Name"
                   name="fullName"
-                  autoComplete="email"
-                  autoFocus
+                  autoComplete="fullName"
                   value={fullName}
-                  onChange={handleRegNoChange}
+                  onChange={handleFullNameChange}
                   validators={["required", "matchRegexp:^[a-zA-Z0-9 ]*$"]}
-                  errorMessages={["Reg No is required.", "Invalid Reg No"]}
+                  errorMessages={["Fullname is required.", "Invalid Fullname"]}
                   onFocus={() => setError("")}
                 />
                 <TextValidator
                   margin="dense"
                   required
                   fullWidth
-                  id="email"
-                  label="Colleague Email ID"
-                  name="email"
+                  id="username"
+                  label="Username"
+                  name="username"
                   autoComplete="email"
-                  value={username}
+                  autoFocus
+                  value={userName}
                   onChange={handleUsernameChange}
-                  validators={["required", "isEmail"]}
-                  errorMessages={["Email is required.", "Invalid email"]}
+                  validators={["required", "matchRegexp:^[a-zA-Z0-9 ]*$"]}
+                  errorMessages={["Username is required.", "Invalid Username"]}
                   onFocus={() => setError("")}
                 />
+
                 <TextValidator
                   margin="dense"
                   required
@@ -174,13 +169,7 @@ export default function SignUp() {
                   onChange={handlePasswordChange}
                   onFocus={() => setError("")}
                 />
-                <Typography
-                  component="h1"
-                  variant="h5"
-                  sx={{ color: "#d32f2f", fontSize: 13, marginLeft: "13px" }}
-                >
-                  {error}
-                </Typography>
+
                 <TextValidator
                   margin="normal"
                   type="password"
@@ -199,13 +188,13 @@ export default function SignUp() {
                   helperText={confirmError}
                   onFocus={() => setError("")}
                 />
-                <Typography
+                {/*  <Typography
                   component="h1"
                   variant="h5"
                   sx={{ color: "#d32f2f", fontSize: 13, marginLeft: "13px" }}
                 >
-                  {error}
-                </Typography>
+                  {confirmError}
+                </Typography> */}
 
                 <Button
                   type="submit"
