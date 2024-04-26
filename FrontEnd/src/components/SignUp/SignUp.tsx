@@ -119,7 +119,7 @@ export default function SignUp() {
                   marginLeft: "13px",
                 }}
               >
-                For Both Staffs & Students
+                For Students
               </Typography>
 
               <ValidatorForm

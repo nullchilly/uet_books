@@ -7,6 +7,7 @@ import logo from "../../../../../../FrontEnd/src/assets/img/logo.svg";
 import { GiBookshelf } from "react-icons/gi";
 import { IoMdHome } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
+import { ImProfile } from "react-icons/im";
 
 // khung lựa chọn
 function SideBarUser() {
@@ -56,6 +57,10 @@ function SideBarUser() {
           <NavLink to="/user/myshelf" className="SideBarAdmin__link">
             <GiBookshelf className="SideBarAdmin__link-icon" />
             My Shelf
+          </NavLink>
+          <NavLink to="/user/profile" className="SideBarAdmin__link">
+            <ImProfile className="SideBarAdmin__link-icon" />
+            Profile
           </NavLink>
           {/* <NavLink to="/admin/rentPenalty" className="SideBarAdmin__link">
                         <WorkspacePremiumOutlinedIcon className="SideBarAdmin__link-icon" />

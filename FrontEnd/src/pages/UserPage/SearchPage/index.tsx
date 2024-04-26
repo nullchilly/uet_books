@@ -1,11 +1,13 @@
-import Login from '../../../components/Login/Login';
+import { Box } from "@mui/material";
+import Login from "../../../components/Login/Login";
 
 function SearchPage() {
-    return (
-        <>
-           <p>Search Page</p>
-        </>
-    );
+  return (
+    <>
+        <p>Search Page</p>
+   
+    </>
+  );
 }
 
 export default SearchPage;
