@@ -61,14 +61,17 @@ export default function SignUp() {
         email: email,
       });
       console.log(email);
-      setLoading(false);
+      // setLoading(false);
       if (res.data.msg === "Register success") {
         console.log("Registration successful:", res.data.msg);
+        // window.location.reload();
+        // setLoading(true);
+        navigate("/");
       } else {
         console.error("Registration failed:", res.data.msg);
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Error during registration");
     }
   };
 

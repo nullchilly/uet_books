@@ -49,9 +49,10 @@ module.exports.Login = async (req, res) => {
     return res.status(200).json({
       id: foundUser.id,
       role: user.length !== 0 ? "user" : "admin",
-      name: foundUser.fullName,
+      username: foundUser.username,
+      fullName: foundUser.fullName,
       email: foundUser.email,
-      idPage: 0,
+     // idPage: 0,
       msg: "Login success",
     });
   } catch (error) {
