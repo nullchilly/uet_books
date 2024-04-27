@@ -176,7 +176,7 @@ function ProfilePage() {
                     mt={3}
                     ml={2}
                   >
-                    Full name
+                    Full Name
                   </Typography>
                   <Input
                     type="search"
@@ -207,7 +207,7 @@ function ProfilePage() {
                     mt={3}
                     ml={2}
                   >
-                    College Email ID
+                    Email
                   </Typography>
                   <Input
                     type="search"
@@ -237,7 +237,7 @@ function ProfilePage() {
                     mt={3}
                     ml={2}
                   >
-                    Register number
+                    Address
                   </Typography>
                   <Input
                     type="search"
@@ -266,7 +266,7 @@ function ProfilePage() {
                     mt={3}
                     ml={2}
                   >
-                    Phone number
+                    Phone Number
                   </Typography>
                   <Input
                     type="search"
