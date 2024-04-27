@@ -2,6 +2,7 @@ const express = require("express");
 const sqlConnection = require("./util/sql.connection");
 const authRouter = require("./route/authRoute");
 const userRoute = require("./route/userRoute");
+const cors = require("cors");
 const app = express();
 const PORT = 3000;
 
