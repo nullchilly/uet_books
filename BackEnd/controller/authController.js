@@ -28,7 +28,7 @@ module.exports.Login = async (req, res) => {
         [username],
         (err, result) => {
           if (err) reject(err);
-          resolve(result[0]);
+          resolve(result);
         }
       );
     });
