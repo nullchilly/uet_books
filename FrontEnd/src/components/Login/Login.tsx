@@ -34,25 +34,26 @@ export default function Login() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5001/user/login", {
+      const res = await axios.post("http://localhost:3000/login", {
         username,
         password,
       });
       setLoading(false);
-      if (res.data.login) {
-        setUsername("");
-        setPassword("");
+      if (res.data.msg === "Login success") {
+        /*     setUsername("");
+        setPassword(""); */
         console.log(res.data);
         localStorage.setItem("role", res.data.role);
-        localStorage.setItem("id", res.data.id);
-        localStorage.setItem("name", res.data.username);
-        localStorage.setItem("email", res.data.email);
-        localStorage.setItem("idPage", res.data.idPage);
-        navigate(`/${res.data.role}`);
-        window.location.reload();
+        // localStorage.setItem("id", res.data.id);
+        localStorage.setItem("username", res.data.name);
+        // localStorage.setItem("email", res.data.email);
+        //  localStorage.setItem("idPage", res.data.idPage);
+        //navigate("/user/home");
+        // window.location.reload();
       } else {
         setError(res.data.msg);
-        setPassword("");
+        /*         setPassword("");
+         */
       }
     } catch (err: any) {
       console.log("Login fe failed: " + err.message);
@@ -119,15 +120,15 @@ export default function Login() {
                   margin="normal"
                   required
                   fullWidth
-                  id="email"
-                  label="Email"
-                  name="email"
-                  autoComplete="email"
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
                   autoFocus
                   value={username}
                   onChange={handleUsernameChange}
-                  validators={["required", "isEmail"]}
-                  errorMessages={["Email is required.", "Invalid email"]}
+                  validators={["required", "matchRegexp:^[a-zA-Z0-9 ]*$"]}
+                  errorMessages={["Username is required.", "Invalid Username"]}
                   onFocus={() => setError("")}
                 />
                 <TextValidator

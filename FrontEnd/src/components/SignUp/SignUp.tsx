@@ -21,6 +21,8 @@ export default function SignUp() {
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,6 +46,9 @@ export default function SignUp() {
       // Handle form submission logic here
     }
   };
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -53,12 +58,14 @@ export default function SignUp() {
         username: userName,
         fullName: fullName,
         password: password,
+        email: email,
       });
+      console.log(email);
       setLoading(false);
-      if (res.data.success) {
-        console.log("Registration successful:", res.data.message);
+      if (res.data.msg === "Register success") {
+        console.log("Registration successful:", res.data.msg);
       } else {
-        console.error("Registration failed:", res.data.message);
+        console.error("Registration failed:", res.data.msg);
       }
     } catch (error) {
       console.error("Error during registration:", error);
@@ -142,7 +149,7 @@ export default function SignUp() {
                   id="username"
                   label="Username"
                   name="username"
-                  autoComplete="email"
+                  autoComplete="username"
                   autoFocus
                   value={userName}
                   onChange={handleUsernameChange}
@@ -186,6 +193,20 @@ export default function SignUp() {
                   onChange={handleConfirmPasswordChange}
                   error={confirmError !== ""}
                   helperText={confirmError}
+                  onFocus={() => setError("")}
+                />
+                <TextValidator
+                  margin="dense"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  validators={["required", "isEmail"]}
+                  errorMessages={["Email is required.", "Invalid Email"]}
                   onFocus={() => setError("")}
                 />
                 {/*  <Typography
