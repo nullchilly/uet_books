@@ -44,12 +44,12 @@ export default function Login() {
         setPassword(""); */
         console.log(res.data);
         localStorage.setItem("role", res.data.role);
-        // localStorage.setItem("id", res.data.id);
-        localStorage.setItem("username", res.data.name);
-        // localStorage.setItem("email", res.data.email);
+        localStorage.setItem("fullName", res.data.fullName);
+        localStorage.setItem("username", res.data.username);
+        localStorage.setItem("email", res.data.email);
         //  localStorage.setItem("idPage", res.data.idPage);
-        //navigate("/user/home");
-        // window.location.reload();
+        navigate("/user/home");
+         window.location.reload();
       } else {
         setError(res.data.msg);
         /*         setPassword("");
