@@ -67,7 +67,7 @@ function TopBarAdmin() {
                   sx={{ fontSize: "0.875rem", color: "rgb(99, 115, 129)" }}
                   variant="h6"
                 >
-                  {localStorage.getItem("email")}
+                  {localStorage.getItem("username")}
                 </Typography>
               </Box>
               <Box
