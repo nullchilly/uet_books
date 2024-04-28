@@ -13,6 +13,7 @@ function TopBarUser() {
   const navigate = useNavigate();
 
   const handleClickLogout = () => {
+    localStorage.setItem("id", "");
     localStorage.setItem("role", "");
     localStorage.setItem("fullName", "");
     localStorage.setItem("username", "");

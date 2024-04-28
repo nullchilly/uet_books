@@ -43,13 +43,14 @@ export default function Login() {
         /*     setUsername("");
         setPassword(""); */
         console.log(res.data);
+        localStorage.setItem("id", res.data.id);
         localStorage.setItem("role", res.data.role);
         localStorage.setItem("fullName", res.data.fullName);
         localStorage.setItem("username", res.data.username);
         localStorage.setItem("email", res.data.email);
         //  localStorage.setItem("idPage", res.data.idPage);
         navigate("/user/home");
-         window.location.reload();
+        window.location.reload();
       } else {
         setError(res.data.msg);
         /*         setPassword("");

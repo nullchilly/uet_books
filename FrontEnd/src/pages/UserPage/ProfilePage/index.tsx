@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
@@ -15,6 +16,7 @@ import {
   TextField,
 } from "@mui/material";
 import avatar from "../../../assets/img/avatar.svg";
+import axios from "axios";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -50,11 +52,45 @@ function a11yProps(index: number) {
 
 function ProfilePage() {
   const [value, setValue] = React.useState(0);
-  const [name, setName] = React.useState("Tram");
+  const [fullName, setFullName] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [Id, setId] = React.useState("30");
+  // setId(localStorage.getItem("id") || "");
+  // const [id, setId] = React.useState("");
+  // const id = localStorage.getItem("id");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  const getData = async (Id: string) => {
+    try {
+      const res = await axios.get(`http://localhost:3000/getUserByID`, {
+        params: {
+          id: Id,
+        },
+      });
+      if (res.data) {
+        console.log("res", res);
+        console.log("res data", res.data);
+        // console.log("res fullname", res.data.fullName);
+
+        setFullName(res.data.fullName);
+        setAddress(res.data.address);
+        setPhone(res.data.phone);
+        setEmail(res.data.email);
+      } else {
+        console.log("No data");
+      }
+    } catch (err: any) {
+      console.log("Get data failed: " + err.message);
+    }
+  };
+  useEffect(() => {
+    console.log("id: " + Id);
+    getData(Id);
+  }, []);
   return (
     <>
       <Box
@@ -193,7 +229,7 @@ function ProfilePage() {
                       height: 42,
                       marginLeft: 16,
                     }}
-                    defaultValue={name}
+                    defaultValue={fullName}
                     onChange={undefined}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
@@ -223,7 +259,7 @@ function ProfilePage() {
                       height: 42,
                       marginLeft: 16,
                     }}
-                    defaultValue="Small"
+                    defaultValue={email}
                     onChange={undefined}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
@@ -252,7 +288,7 @@ function ProfilePage() {
                       height: 42,
                       marginLeft: 16,
                     }}
-                    defaultValue="Small"
+                    defaultValue={address}
                     onChange={undefined}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
@@ -281,7 +317,7 @@ function ProfilePage() {
                       height: 42,
                       marginLeft: 16,
                     }}
-                    defaultValue="Small"
+                    defaultValue={phone}
                     onChange={undefined}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
