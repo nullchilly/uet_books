@@ -12,7 +12,7 @@ const loginApi = "/login";
 const registerApi = "/register";
 const deleteApi = "/deleteUser";
 const updateApi = "/updateUser";
-const getUserByIDApi = "/getUserByID";
+const getUserByIDApi = "/getUserByID/:id";;
 authRouter.post(loginApi, Login);
 authRouter.post(registerApi, Register);
 authRouter.post(deleteApi, DeleteUser);

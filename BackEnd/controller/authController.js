@@ -196,7 +196,7 @@ module.exports.GetAllUser = async (req, res) => {
 
 module.exports.GetUserById = async (req, res) => {
     try {
-        const { id } = req.body;
+      const { id } = req.params;
         const result = await new Promise((resolve, reject) => {
             sqlConnection.query(
                 "SELECT * FROM user WHERE id = ?",
