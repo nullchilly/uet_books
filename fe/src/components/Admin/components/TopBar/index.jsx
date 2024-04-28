@@ -16,8 +16,8 @@ function TopBarAdmin() {
 
     const handleClickLogout = () => {
         localStorage.setItem('role', '');
-        localStorage.setItem('id', '');
-        localStorage.setItem('name', '');
+        localStorage.setItem('username', '');
+        localStorage.setItem('fullName', '');
         navigate('/');
         window.location.reload();
     };

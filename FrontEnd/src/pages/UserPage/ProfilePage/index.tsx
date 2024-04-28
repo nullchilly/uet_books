@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
@@ -15,6 +16,7 @@ import {
   TextField,
 } from "@mui/material";
 import avatar from "../../../assets/img/avatar.svg";
+import axios from "axios";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -50,11 +52,54 @@ function a11yProps(index: number) {
 
 function ProfilePage() {
   const [value, setValue] = React.useState(0);
-  const [name, setName] = React.useState("Tram");
+  const [username, setUsername] = React.useState("");
+  const [fullName, setFullName] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const Id = localStorage.getItem("id") || "";
+  // const [id, setId] = React.useState("");
+  // const id = localStorage.getItem("id");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  const getData = async (id: string) => {
+    try {
+      const res = await axios.get(`http://localhost:3000/getUserByID/${id}`);
+
+      /*  console.log(res.data);
+      console.log(res.data.data.fullName);
+      console.log(res.data.address); */
+      /*  setFullName(res.data[0].fullName);
+      setAddress(res.data.address);
+      setPhone(res.data.phone);
+      setEmail(res.data.email); */
+      return res.data;
+    } catch (err: any) {
+      console.log("Get data failed: " + err.message);
+    }
+  };
+  const fetchData = async () => {
+    try {
+      const res = await getData(Id);
+      console.log(res);
+      console.log(res.data);
+      console.log(res.data[0]);
+      console.log(res.data[0].fullName);
+      setFullName(res.data[0].fullName);
+      setAddress(res.data[0].address);
+      setPhone(res.data[0].phone);
+      setEmail(res.data[0].email);
+      setUsername(res.data[0].username);
+    } catch (err: any) {
+      console.log("Fetch data failed: " + err.message);
+    }
+  };
+  useEffect(() => {
+    console.log("id: " + Id);
+    fetchData();
+  }, []);
   return (
     <>
       <Box
@@ -176,7 +221,7 @@ function ProfilePage() {
                     mt={3}
                     ml={2}
                   >
-                    Full name
+                    Full Name
                   </Typography>
                   <Input
                     type="search"
@@ -193,7 +238,7 @@ function ProfilePage() {
                       height: 42,
                       marginLeft: 16,
                     }}
-                    defaultValue={name}
+                    defaultValue={fullName}
                     onChange={undefined}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
@@ -207,23 +252,22 @@ function ProfilePage() {
                     mt={3}
                     ml={2}
                   >
-                    College Email ID
+                    Username
                   </Typography>
                   <Input
                     type="search"
                     style={{
                       color: "black",
-
                       backgroundColor: "#F0F3F7",
                       border: 1,
                       borderColor: "#E0E4EC",
                       padding: 8,
-
-                      minWidth: "90%",
+                      fontSize: 16,
+                      width: "90%",
                       height: 42,
                       marginLeft: 16,
                     }}
-                    defaultValue="Small"
+                    defaultValue={username}
                     onChange={undefined}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
@@ -237,7 +281,38 @@ function ProfilePage() {
                     mt={3}
                     ml={2}
                   >
-                    Register number
+                    Email
+                  </Typography>
+                  <Input
+                    type="search"
+                    style={{
+                      color: "black",
+                      backgroundColor: "#F0F3F7",
+
+                      border: 1,
+                      borderColor: "#E0E4EC",
+                      padding: 8,
+
+                      fontSize: 16,
+                      width: "90%",
+                      height: 42,
+                      marginLeft: 16,
+                    }}
+                    defaultValue={email}
+                    onChange={undefined}
+                    crossOrigin={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  />
+                </Grid>
+                <Grid xs={8} sx={{ justifyContent: "center" }}>
+                  <Typography
+                    component="h1"
+                    sx={{ fontSize: 16 }}
+                    mt={3}
+                    ml={2}
+                  >
+                    Address
                   </Typography>
                   <Input
                     type="search"
@@ -252,42 +327,14 @@ function ProfilePage() {
                       height: 42,
                       marginLeft: 16,
                     }}
-                    defaultValue="Small"
+                    defaultValue={address}
                     onChange={undefined}
                     crossOrigin={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   />
                 </Grid>
-                <Grid xs={8} sx={{ justifyContent: "center" }}>
-                  <Typography
-                    component="h1"
-                    sx={{ fontSize: 16 }}
-                    mt={3}
-                    ml={2}
-                  >
-                    Phone number
-                  </Typography>
-                  <Input
-                    type="search"
-                    style={{
-                      color: "black",
-                      backgroundColor: "#F0F3F7",
-                      border: 1,
-                      borderColor: "#E0E4EC",
-                      padding: 8,
-                      fontSize: 16,
-                      width: "90%",
-                      height: 42,
-                      marginLeft: 16,
-                    }}
-                    defaultValue="Small"
-                    onChange={undefined}
-                    crossOrigin={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  />
-                </Grid>
+
                 <Grid xs={16} sx={{ justifyContent: "center" }}>
                   <Typography
                     component="h1"

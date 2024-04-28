@@ -10,7 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Checkbox } from "@mui/material";
+import { Alert, Checkbox } from "@mui/material";
 import background from "../../assets/img/background.svg";
 import logo from "../../assets/img/logo.svg";
 import { ChangeEvent, Component, useState } from "react";
@@ -18,22 +18,27 @@ import { ChangeEvent, Component, useState } from "react";
 const theme = createTheme();
 
 export default function SignUp() {
-  const [username, setUsername] = useState("");
+  const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [confirmError, setConfirmError] = useState("");
 
-  const handleRegNoChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFullNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value);
   };
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+    setUserName(e.target.value);
   };
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+  const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAddress(e.target.value);
   };
   const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
@@ -44,32 +49,36 @@ export default function SignUp() {
       // Handle form submission logic here
     }
   };
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
   const navigate = useNavigate();
 
-  /*    const handleSubmit = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.post('http://localhost:5001/user/login', { username, password });
-            setLoading(false);
-            if (res.data.login) {
-                setUsername('');
-                setPassword('');
-                console.log(res.data);
-                localStorage.setItem('role', res.data.role);
-                localStorage.setItem('id', res.data.id);
-                localStorage.setItem('name', res.data.username);
-                localStorage.setItem('email', res.data.email);
-                localStorage.setItem('idPage', res.data.idPage);
-                navigate(`/${res.data.role}`);
-                window.location.reload();
-            } else {
-                setError(res.data.msg);
-                setPassword('');
-            }
-        } catch (err) {
-            console.log('Login fe failed: ' + err.message);
-        }
-    }; */
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:3000/register", {
+        username: userName,
+        fullName: fullName,
+        password: password,
+        email: email,
+        address: address,
+      });
+      console.log(email);
+      setLoading(false);
+      if (res.data.msg === "Register success") {
+        console.log("Registration successful:", res.data.msg);
+        // window.location.reload();
+        // setLoading(true);
+        navigate("/");
+      } else {
+        //alert("Registration failed");
+        console.error("Registration failed:", res.data.msg);
+      }
+    } catch (error) {
+      console.error("Error during registration");
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -91,7 +100,7 @@ export default function SignUp() {
                 backgroundColor: "white",
                 margin: "auto",
                 width: "25%",
-                height: "88%",
+                height: "92%",
                 paddingX: 5,
                 display: "flex",
                 flexDirection: "column",
@@ -125,37 +134,38 @@ export default function SignUp() {
               <ValidatorForm
                 noValidate
                 style={{ width: "100%", marginTop: "12px" }}
-                onSubmit={() => { }}
+                onSubmit={() => handleSubmit()}
               >
                 <TextValidator
                   margin="dense"
                   required
                   fullWidth
-                  id="fullName"
-                  label="Reg No."
+                  id="email"
+                  label="Full Name"
                   name="fullName"
-                  autoComplete="email"
-                  autoFocus
+                  autoComplete="fullName"
                   value={fullName}
-                  onChange={handleRegNoChange}
+                  onChange={handleFullNameChange}
                   validators={["required", "matchRegexp:^[a-zA-Z0-9 ]*$"]}
-                  errorMessages={["Reg No is required.", "Invalid Reg No"]}
+                  errorMessages={["Fullname is required.", "Invalid Fullname"]}
                   onFocus={() => setError("")}
                 />
                 <TextValidator
                   margin="dense"
                   required
                   fullWidth
-                  id="email"
-                  label="Colleague Email ID"
-                  name="email"
-                  autoComplete="email"
-                  value={username}
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  autoFocus
+                  value={userName}
                   onChange={handleUsernameChange}
-                  validators={["required", "isEmail"]}
-                  errorMessages={["Email is required.", "Invalid email"]}
+                  validators={["required", "matchRegexp:^[a-zA-Z0-9 ]*$"]}
+                  errorMessages={["Username is required.", "Invalid Username"]}
                   onFocus={() => setError("")}
                 />
+
                 <TextValidator
                   margin="dense"
                   required
@@ -174,13 +184,7 @@ export default function SignUp() {
                   onChange={handlePasswordChange}
                   onFocus={() => setError("")}
                 />
-                <Typography
-                  component="h1"
-                  variant="h5"
-                  sx={{ color: "#d32f2f", fontSize: 13, marginLeft: "13px" }}
-                >
-                  {error}
-                </Typography>
+
                 <TextValidator
                   margin="normal"
                   type="password"
@@ -199,13 +203,40 @@ export default function SignUp() {
                   helperText={confirmError}
                   onFocus={() => setError("")}
                 />
-                <Typography
+                <TextValidator
+                  margin="dense"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  validators={["required", "isEmail"]}
+                  errorMessages={["Email is required.", "Invalid Email"]}
+                  onFocus={() => setError("")}
+                />
+                <TextValidator
+                  margin="dense"
+                  required
+                  fullWidth
+                  id="address"
+                  label="Address"
+                  name="address"
+                  autoComplete="address"
+                  value={address}
+                  onChange={handleAddressChange}
+                  validators={["required", "matchRegexp:^[a-zA-Z0-9 ]*$"]}
+                  onFocus={() => setError("")}
+                />
+                {/*  <Typography
                   component="h1"
                   variant="h5"
                   sx={{ color: "#d32f2f", fontSize: 13, marginLeft: "13px" }}
                 >
-                  {error}
-                </Typography>
+                  {confirmError}
+                </Typography> */}
 
                 <Button
                   type="submit"

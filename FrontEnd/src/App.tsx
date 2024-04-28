@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {localStorage.getItem("role") === "student" ? (
+        {localStorage.getItem("role") === "user" ? (
           <>
             <SideBarUser />
             <TopBarUser />

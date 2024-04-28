@@ -13,9 +13,11 @@ function TopBarUser() {
   const navigate = useNavigate();
 
   const handleClickLogout = () => {
-    localStorage.setItem("role", "");
     localStorage.setItem("id", "");
-    localStorage.setItem("name", "");
+    localStorage.setItem("role", "");
+    localStorage.setItem("fullName", "");
+    localStorage.setItem("username", "");
+    localStorage.setItem("email", "");
     navigate("/");
     window.location.reload();
   };
@@ -66,7 +68,7 @@ function TopBarUser() {
                   sx={{ fontSize: "0.875rem", color: "rgb(99, 115, 129)" }}
                   variant="h6"
                 >
-                  {localStorage.getItem("email")}
+                  {localStorage.getItem("username")}
                 </Typography>
               </Box>
               <Box

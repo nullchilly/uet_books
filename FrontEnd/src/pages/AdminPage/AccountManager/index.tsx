@@ -36,6 +36,7 @@ import React from "react";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import { Input } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -128,12 +129,13 @@ const styleModal = {
 };
 
 export interface UserInterface {
-  _id: string;
-  name: string;
+  id: string;
   username: string;
   password: string;
-  sdt: string;
+  phone: string;
   address: string;
+  email: string;
+  fullName: string;
 }
 
 function AccountManagementPage() {
@@ -146,14 +148,17 @@ function AccountManagementPage() {
   const [openModalSearch, setOpenModalSearch] = useState(false);
   const [searchValue, setSearchValue] = React.useState("");
   const [name, setName] = React.useState("");
+  const [userName, setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordX2, setPasswordX2] = React.useState("");
   const [sdt, setSdt] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
-
+  const [fullName, setFullName] = useState<string>("");
   const [id, setId] = React.useState("");
+  const navigate = useNavigate();
+
   const handleSearch = (event: any) => {
     event.preventDefault();
   };
@@ -171,41 +176,46 @@ function AccountManagementPage() {
 
   const getData = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/user/useradmin");
+      console.log("get data");
+      //    console.log(rowsPerPage, "rowsPerPage");
+      const res = await axios.get("http://localhost:3000/getAllUser");
+      // console.log(res.data, "getData");
       return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
     }
   };
+  const fetchData = async () => {
+    try {
+      const allUserList = await getData();
+      //  console.log(allUserList, "hihi");
+      setRows(allUserList.data);
 
+      console.log("fetch data success");
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      console.log("Failed to fetch data: ", error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const allUserList = await getData();
-        setRows(allUserList);
-        console.log("abc");
-      } catch (error) {
-        // Xử lý lỗi nếu có
-      }
-    };
-    console.log("fetching data");
-
     fetchData();
-  }, []);
+  }, [navigate]);
 
   const handleQuery = async () => {
     let allUserList: UserInterface[] = await getData();
-    console.log(allUserList);
+    // console.log(allUserList);
     if (searchQuery !== "") {
       allUserList = allUserList.filter((row) =>
-        row.name.toLowerCase().includes(searchQuery.toLowerCase())
+        row.username.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
+    // console.log("huhu");
     setRows(allUserList);
   };
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -222,48 +232,49 @@ function AccountManagementPage() {
   // Create user
   const handleCreateUser = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/user/register", {
-        name: name,
-        email: email,
+      const res = await axios.post("http://localhost:3000/register", {
+        username: userName,
         password: password,
-        sdt: sdt,
-        address: address,
-        role: "admin",
+        email: email,
+        fullName: fullName,
       });
-      if (res.data.register) {
+      if (res.data.msg === "Register success") {
+        console.log("register success");
         window.location.reload();
-        alert(res.data.msg);
+        // alert(res.data.msg);
       } else {
+        // alert("register failed");
+
         window.location.reload();
-        alert(res.data.msg);
+        console.log("register failed");
       }
     } catch (err: any) {
-      console.log("Register failed: " + err.message);
+      console.log("Register failed: ");
+      //  console.log("Register failed: " + err.message);
     }
   };
   // Delete user
   const handleDeleteUser = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/user/delete", {
-        id,
+      const res = await axios.post("http://localhost:3000/deleteUser", {
+        id: id,
       });
-      if (res.data.delete) {
+
+      if (res.data.msg === "Delete success") {
         window.location.reload();
-        alert(res.data.msg);
+        console.log("delete success");
+        // alert(res.data.msg);
       }
     } catch (err: any) {
-      console.log("Register failed: " + err.message);
+      console.log("delete failed: " + err.message);
     }
   };
 
   const handleEditUser = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/user/update", {
-        id,
-        name,
-        username: email,
-        sdt,
-        address,
+      const res = await axios.post("http://localhost:3000/updateUser", {
+        id: id,
+        //updateAttribute: {}
       });
       if (res.data.update) {
         window.location.reload();
@@ -276,94 +287,96 @@ function AccountManagementPage() {
 
   return (
     <>
-      <Box
-        id="style-2"
-        sx={{
-          backgroundColor: "#f3f3f7",
-          width: "calc(100% - var(--default-layout-width-sidebar))",
-          height: "calc(100vh - var(--default-layout-height-header))",
-          float: "right",
-          overflowY: "scroll",
-        }}
-      >
-        {/* btn new user */}
-        <Typography
-          gutterBottom
-          variant="h5"
-          component="div"
-          sx={{ margin: "10px" }}
-        >
-          All Students
-        </Typography>
+      {/* {console.log(rows, "rows")} */}
+      {
         <Box
+          id="style-2"
           sx={{
-            display: "flex",
-            margin: "10px",
-
-            justifyContent: "space-between",
-            marginInline: 4,
+            backgroundColor: "#f3f3f7",
+            width: "calc(100% - var(--default-layout-width-sidebar))",
+            height: "calc(100vh - var(--default-layout-height-header))",
+            float: "right",
+            overflowY: "scroll",
           }}
         >
-          <Button
-            /*   variant="outlined" */
-
+          {/* btn new user */}
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{ margin: "10px" }}
+          >
+            All Students
+          </Typography>
+          <Box
             sx={{
-              backgroundColor: "#F27851",
-              color: "white",
-              fontWeight: "medium",
-              "&:hover": {
-                backgroundColor: "#EC501E",
-              },
-            }}
-            onClick={() => {
-              setName("");
-              setEmail("");
-              setSdt("");
+              display: "flex",
+              margin: "10px",
 
-              setAddress("");
-              setOpenModalCreate(true);
+              justifyContent: "space-between",
+              marginInline: 4,
             }}
           >
-            <AddCircleOutlineOutlinedIcon
-              sx={{ marginRight: "5px", color: "white" }}
-            />
-            Add User
-          </Button>
-          <Box sx={{ display: "flex" }}>
-            <Input
-              type="search"
-              value={searchQuery}
-              style={{
-                color: "black",
-                padding: 8,
-                marginLeft: 12,
-                fontSize: 16,
-                width: 320,
-                height: 42,
-              }}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              crossOrigin={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            />
             <Button
+              /*   variant="outlined" */
+
               sx={{
                 backgroundColor: "#F27851",
                 color: "white",
                 fontWeight: "medium",
-                marginLeft: 2,
                 "&:hover": {
                   backgroundColor: "#EC501E",
                 },
               }}
-              onClick={handleQuery}
+              onClick={() => {
+                setFullName("");
+                setUserName("");
+                setEmail("");
+                setSdt("");
+                setAddress("");
+                setOpenModalCreate(true);
+              }}
             >
-              Tìm kiếm
+              <AddCircleOutlineOutlinedIcon
+                sx={{ marginRight: "5px", color: "white" }}
+              />
+              Add User
             </Button>
+            <Box sx={{ display: "flex" }}>
+              <Input
+                type="search"
+                value={searchQuery}
+                style={{
+                  color: "black",
+                  padding: 8,
+                  marginLeft: 12,
+                  fontSize: 16,
+                  width: 320,
+                  height: 42,
+                }}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                crossOrigin={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              />
+              <Button
+                sx={{
+                  backgroundColor: "#F27851",
+                  color: "white",
+                  fontWeight: "medium",
+                  marginLeft: 2,
+                  "&:hover": {
+                    backgroundColor: "#EC501E",
+                  },
+                }}
+                onClick={handleQuery}
+              >
+                Tìm kiếm
+              </Button>
+            </Box>
           </Box>
-        </Box>
 
-        {/*   <Button
+          {/*   <Button
           variant="outlined"
           color="secondary"
           sx={{ margin: "10px" }}
@@ -372,125 +385,141 @@ function AccountManagementPage() {
           <SearchIcon sx={{ marginRight: "5px" }} /> Search
         </Button> */}
 
-        <TableContainer
-          sx={{ marginBottom: "40px", marginLeft: 1 }}
-          component={Paper}
-        >
-          {rows.length > 0 ? (
-            <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>STT</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  {/* <TableCell>Password</TableCell> */}
-                  <TableCell>SDT</TableCell>
-                  <TableCell>Address</TableCell>
-                  <TableCell align="center">Edit</TableCell>
-                  <TableCell align="center">Delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(rowsPerPage > 0
-                  ? rows.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : rows
-                ).map((row, index) => (
-                  <TableRow
-                    id={row._id}
-                    className="row"
-                    key={row._id}
-                    sx={{ "&:last-child td, &:last-child th": { brent: 0 } }}
-                  >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell component="th" scope="row" sortDirection="desc">
-                      {row.name}
-                    </TableCell>
-                    <TableCell>{row.username}</TableCell>
-                    {/* <TableCell size="small">{row.password}</TableCell> */}
-                    <TableCell>{row.sdt}</TableCell>
-                    <TableCell>{row.address}</TableCell>
-                    <TableCell
-                      align="center"
-                      onClick={() => {
-                        setOpenModalEdit(true);
-                        setId(row._id);
-                        setName(row.name);
-                        setEmail(row.username);
-                        setAddress(row.address);
-                        setSdt(row.sdt);
+          <TableContainer
+            sx={{ marginBottom: "40px", marginLeft: 1 }}
+            component={Paper}
+          >
+            {rows.length > 0 ? (
+              <Table
+                sx={{ minWidth: 500 }}
+                aria-label="custom pagination table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>STT</TableCell>
+                    <TableCell>FullName</TableCell>
+                    <TableCell>Email</TableCell>
+                    {/* <TableCell>Password</TableCell> */}
+                    <TableCell>Address</TableCell>
+                    <TableCell align="center">Edit</TableCell>
+                    <TableCell align="center">Delete</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? rows.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : rows
+                  ).map((row, index) => (
+                    <TableRow
+                      // id={row._id}
+                      className="row"
+                      key={row.id}
+                      sx={{
+                        "&:last-child td, &:last-child th": { brent: 0 },
                       }}
                     >
-                      <Button variant="text">
-                        <EditOutlinedIcon />
-                        Edit
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="text"
-                        color="error"
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sortDirection="desc"
+                      >
+                        {row.fullName}
+                      </TableCell>
+                      <TableCell>{row.email}</TableCell>
+                      {/* <TableCell size="small">{row.password}</TableCell> */}
+                      <TableCell>{row.address}</TableCell>
+                      <TableCell
+                        align="center"
                         onClick={() => {
-                          setOpenModalDelete(true);
-                          setId(row._id);
+                          setOpenModalEdit(true);
+                          //  console.log(row.id);
+
+                          setId(row.id);
+                          //  console.log(id);
+                          setFullName(row.fullName);
+
+                          setEmail(row.email);
+                          setAddress(row.address);
+                          setSdt(row.phone);
                         }}
                       >
-                        <DeleteSweepOutlinedIcon />
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "All", value: -1 },
-                    ]}
-                    colSpan={5}
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    slotProps={{
-                      select: {
-                        inputProps: {
-                          "aria-label": "rows per page",
+                        <Button variant="text">
+                          <EditOutlinedIcon />
+                          Edit
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="text"
+                          color="error"
+                          onClick={() => {
+                            //  console.log(row.id);
+                            setOpenModalDelete(true);
+                            let id = row.id;
+
+                            setId(id);
+                            //  console.log(id);
+                          }}
+                        >
+                          <DeleteSweepOutlinedIcon />
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: "All", value: -1 },
+                      ]}
+                      colSpan={5}
+                      count={rows.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      slotProps={{
+                        select: {
+                          inputProps: {
+                            "aria-label": "rows per page",
+                          },
+                          native: true,
                         },
-                        native: true,
-                      },
-                    }}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          ) : (
-            <>
-              <Stack spacing={1} sx={{ padding: "0 10px" }}>
-                <Skeleton variant="rounded" width={"100%"} height={40} />
-                <Skeleton variant="rounded" width={"100%"} height={40} />
-                <Skeleton variant="rounded" width={"100%"} height={40} />
-                <Skeleton variant="rounded" width={"100%"} height={40} />
-                <Skeleton variant="rounded" width={"100%"} height={40} />
-                <Skeleton variant="rounded" width={"100%"} height={40} />
-              </Stack>
-            </>
-          )}
-        </TableContainer>
-      </Box>
+                      }}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            ) : (
+              <>
+                <Stack spacing={1} sx={{ padding: "0 10px" }}>
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                  <Skeleton variant="rounded" width={"100%"} height={40} />
+                </Stack>
+              </>
+            )}
+          </TableContainer>
+        </Box>
+      }
       {/* Modal Create user admin */}
       <Modal
         aria-labelledby="transition-modal-title"
@@ -512,29 +541,29 @@ function AccountManagementPage() {
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                value={name}
+                value={fullName}
                 label="Full Name"
-                name="name"
+                name="fullName"
                 variant="standard"
                 color="secondary"
                 validators={["required"]}
                 errorMessages={["Vui lòng nhập tên người dùng"]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setName(e.target.value)
+                  setFullName(e.target.value)
                 }
               />
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                value={email}
-                label="Email"
-                name="email"
+                name="username"
+                value={userName}
+                label="Username"
                 variant="standard"
                 color="secondary"
-                validators={["required", "isEmail"]}
-                errorMessages={["Vui lòng nhập email", "Email không hợp lệ"]}
+                validators={["required"]}
+                errorMessages={["Vui lòng nhập tên đăng nhập"]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
+                  setUserName(e.target.value)
                 }
               />
               <TextValidator
@@ -570,21 +599,35 @@ function AccountManagementPage() {
                   setPasswordX2(e.target.value)
                 }
               />
-
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                name="address"
+                value={email}
+                label="Email"
+                name="email"
+                variant="standard"
+                color="secondary"
+                validators={["required", "isEmail"]}
+                errorMessages={["Vui lòng nhập email", "Email không hợp lệ"]}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
+              />
+              <TextValidator
+                sx={{ marginTop: "10px" }}
+                fullWidth
                 value={address}
-                label="Reg No"
+                label="Address"
+                name="address"
                 variant="standard"
                 color="secondary"
                 validators={["required"]}
                 errorMessages={["Vui lòng nhập địa chỉ"]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setAddress(e.target.value)
+                  setFullName(e.target.value)
                 }
               />
+
               <Button
                 sx={{ marginTop: "10px", backgroundColor: "#F27851" }}
                 variant="contained"
@@ -613,15 +656,15 @@ function AccountManagementPage() {
         <Fade in={openModalEdit}>
           <Box sx={styleModal}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              Edit User 
+              Edit User
             </Typography>
             <ValidatorForm onSubmit={handleEditUser}>
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                value={name}
-                label="Name"
-                name="name"
+                value={fullName}
+                label="Full Name"
+                name="fullName"
                 variant="standard"
                 color="secondary"
                 validators={["required"]}
@@ -630,6 +673,7 @@ function AccountManagementPage() {
                   setName(e.target.value)
                 }
               />
+
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
@@ -644,20 +688,7 @@ function AccountManagementPage() {
                   setEmail(e.target.value)
                 }
               />
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
-                value={sdt}
-                label="SDT"
-                name="sdt"
-                variant="standard"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập số điện thoại"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setSdt(e.target.value)
-                }
-              />
+
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
@@ -673,7 +704,7 @@ function AccountManagementPage() {
                 }
               />
               <Button
-                sx={{ marginTop: "10px" ,backgroundColor: "#F27851"}}
+                sx={{ marginTop: "10px", backgroundColor: "#F27851" }}
                 variant="contained"
                 startIcon={<SendIcon />}
                 fullWidth
