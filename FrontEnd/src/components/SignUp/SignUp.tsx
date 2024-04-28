@@ -10,7 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Checkbox } from "@mui/material";
+import { Alert, Checkbox } from "@mui/material";
 import background from "../../assets/img/background.svg";
 import logo from "../../assets/img/logo.svg";
 import { ChangeEvent, Component, useState } from "react";
@@ -22,7 +22,7 @@ export default function SignUp() {
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-
+  const [address, setAddress] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,6 +36,9 @@ export default function SignUp() {
   };
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+  const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAddress(e.target.value);
   };
   const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
@@ -59,15 +62,17 @@ export default function SignUp() {
         fullName: fullName,
         password: password,
         email: email,
+        address: address,
       });
       console.log(email);
-      // setLoading(false);
+      setLoading(false);
       if (res.data.msg === "Register success") {
         console.log("Registration successful:", res.data.msg);
         // window.location.reload();
         // setLoading(true);
         navigate("/");
       } else {
+        //alert("Registration failed");
         console.error("Registration failed:", res.data.msg);
       }
     } catch (error) {
@@ -95,7 +100,7 @@ export default function SignUp() {
                 backgroundColor: "white",
                 margin: "auto",
                 width: "25%",
-                height: "88%",
+                height: "92%",
                 paddingX: 5,
                 display: "flex",
                 flexDirection: "column",
@@ -210,6 +215,19 @@ export default function SignUp() {
                   onChange={handleEmailChange}
                   validators={["required", "isEmail"]}
                   errorMessages={["Email is required.", "Invalid Email"]}
+                  onFocus={() => setError("")}
+                />
+                <TextValidator
+                  margin="dense"
+                  required
+                  fullWidth
+                  id="address"
+                  label="Address"
+                  name="address"
+                  autoComplete="address"
+                  value={address}
+                  onChange={handleAddressChange}
+                  validators={["required", "matchRegexp:^[a-zA-Z0-9 ]*$"]}
                   onFocus={() => setError("")}
                 />
                 {/*  <Typography

@@ -52,44 +52,53 @@ function a11yProps(index: number) {
 
 function ProfilePage() {
   const [value, setValue] = React.useState(0);
+  const [username, setUsername] = React.useState("");
   const [fullName, setFullName] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [Id, setId] = React.useState("30");
-  // setId(localStorage.getItem("id") || "");
+  const Id = localStorage.getItem("id") || "";
   // const [id, setId] = React.useState("");
   // const id = localStorage.getItem("id");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const getData = async (Id: string) => {
+  const getData = async (id: string) => {
     try {
-      const res = await axios.get(`http://localhost:3000/getUserByID`, {
-        params: {
-          id: Id,
-        },
-      });
-      if (res.data) {
-        console.log("res", res);
-        console.log("res data", res.data);
-        // console.log("res fullname", res.data.fullName);
+      const res = await axios.get(`http://localhost:3000/getUserByID/${id}`);
 
-        setFullName(res.data.fullName);
-        setAddress(res.data.address);
-        setPhone(res.data.phone);
-        setEmail(res.data.email);
-      } else {
-        console.log("No data");
-      }
+      /*  console.log(res.data);
+      console.log(res.data.data.fullName);
+      console.log(res.data.address); */
+      /*  setFullName(res.data[0].fullName);
+      setAddress(res.data.address);
+      setPhone(res.data.phone);
+      setEmail(res.data.email); */
+      return res.data;
     } catch (err: any) {
       console.log("Get data failed: " + err.message);
     }
   };
+  const fetchData = async () => {
+    try {
+      const res = await getData(Id);
+      console.log(res);
+      console.log(res.data);
+      console.log(res.data[0]);
+      console.log(res.data[0].fullName);
+      setFullName(res.data[0].fullName);
+      setAddress(res.data[0].address);
+      setPhone(res.data[0].phone);
+      setEmail(res.data[0].email);
+      setUsername(res.data[0].username);
+    } catch (err: any) {
+      console.log("Fetch data failed: " + err.message);
+    }
+  };
   useEffect(() => {
     console.log("id: " + Id);
-    getData(Id);
+    fetchData();
   }, []);
   return (
     <>
@@ -243,19 +252,49 @@ function ProfilePage() {
                     mt={3}
                     ml={2}
                   >
+                    Username
+                  </Typography>
+                  <Input
+                    type="search"
+                    style={{
+                      color: "black",
+                      backgroundColor: "#F0F3F7",
+                      border: 1,
+                      borderColor: "#E0E4EC",
+                      padding: 8,
+                      fontSize: 16,
+                      width: "90%",
+                      height: 42,
+                      marginLeft: 16,
+                    }}
+                    defaultValue={username}
+                    onChange={undefined}
+                    crossOrigin={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  />
+                </Grid>
+                <Grid xs={8} sx={{ justifyContent: "center" }}>
+                  <Typography
+                    component="h1"
+                    sx={{ fontSize: 16 }}
+                    mt={3}
+                    ml={2}
+                  >
                     Email
                   </Typography>
                   <Input
                     type="search"
                     style={{
                       color: "black",
-
                       backgroundColor: "#F0F3F7",
+
                       border: 1,
                       borderColor: "#E0E4EC",
                       padding: 8,
 
-                      minWidth: "90%",
+                      fontSize: 16,
+                      width: "90%",
                       height: 42,
                       marginLeft: 16,
                     }}
@@ -295,35 +334,7 @@ function ProfilePage() {
                     onPointerLeaveCapture={undefined}
                   />
                 </Grid>
-                <Grid xs={8} sx={{ justifyContent: "center" }}>
-                  <Typography
-                    component="h1"
-                    sx={{ fontSize: 16 }}
-                    mt={3}
-                    ml={2}
-                  >
-                    Phone Number
-                  </Typography>
-                  <Input
-                    type="search"
-                    style={{
-                      color: "black",
-                      backgroundColor: "#F0F3F7",
-                      border: 1,
-                      borderColor: "#E0E4EC",
-                      padding: 8,
-                      fontSize: 16,
-                      width: "90%",
-                      height: 42,
-                      marginLeft: 16,
-                    }}
-                    defaultValue={phone}
-                    onChange={undefined}
-                    crossOrigin={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  />
-                </Grid>
+
                 <Grid xs={16} sx={{ justifyContent: "center" }}>
                   <Typography
                     component="h1"
