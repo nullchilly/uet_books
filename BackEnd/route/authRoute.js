@@ -1,4 +1,4 @@
-const {Login, Register, DeleteUser, UpdateUser, GetAllUser, GetUserByID} = require("../controller/authController");
+const {Login, Register, DeleteUser, UpdateUser, GetAllUser, GetUserById} = require("../controller/authController");
 
 const authRouter = require("express").Router();
 const loginApi = "/login"
@@ -12,7 +12,7 @@ authRouter.post(deleteApi, DeleteUser);
 authRouter.post(updateApi, UpdateUser);
 
 authRouter.get("/getAllUser", GetAllUser);
-authRouter.get(getUserByIDApi, GetUserByID);
+authRouter.get(getUserByIDApi, GetUserById);
 
 
 module.exports = authRouter
