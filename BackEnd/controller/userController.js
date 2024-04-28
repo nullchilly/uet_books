@@ -71,7 +71,7 @@ module.exports.AddFavouriteBook = async (req, res) => {
     if (result) {
         return res.status(200).json({ msg: "success add favourite" });
     } else {
-        return res.status(400).json({ msg: "failed add favourite" });
+        return res.status(400).json({ msg: "failed ad   d favourite" });
     }
 }
 
