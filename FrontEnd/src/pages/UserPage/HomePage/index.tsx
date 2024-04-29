@@ -1,17 +1,25 @@
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import logo from "../../../assets/img/poster.jpeg";
 import newarrivals from "../../../assets/img/newarrivals.jpeg";
 
-import { Box, Button, CardActionArea, Grid, Paper } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, CardActionArea, Grid } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+export interface BookInterface {
+  name: string;
+  image: string;
+  author: string;
+  description: string;
+  date: string;
+}
+
 function HomePage() {
   const [showFullList, setShowFullList] = useState(false); // State to control data display
   const [showFullRecentList, setShowFullRecentList] = useState(false); // State to control data display
-
+  const [books, setBooks] = useState<BookInterface[]>([]);
   const handleShowAll = () => {
     setShowFullList(!showFullList); // Update state to show all data
   };
@@ -19,82 +27,31 @@ function HomePage() {
     setShowFullRecentList(!showFullRecentList);
     // Update state to show all data
   };
-  const data = [
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
+  const getAllBooks = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/books/all");
+      console.log(res.data);
+      return res.data;
+    } catch (err: any) {
+      console.log("fe : " + err.message);
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allBookList = await getAllBooks();
+        setBooks(allBookList);
+        console.log("abc");
+      } catch (error) {
+        // Xử lý lỗi nếu có
+      }
+    };
+    console.log("fetching data");
 
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-    {
-      title: "Lizard",
-      author: "Steve Krug",
-      img: logo,
-      description: "This is a description",
-    },
-  ];
-  const filteredData = showFullList ? data : data.slice(0, 6); // Fil
+    fetchData();
+  }, []);
+
+  const filteredData = showFullList ? books : books.slice(0, 6); // Fil
 
   return (
     <>
@@ -193,14 +150,14 @@ function HomePage() {
                 <Card sx={{ width: 168, height: 260 }}>
                   <CardMedia
                     component="img"
-                    alt={item.title}
+                    alt={item.name}
                     height="190"
                     sx={{ objectFit: "fill" }}
                     width="123"
-                    src={item.img}
+                    src={item.image}
                   />
                   <CardContent>
-                    <Typography gutterBottom>{item.title}</Typography>
+                    {<Typography gutterBottom>{item.name}</Typography>}
                     <Typography variant="body2" color="text.secondary">
                       {item.author}
                     </Typography>
@@ -241,14 +198,14 @@ function HomePage() {
                 <Card sx={{ width: 168, height: 260 }}>
                   <CardMedia
                     component="img"
-                    alt={item.title}
+                    alt={item.name}
                     height="190"
                     sx={{ objectFit: "fill" }}
                     width="123"
-                    src={item.img}
+                    src={item.image}
                   />
                   <CardContent>
-                    <Typography gutterBottom>{item.title}</Typography>
+                    <Typography gutterBottom>{item.name}</Typography>
                     <Typography variant="body2" color="text.secondary">
                       {item.author}
                     </Typography>

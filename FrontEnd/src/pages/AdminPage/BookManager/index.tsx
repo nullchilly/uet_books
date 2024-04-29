@@ -177,7 +177,6 @@ function BookManagementPage() {
       try {
         const allBookList = await getAllBooks();
         setRows(allBookList);
-        console.log("abc");
       } catch (error) {
         // Xử lý lỗi nếu có
       }
