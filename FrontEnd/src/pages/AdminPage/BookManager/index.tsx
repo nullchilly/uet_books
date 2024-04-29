@@ -164,7 +164,9 @@ function BookManagementPage() {
 
   const getAllBooks = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/book/allBooks");
+      const res = await axios.get("http://localhost:3000/books/all");
+      console.log(res.data);
+
       return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
@@ -197,22 +199,24 @@ function BookManagementPage() {
   };
   const handleCreate = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/book/create", {
-        code,
-        name,
-        description,
-        image,
-        category,
-        author,
-        language,
-        publishYear,
+      const res = await axios.post("http://localhost:3000/books/create", {
+        code: code,
+        name: name,
+        description: description,
+        price: 0,
+        image: image,
+        category: category,
+        author: author,
+        language: language,
+        publishYear: publishYear,
       });
       if (res.data.create) {
+        console.log(res.data);
         window.location.reload();
         alert(res.data.msg);
       }
     } catch (err: any) {
-      console.log("Register failed: " + err.message);
+      console.log("Create failed: " + err.message);
     }
   };
 
@@ -240,10 +244,10 @@ function BookManagementPage() {
   };
 
   // delete book
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     try {
-      const res = await axios.post("http://localhost:5001/book/delete", {
-        id,
+      const res = await axios.post("http://localhost:3000/books/delete", {
+        id: id,
       });
       if (res.data.delete) {
         window.location.reload();
@@ -810,10 +814,18 @@ function BookManagementPage() {
                 variant="contained"
                 color="error"
                 sx={{ marginLeft: "10px" }}
-                onClick={handleDelete}
+                onClick={() => handleDelete(id)}
               >
                 Delete
               </Button>
+              {/*  <Button
+                variant="contained"
+                color="error"
+                sx={{ marginLeft: "10px" }}
+                onClick={handleDelete(id)}
+              >
+                Delete
+              </Button>  */}
             </Box>
           </Box>
         </Fade>
