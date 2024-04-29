@@ -52,7 +52,7 @@ module.exports.Login = async (req, res) => {
       username: foundUser.username,
       fullName: foundUser.fullName,
       email: foundUser.email,
-     // idPage: 0,
+      // idPage: 0,
       msg: "Login success",
     });
   } catch (error) {
@@ -144,11 +144,29 @@ module.exports.DeleteUser = async (req, res) => {
 module.exports.UpdateUser = async (req, res) => {
   try {
     console.log(req.body);
-    const { id, updateAttribute, updateValue } = req.body;
+    const { id, updates } = req.body;
+
+    const updateClauses = [];
+    const updateValues = [];
+
+    for (const key in updates) {
+      if (['username', 'phone', 'address', 'email', 'fullName'].includes(key)) {
+        updateClauses.push(`${key} = ?`);
+        updateValues.push(updates[key]);
+      }
+    }
+
+    if (updateClauses.length === 0) {
+      return res.status(400).json({ msg: "No valid updates provided" });
+    }
+
+    const sqlQuery = `UPDATE user SET ${updateClauses.join(', ')} WHERE id = ?`;
+    updateValues.push(id);
+
     const updatedUser = await new Promise((resolve, reject) => {
       sqlConnection.query(
-        `UPDATE user SET ${updateAttribute} = ? WHERE id = ?`,
-        [updateValue, id],
+        sqlQuery,
+        updateValues,
         (error, result) => {
           if (error) {
             console.error("Error executing SQL query:", error);
@@ -169,52 +187,53 @@ module.exports.UpdateUser = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: error.message });
   }
+
 };
 
 module.exports.GetAllUser = async (req, res) => {
-    try {
-        const result = await new Promise((resolve, reject) => {
-            sqlConnection.query(
-                "SELECT * FROM user",
-                (error, result) => {
-                    if (error) {
-                        console.error("Error executing SQL query:", error);
-                        reject(error);
-                    } else {
-                        resolve(result);
-                    }
-                }
-            );
-        });
-        console.log(result);
-        return res.status(200).json({ data: result });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ msg: error.message });
-    }
+  try {
+    const result = await new Promise((resolve, reject) => {
+      sqlConnection.query(
+        "SELECT * FROM user",
+        (error, result) => {
+          if (error) {
+            console.error("Error executing SQL query:", error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+    console.log(result);
+    return res.status(200).json({ data: result });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: error.message });
+  }
 }
 
 module.exports.GetUserById = async (req, res) => {
-    try {
-      const { id } = req.params;
-        const result = await new Promise((resolve, reject) => {
-            sqlConnection.query(
-                "SELECT * FROM user WHERE id = ?",
-                [id],
-                (error, result) => {
-                    if (error) {
-                        console.error("Error executing SQL query:", error);
-                        reject(error);
-                    } else {
-                        resolve(result);
-                    }
-                }
-            );
-        });
-        console.log(result);
-        return res.status(200).json({ data: result });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ msg: error.message });
-    }
+  try {
+    const { id } = req.params;
+    const result = await new Promise((resolve, reject) => {
+      sqlConnection.query(
+        "SELECT * FROM user WHERE id = ?",
+        [id],
+        (error, result) => {
+          if (error) {
+            console.error("Error executing SQL query:", error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+    console.log(result);
+    return res.status(200).json({ data: result });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: error.message });
+  }
 }
