@@ -52,7 +52,10 @@ function HomePage() {
   }, []);
 
   const filteredData = showFullList ? books : books.slice(0, 6); // Fil
-
+  function handleClick() {
+    console.log("Button clicked!");
+    alert("Button clicked!");
+  }
   return (
     <>
       <Box
@@ -148,20 +151,22 @@ function HomePage() {
               <Grid key={index} item xs={2}>
                 {/* Set responsive layout */}
                 <Card sx={{ width: 168, height: 260 }}>
-                  <CardMedia
-                    component="img"
-                    alt={item.name}
-                    height="190"
-                    sx={{ objectFit: "fill" }}
-                    width="123"
-                    src={item.image}
-                  />
-                  <CardContent>
-                    {<Typography gutterBottom>{item.name}</Typography>}
-                    <Typography variant="body2" color="text.secondary">
-                      {item.author}
-                    </Typography>
-                  </CardContent>
+                  <CardActionArea onClick={handleClick}>
+                    <CardMedia
+                      component="img"
+                      alt={item.name}
+                      height="190"
+                      sx={{ objectFit: "fill" }}
+                      width="123"
+                      src={item.image}
+                    />
+                    <CardContent>
+                      {<Typography gutterBottom>{item.name}</Typography>}
+                      <Typography variant="body2" color="text.secondary">
+                        {item.author}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
                 </Card>
               </Grid>
             ))}
@@ -196,20 +201,22 @@ function HomePage() {
               <Grid key={index} xs={2} item>
                 {/* Set responsive layout */}
                 <Card sx={{ width: 168, height: 260 }}>
-                  <CardMedia
-                    component="img"
-                    alt={item.name}
-                    height="190"
-                    sx={{ objectFit: "fill" }}
-                    width="123"
-                    src={item.image}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom>{item.name}</Typography>
-                    <Typography variant="body2" color="text.secondary">
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      alt={item.name}
+                      height="190"
+                      sx={{ objectFit: "fill" }}
+                      width="123"
+                      src={item.image}
+                    />
+                    <CardContent>
+                      <Typography gutterBottom>{item.name}</Typography>
+                      {/*  <Typography variant="body2" color="text.secondary">
                       {item.author}
-                    </Typography>
-                  </CardContent>
+                    </Typography> */}
+                    </CardContent>
+                  </CardActionArea>
                 </Card>
               </Grid>
             ))}
