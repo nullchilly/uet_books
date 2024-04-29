@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -15,7 +15,7 @@ const Item = styled(Paper)(({ theme }) => ({
   maxWidth: 400,
 }));
 
-export default function SearchPage() {
+const SearchPage = () => {
   return (
     <Box
       id="style-2"
@@ -43,21 +43,9 @@ export default function SearchPage() {
             <Typography>Computer Science</Typography>
           </Stack>
         </Item>
-        <Item
-          sx={{
-            my: 1,
-            mx: "auto",
-            p: 2,
-          }}
-        >
-          <Stack spacing={2} direction="row" alignItems="center">
-            <Stack>
-              <Avatar>W</Avatar>
-            </Stack>
-            <Stack sx={{ minWidth: 0 }}></Stack>
-          </Stack>
-        </Item>
       </Box>
     </Box>
   );
-}
+};
+
+export default SearchPage;
