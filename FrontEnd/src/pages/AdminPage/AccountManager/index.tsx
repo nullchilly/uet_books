@@ -400,7 +400,6 @@ function AccountManagementPage() {
                     <TableCell>FullName</TableCell>
                     <TableCell>Email</TableCell>
                     {/* <TableCell>Password</TableCell> */}
-                    <TableCell>SDT</TableCell>
                     <TableCell>Address</TableCell>
                     <TableCell align="center">Edit</TableCell>
                     <TableCell align="center">Delete</TableCell>
@@ -432,7 +431,6 @@ function AccountManagementPage() {
                       </TableCell>
                       <TableCell>{row.email}</TableCell>
                       {/* <TableCell size="small">{row.password}</TableCell> */}
-                      <TableCell>{row.phone}</TableCell>
                       <TableCell>{row.address}</TableCell>
                       <TableCell
                         align="center"
@@ -615,6 +613,20 @@ function AccountManagementPage() {
                   setEmail(e.target.value)
                 }
               />
+              <TextValidator
+                sx={{ marginTop: "10px" }}
+                fullWidth
+                value={address}
+                label="Address"
+                name="address"
+                variant="standard"
+                color="secondary"
+                validators={["required"]}
+                errorMessages={["Vui lòng nhập địa chỉ"]}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFullName(e.target.value)
+                }
+              />
 
               <Button
                 sx={{ marginTop: "10px", backgroundColor: "#F27851" }}
@@ -676,20 +688,7 @@ function AccountManagementPage() {
                   setEmail(e.target.value)
                 }
               />
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
-                value={sdt}
-                label="SDT"
-                name="sdt"
-                variant="standard"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập số điện thoại"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setSdt(e.target.value)
-                }
-              />
+
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth

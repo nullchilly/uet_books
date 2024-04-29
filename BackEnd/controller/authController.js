@@ -53,6 +53,7 @@ module.exports.Login = async (req, res) => {
       fullName: foundUser.fullName,
       email: foundUser.email,
       // idPage: 0,
+      // idPage: 0,
       msg: "Login success",
     });
   } catch (error) {
@@ -64,7 +65,7 @@ module.exports.Login = async (req, res) => {
 module.exports.Register = async (req, res) => {
   try {
     console.log(req.body);
-    const { username, fullName, password, email } = req.body;
+    const { username, fullName, password, email, address } = req.body;
     if (!username) {
       return res.status(400).json({ msg: "Please enter your email" });
     }
@@ -76,6 +77,9 @@ module.exports.Register = async (req, res) => {
     }
     if (!email) {
       return res.status(400).json({ msg: "Please enter your email" });
+    }
+    if (!address) {
+      return res.status(400).json({ msg: "Please enter your address" });
     }
     const existingUser = await new Promise((resolve, reject) => {
       sqlConnection.query(
@@ -97,8 +101,8 @@ module.exports.Register = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await sqlConnection.query(
-      "INSERT INTO user (username, fullName, password, email) VALUES (?, ?, ?, ?)",
-      [username, fullName, hashedPassword, email]
+      "INSERT INTO user (username, fullName, password, email, address) VALUES (?, ?, ?, ?,?)",
+      [username, fullName, hashedPassword, email, address]
     );
 
     if (result != null) {
