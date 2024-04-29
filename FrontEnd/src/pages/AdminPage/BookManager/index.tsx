@@ -223,16 +223,17 @@ function BookManagementPage() {
   // update book
   const handleEdit = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/book/update", {
-        id,
-        code,
-        name,
-        description,
-        image,
-        category,
-        author,
-        language,
-        publishYear,
+      const res = await axios.post("http://localhost:3000/books/update", {
+        id: id,
+        code: code,
+        name: name,
+        description: description,
+        price: 0,
+        image: image,
+        category: category,
+        author: author,
+        language: language,
+        publishYear: publishYear,
       });
       if (res.data.update) {
         window.location.reload();
