@@ -14,6 +14,7 @@ import {
   Box,
   Button,
   IconButton,
+  Input,
   Skeleton,
   TableFooter,
   useTheme,
@@ -35,7 +36,7 @@ import { Stack } from "@mui/system";
 import React from "react";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import { Input } from "@material-tailwind/react";
+
 import { useNavigate } from "react-router-dom";
 
 interface TablePaginationActionsProps {
@@ -142,21 +143,23 @@ function AccountManagementPage() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = useState<UserInterface[]>([]);
+
   const [openModalCreate, setOpenModalCreate] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openModalSearch, setOpenModalSearch] = useState(false);
+
   const [searchValue, setSearchValue] = React.useState("");
-  const [name, setName] = React.useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const [id, setId] = React.useState("");
+  const [fullName, setFullName] = useState<string>("");
   const [userName, setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordX2, setPasswordX2] = React.useState("");
-  const [sdt, setSdt] = React.useState("");
   const [address, setAddress] = React.useState("");
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [fullName, setFullName] = useState<string>("");
-  const [id, setId] = React.useState("");
+
   const navigate = useNavigate();
 
   const handleSearch = (event: any) => {
@@ -237,6 +240,7 @@ function AccountManagementPage() {
         password: password,
         email: email,
         fullName: fullName,
+        address: address,
       });
       if (res.data.msg === "Register success") {
         console.log("register success");
@@ -274,14 +278,19 @@ function AccountManagementPage() {
     try {
       const res = await axios.post("http://localhost:3000/updateUser", {
         id: id,
+        updates: {
+          fullName: fullName,
+          email: email,
+          address: address,
+        },
         //updateAttribute: {}
       });
-      if (res.data.update) {
+      if (res.data.msg === "Update success") {
         window.location.reload();
-        alert(res.data.msg);
+        console.log("update success");
       }
     } catch (err: any) {
-      console.log("Register failed: " + err.message);
+      console.log("Update failed: " + err.message);
     }
   };
 
@@ -331,8 +340,8 @@ function AccountManagementPage() {
               onClick={() => {
                 setFullName("");
                 setUserName("");
+                setPassword("");
                 setEmail("");
-                setSdt("");
                 setAddress("");
                 setOpenModalCreate(true);
               }}
@@ -355,9 +364,6 @@ function AccountManagementPage() {
                   height: 42,
                 }}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                crossOrigin={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
               />
               <Button
                 sx={{
@@ -437,14 +443,12 @@ function AccountManagementPage() {
                         onClick={() => {
                           setOpenModalEdit(true);
                           //  console.log(row.id);
-
                           setId(row.id);
                           //  console.log(id);
                           setFullName(row.fullName);
 
                           setEmail(row.email);
                           setAddress(row.address);
-                          setSdt(row.phone);
                         }}
                       >
                         <Button variant="text">
@@ -624,7 +628,7 @@ function AccountManagementPage() {
                 validators={["required"]}
                 errorMessages={["Vui lòng nhập địa chỉ"]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setFullName(e.target.value)
+                  setAddress(e.target.value)
                 }
               />
 
@@ -662,7 +666,8 @@ function AccountManagementPage() {
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                value={fullName}
+                // defaultValue={fullName}
+                value={fullName} // Assuming this is your state variable to store the input value
                 label="Full Name"
                 name="fullName"
                 variant="standard"
@@ -670,7 +675,7 @@ function AccountManagementPage() {
                 validators={["required"]}
                 errorMessages={["Vui lòng nhập tên người dùng"]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setName(e.target.value)
+                  setFullName(e.target.value)
                 }
               />
 

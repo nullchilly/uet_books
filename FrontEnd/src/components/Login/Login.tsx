@@ -38,18 +38,23 @@ export default function Login() {
         username,
         password,
       });
+      //console.log(res.data);
       setLoading(false);
       if (res.data.msg === "Login success") {
         /*     setUsername("");
         setPassword(""); */
         console.log(res.data);
+        console.log("abdc");
         localStorage.setItem("id", res.data.id);
         localStorage.setItem("role", res.data.role);
         localStorage.setItem("fullName", res.data.fullName);
         localStorage.setItem("username", res.data.username);
         localStorage.setItem("email", res.data.email);
         //  localStorage.setItem("idPage", res.data.idPage);
-        navigate("/user/home");
+        if (res.data.role === "admin") navigate("/admin/home");
+        else {
+          navigate("/user/home");
+        }
         window.location.reload();
       } else {
         setError(res.data.msg);
