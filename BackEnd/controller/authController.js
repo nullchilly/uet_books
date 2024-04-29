@@ -32,8 +32,8 @@ module.exports.Login = async (req, res) => {
         }
       );
     });
-    console.log(user, "user");
-    console.log(admin, "admin");
+    //console.log(user, "user");
+    //console.log(admin, "admin");
 
     if (user.length === 0 && admin.length === 0) {
       return res.status(400).json({ msg: "User not found" });
@@ -154,7 +154,7 @@ module.exports.UpdateUser = async (req, res) => {
     const updateValues = [];
 
     for (const key in updates) {
-      if (['username', 'phone', 'address', 'email', 'fullName'].includes(key)) {
+      if (["username", "phone", "address", "email", "fullName"].includes(key)) {
         updateClauses.push(`${key} = ?`);
         updateValues.push(updates[key]);
       }
@@ -164,22 +164,18 @@ module.exports.UpdateUser = async (req, res) => {
       return res.status(400).json({ msg: "No valid updates provided" });
     }
 
-    const sqlQuery = `UPDATE user SET ${updateClauses.join(', ')} WHERE id = ?`;
+    const sqlQuery = `UPDATE user SET ${updateClauses.join(", ")} WHERE id = ?`;
     updateValues.push(id);
 
     const updatedUser = await new Promise((resolve, reject) => {
-      sqlConnection.query(
-        sqlQuery,
-        updateValues,
-        (error, result) => {
-          if (error) {
-            console.error("Error executing SQL query:", error);
-            reject(error);
-          } else {
-            resolve(result);
-          }
+      sqlConnection.query(sqlQuery, updateValues, (error, result) => {
+        if (error) {
+          console.error("Error executing SQL query:", error);
+          reject(error);
+        } else {
+          resolve(result);
         }
-      );
+      });
     });
 
     if (updatedUser != null) {
@@ -191,23 +187,19 @@ module.exports.UpdateUser = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: error.message });
   }
-
 };
 
 module.exports.GetAllUser = async (req, res) => {
   try {
     const result = await new Promise((resolve, reject) => {
-      sqlConnection.query(
-        "SELECT * FROM user",
-        (error, result) => {
-          if (error) {
-            console.error("Error executing SQL query:", error);
-            reject(error);
-          } else {
-            resolve(result);
-          }
+      sqlConnection.query("SELECT * FROM user", (error, result) => {
+        if (error) {
+          console.error("Error executing SQL query:", error);
+          reject(error);
+        } else {
+          resolve(result);
         }
-      );
+      });
     });
     console.log(result);
     return res.status(200).json({ data: result });
@@ -215,7 +207,7 @@ module.exports.GetAllUser = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: error.message });
   }
-}
+};
 
 module.exports.GetUserById = async (req, res) => {
   try {
@@ -240,4 +232,4 @@ module.exports.GetUserById = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: error.message });
   }
-}
+};

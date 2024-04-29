@@ -6,7 +6,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button, IconButton, TableFooter, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Input,
+  TableFooter,
+  useTheme,
+} from "@mui/material";
 import { Typography } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -26,7 +33,6 @@ import { Stack } from "@mui/system";
 import React from "react";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import { Input } from "@material-tailwind/react";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 interface TablePaginationActionsProps {
@@ -332,9 +338,6 @@ function BookManagementPage() {
                 height: 42,
               }}
               onChange={(e) => setSearchQuery(e.target.value)}
-              crossOrigin={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
             />
             <Button
               sx={{
