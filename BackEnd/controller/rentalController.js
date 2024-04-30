@@ -37,7 +37,16 @@ module.exports.addRental = async (req, res) => {
         )
     })
     if (rentalInfo.length > 0) {
-        return res.status(400).json({ msg: "book already rental" });
+        let check = false;
+        for (let i = 0; i < rentalInfo.length; i++) {
+            if (rentalInfo[i].returnDate == null) {
+                check = true;
+                break
+            }
+        }
+        if (check) {
+            return res.status(400).json({ msg: "book already rented" });
+        }
     }
     const result = await new Promise((resolve, reject) => {
         sqlConnection.query(
