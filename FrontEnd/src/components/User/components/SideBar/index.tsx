@@ -16,7 +16,6 @@ function SideBarUser() {
       <Box
         sx={{
           height: "100vh",
-
           width: "var(--default-layout-width-sidebar)",
           float: "left",
         }}

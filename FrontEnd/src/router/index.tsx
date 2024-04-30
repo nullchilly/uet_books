@@ -7,6 +7,8 @@ import MyShelfPage from "../pages/UserPage/MyShelfPage";
 import ProfilePage from "../pages/UserPage/ProfilePage";
 import SearchPage from "../pages/UserPage/SearchPage";
 import AuthScreen from "../pages/Auth";
+import BookDetail from "../pages/UserPage/BookDetailPage";
+import BookViewer from "../pages/BookViewer";
 
 const publicRoutes = [
   {
@@ -38,6 +40,14 @@ const privateUserRoutes = [
   {
     path: "/user/profile",
     component: ProfilePage,
+  },
+  {
+    path: "/user/:book_id",
+    component: BookDetail,
+  },
+  {
+    path: "/user/view/:book_id",
+    component: BookViewer,
   },
 ];
 const privateAdminRoutes = [
