@@ -173,7 +173,7 @@ module.exports.addBudget = async (req, res) => {
 }
 
 module.exports.queryRentalBookByUser = async (req, res) => {
-    const { userId } = req.body;
+    const userId = req.params.userId;
     const rentalInfo = await new Promise((resolve, reject) => {
         sqlConnection.query(
             "SELECT b.mongoId FROM rental r JOIN book b On r.bookId = b.id WHERE r.userId = ?;",
