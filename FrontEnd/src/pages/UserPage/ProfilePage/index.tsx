@@ -400,7 +400,7 @@ function ProfilePage() {
               Update Profile
             </Button>
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
+          {/* <CustomTabPanel value={value} index={1}>
             <ValidatorForm onSubmit={payment}>
               <Typography component="h1" sx={{ fontSize: 16 }} mt={3} ml={2}>
                 Full Name
@@ -464,7 +464,7 @@ function ProfilePage() {
                 Payment
               </Button>
             </ValidatorForm>
-          </CustomTabPanel>
+          </CustomTabPanel> */}
         </Box>
       </Box>
     </>

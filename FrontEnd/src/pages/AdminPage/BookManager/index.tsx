@@ -125,14 +125,12 @@ const styleModal = {
 };
 export interface BookInterface {
   _id: string;
-  name: string;
-  code: string;
-  author: string;
-  language: string;
-  publishYear: string;
+  Title: string;
+  Author: string;
+  Language: string;
+  Year: string;
   category: string;
-  image: string;
-  description: string;
+  Coverurl: string;
 }
 function BookManagementPage() {
   const [page, setPage] = React.useState(0);
@@ -146,11 +144,11 @@ function BookManagementPage() {
   const [searchValue, setSearchValue] = useState("");
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [description, setDescription] = React.useState("");
+
   const [image, setImage] = React.useState("");
   const [category, setCategory] = useState("");
   const [author, setAuthor] = React.useState("");
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = React.useState("");
   const [publishYear, setPublishYear] = useState("");
   const [id, setId] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -224,15 +222,12 @@ function BookManagementPage() {
     try {
       const res = await axios.post("http://localhost:3000/books/update", {
         id: id,
-        code: code,
-        name: name,
-        description: description,
-        price: 0,
-        image: image,
-        category: category,
-        author: author,
-        language: language,
-        publishYear: publishYear,
+        Title: name,
+        Language: language,
+       // price: 0,
+        Author: author,
+        Coverurl: image,
+        Year: publishYear,
       });
       if (res.data.update) {
         window.location.reload();
@@ -314,10 +309,9 @@ function BookManagementPage() {
             }}
             onClick={() => {
               setName("");
-              setCode("");
+
               setImage("");
-              setDescription("");
-              setCategory("");
+
               setAuthor("");
               setLanguage("");
               setPublishYear("");
@@ -370,8 +364,8 @@ function BookManagementPage() {
               <TableHead>
                 <TableRow>
                   <TableCell>STT</TableCell>
-                  <TableCell>Code</TableCell>
-                  <TableCell>Name</TableCell>
+
+                  <TableCell>Title</TableCell>
                   <TableCell>Danh mục</TableCell>
                   <TableCell>Tác giả</TableCell>
                   <TableCell>Năm xuất bản</TableCell>
@@ -394,26 +388,23 @@ function BookManagementPage() {
                     sx={{ "&:last-child td, &:last-child th": { brent: 0 } }}
                   >
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell component="th" scope="row" sortDirection="desc">
-                      {row.code}
-                    </TableCell>
-                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.Title}</TableCell>
                     <TableCell>{row.category}</TableCell>
-                    <TableCell>{row.author}</TableCell>
-                    <TableCell>{row.publishYear}</TableCell>
+                    <TableCell>{row.Author}</TableCell>
+                    <TableCell>{row.Year}</TableCell>
                     <TableCell
                       align="center"
                       onClick={() => {
                         setOpenModalEdit(true);
                         setId(row._id);
-                        setName(row.name);
-                        setCode(row.code);
-                        setCategory(row.category);
-                        setImage(row.image);
-                        setDescription(row.description);
-                        setAuthor(row.author);
-                        setLanguage(row.language);
-                        setPublishYear(row.publishYear);
+                        setName(row.Title);
+
+                        //setCategory(row.category);
+                        setImage(row.Coverurl);
+                        setLanguage(row.Language);
+                        setAuthor(row.Author);
+
+                        setPublishYear(row.Year);
                       }}
                     >
                       <Button variant="text">
@@ -505,20 +496,6 @@ function BookManagementPage() {
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                value={code}
-                name="code"
-                label="Mã sách"
-                variant="standard"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập mã sách"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setCode(e.target.value)
-                }
-              />
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
                 value={name}
                 name="name"
                 label="Tên Sách"
@@ -531,20 +508,6 @@ function BookManagementPage() {
                 }
               />
 
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
-                value={description}
-                name="description"
-                label="Mô Tả"
-                variant="standard"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập mô tả"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setDescription(e.target.value)
-                }
-              />
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
@@ -641,20 +604,6 @@ function BookManagementPage() {
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                value={code}
-                label="Mã sách"
-                name="code"
-                variant="standard"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập mã sách"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setCode(e.target.value)
-                }
-              />
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
                 value={name}
                 name="name"
                 label="Tên sách"
@@ -667,20 +616,6 @@ function BookManagementPage() {
                 }
               />
 
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
-                value={description}
-                label="Mô Tả"
-                variant="standard"
-                name="description"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập mô tả"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setDescription(e.target.value)
-                }
-              />
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
@@ -724,7 +659,6 @@ function BookManagementPage() {
                 fullWidth
                 value={language}
                 name="language"
-                type="number"
                 label="Ngôn Ngữ"
                 variant="standard"
                 color="secondary"
