@@ -6,10 +6,15 @@ import HomePage from "../pages/UserPage/HomePage";
 import MyShelfPage from "../pages/UserPage/MyShelfPage";
 import ProfilePage from "../pages/UserPage/ProfilePage";
 import SearchPage from "../pages/UserPage/SearchPage";
+import AuthScreen from "../pages/Auth";
 
 const publicRoutes = [
   {
     path: "/",
+    component: AuthScreen,
+  },
+  {
+    path: "/login",
     component: LoginPage,
   },
   {
@@ -33,7 +38,7 @@ const privateUserRoutes = [
   {
     path: "/user/profile",
     component: ProfilePage,
-  }
+  },
 ];
 const privateAdminRoutes = [
   {
@@ -48,6 +53,5 @@ const privateAdminRoutes = [
     path: "/admin/bookmanagement",
     component: BookManagementPage,
   },
- 
 ];
 export { publicRoutes, privateUserRoutes, privateAdminRoutes };
