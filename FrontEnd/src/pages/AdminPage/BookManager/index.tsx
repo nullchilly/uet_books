@@ -224,7 +224,7 @@ function BookManagementPage() {
         id: id,
         Title: name,
         Language: language,
-       // price: 0,
+        // price: 0,
         Author: author,
         Coverurl: image,
         Year: publishYear,
@@ -380,53 +380,56 @@ function BookManagementPage() {
                       page * rowsPerPage + rowsPerPage
                     )
                   : rows
-                ).map((row, index) => (
-                  <TableRow
-                    id={row._id}
-                    className="row"
-                    key={index}
-                    sx={{ "&:last-child td, &:last-child th": { brent: 0 } }}
-                  >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{row.Title}</TableCell>
-                    <TableCell>{row.category}</TableCell>
-                    <TableCell>{row.Author}</TableCell>
-                    <TableCell>{row.Year}</TableCell>
-                    <TableCell
-                      align="center"
-                      onClick={() => {
-                        setOpenModalEdit(true);
-                        setId(row._id);
-                        setName(row.Title);
-
-                        //setCategory(row.category);
-                        setImage(row.Coverurl);
-                        setLanguage(row.Language);
-                        setAuthor(row.Author);
-
-                        setPublishYear(row.Year);
-                      }}
+                ).map((row, index) => {
+                  const realIndex = page * rowsPerPage + index + 1;
+                  return (
+                    <TableRow
+                      id={row._id}
+                      className="row"
+                      key={index}
+                      sx={{ "&:last-child td, &:last-child th": { brent: 0 } }}
                     >
-                      <Button variant="text">
-                        <EditOutlinedIcon />
-                        Edit
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="text"
-                        color="error"
+                      <TableCell>{realIndex}</TableCell>
+                      <TableCell>{row.Title}</TableCell>
+                      <TableCell>{row.category}</TableCell>
+                      <TableCell>{row.Author}</TableCell>
+                      <TableCell>{row.Year}</TableCell>
+                      <TableCell
+                        align="center"
                         onClick={() => {
-                          setOpenModalDelete(true);
+                          setOpenModalEdit(true);
                           setId(row._id);
+                          setName(row.Title);
+
+                          //setCategory(row.category);
+                          setImage(row.Coverurl);
+                          setLanguage(row.Language);
+                          setAuthor(row.Author);
+
+                          setPublishYear(row.Year);
                         }}
                       >
-                        <DeleteSweepOutlinedIcon />
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <Button variant="text">
+                          <EditOutlinedIcon />
+                          Edit
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="text"
+                          color="error"
+                          onClick={() => {
+                            setOpenModalDelete(true);
+                            setId(row._id);
+                          }}
+                        >
+                          <DeleteSweepOutlinedIcon />
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
