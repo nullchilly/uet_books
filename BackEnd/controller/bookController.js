@@ -240,8 +240,7 @@ const bookCtrl = {
       }
       const books = await Books.find({
         $or: [
-          { code: { $regex: keyword, $options: 'i' } },
-          { name: { $regex: keyword, $options: 'i' } },
+          { Title: { $regex: keyword, $options: 'i' } },
         ]
       });
       if (books) {
