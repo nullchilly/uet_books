@@ -1,10 +1,10 @@
 const sqlConnection = require("../util/sql.connection");
 
 module.exports.addRental = async (req, res) => {
-    const { userId, bookMongoId } = req.body;
+    const { userId, bookMongoId, price } = req.body;
     const bookInfo = await new Promise((resolve, reject) => {
         sqlConnection.query(
-            "SELECT id, price FROM book WHERE mongoId = ?",
+            "SELECT id FROM book WHERE mongoId = ?",
             [bookMongoId],
             (error, result) => {
                 if (error) {
@@ -16,6 +16,8 @@ module.exports.addRental = async (req, res) => {
             }
         )
     })
+    const parsePrice = parseFloat(price);
+    console.log(parsePrice);
     console.log(bookInfo);
     if (bookInfo.length == 0) {
         return res.status(400).json({ msg: "book not found" });
@@ -51,7 +53,73 @@ module.exports.addRental = async (req, res) => {
         )
     })
     console.log(result);
-    if (result.affectedRows > 0) {
+    const rentalID = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "SELECT id FROM rental WHERE userId = ? AND bookId = ?",
+            [userId, bookInfo[0].id],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    })
+
+    const parseRentalId = parseInt(rentalID[0].id);
+    const userBuget = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "SELECT budget FROM user WHERE id = ?",
+            [userId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    })
+    if (parsePrice > rentalID[0].budget) {
+        return res.status(400).json({ msg: "not enough budget" });
+    }
+
+    const newBudget = parseFloat(userBuget[0].budget) - parsePrice;
+    const addPayment = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "INSERT INTO payments (rentalId, amount, paymentDate, userId) VALUES (?, ?, NOW(), ?)",
+            [parseRentalId, parsePrice, userId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    })
+    const updateUserBudget = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "UPDATE user SET budget = ? WHERE id = ?",
+            [newBudget, userId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    })
+
+
+
+    if (result.affectedRows > 0&& addPayment.affectedRows > 0 && updateUserBudget.affectedRows > 0) {
         return res.status(200).json({ msg: "addRental success" });
     }
     else {
