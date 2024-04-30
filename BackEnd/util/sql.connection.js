@@ -11,7 +11,7 @@ sqlConnection.connect((er) => {
   if (er) {
     console.log(er);
   } else {
-    console.log("Database connected");
+    console.log("MySQL Database connected");
   }
 });
 
