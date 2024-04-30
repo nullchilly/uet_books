@@ -1,56 +1,56 @@
 const mongoose = require("mongoose");
 
-const bookSchema = new mongoose.Schema (
-  {
-    code: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-    },
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    image: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    language: {
-      type: String,
-      trim: true
-    },
-    publishYear: {
-      type: Number,
-    },
-    category: {
-      type: String,
-      require: true,
-      trim: true,
-    },
-    author: {
-      type: String,
-      require: true,
-      trim: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+const bookSchema = new mongoose.Schema({
+  ID: { type: Number },
+  Title: { type: String },
+  VolumeInfo: { type: String },
+  // Series: { type: String },
+  // Periodical: { type: String },
+  Author: { type: String },
+  Year: { type: String },
+  Edition: { type: String },
+  Publisher: { type: String },
+  // City: { type: String },
+  // Pages: { type: String },
+  PagesInFile: { type: Number },
+  Language: { type: String },
+  Topic: { type: String },
+  Library: { type: String },
+  Issue: { type: String },
+  // Identifier: { type: String },
+  // ISSN: { type: String },
+  // ASIN: { type: String },
+  // UDC: { type: String },
+  // LBC: { type: String },
+  // DDC: { type: String },
+  // LCC: { type: String },
+  // Doi: { type: String },
+  // Googlebookid: { type: String },
+  // OpenLibraryID: { type: String },
+  // Commentary: { type: String },
+  // DPI: { type: Number },
+  // Color: { type: String },
+  // Cleaned: { type: String },
+  // Orientation: { type: String },
+  // Paginated: { type: String },
+  // Scanned: { type: String },
+  // Bookmarked: { type: String },
+  // Searchable: { type: String },
+  Filesize: { type: Number },
+  // Extension: { type: String },
+  MD5: { type: String },
+  // Generic: { type: String },
+  // Visible: { type: String },
+  // Locator: { type: String },
+  // Local: { type: Number },
+  TimeAdded: { type: Date },
+  TimeLastModified: { type: Date },
+  Coverurl: { type: String },
+  // Tags: { type: String },
+  // IdentifierWODash: { type: String }
+});
 
-const Books = mongoose.model("Books", bookSchema);
+const Books = mongoose.model("books", bookSchema, "updated");
 
 const bookCtrl = {
   autocomplete: async (req, res) => {
@@ -82,7 +82,7 @@ const bookCtrl = {
         if (books) {
           res.json(books);
         } else {
-          res.json({ msg: "Not found books" });
+          res.json({ msg: "No books found" });
         }
       }
     } catch (error) {
@@ -95,6 +95,7 @@ const bookCtrl = {
 
       const book = await Books.findOne({ code: code });
       if (book) {
+        console.log(book)
         return res.json({ msg: "Code book registered", create: false });
       }
       const newBook = new Books({
@@ -103,10 +104,10 @@ const bookCtrl = {
         description,
         image,
         price,
-        author, 
-        category, 
-        language, 
-        publishYear, 
+        author,
+        category,
+        language,
+        publishYear,
         lab: [],
       });
       // Save mongodb
@@ -200,7 +201,8 @@ const bookCtrl = {
 
   getAllBooks: async (req, res) => {
     try {
-      const books = await Books.find();
+      const books = await Books.find().limit(1000);
+      console.log(books)
       if (books) {
         res.json(books);
       } else {
@@ -213,7 +215,7 @@ const bookCtrl = {
   getBookById: async (req, res) => {
     try {
       const { id } = req.body;
-      const book = await Books.findOne({ _id: id });
+      const book = await Books.findOne({ ID: id });
       if (book) {
         res.json(book);
       } else {
@@ -225,7 +227,17 @@ const bookCtrl = {
   },
   getAllBooksBySearch: async (req, res) => {
     try {
-      const keyword = req.query.value;
+      const {id, keyword} = req.query;
+      if (id) {
+        console.log(id)
+        const book = await Books.findOne({ ID: id });
+        if (book) {
+          res.json(book);
+        } else {
+          res.json({ msg: "No book with such id"});
+        }
+        return;
+      }
       const books = await Books.find({
         $or: [
           { code: { $regex: keyword, $options: 'i' } },
