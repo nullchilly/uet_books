@@ -187,19 +187,23 @@ module.exports.UpdateUser = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: error.message });
   }
+
 };
 
 module.exports.GetAllUser = async (req, res) => {
   try {
     const result = await new Promise((resolve, reject) => {
-      sqlConnection.query("SELECT * FROM user", (error, result) => {
-        if (error) {
-          console.error("Error executing SQL query:", error);
-          reject(error);
-        } else {
-          resolve(result);
+      sqlConnection.query(
+        "SELECT * FROM user",
+        (error, result) => {
+          if (error) {
+            console.error("Error executing SQL query:", error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
         }
-      });
+      );
     });
     console.log(result);
     return res.status(200).json({ data: result });
@@ -207,7 +211,7 @@ module.exports.GetAllUser = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: error.message });
   }
-};
+}
 
 module.exports.GetUserById = async (req, res) => {
   try {
@@ -232,7 +236,6 @@ module.exports.GetUserById = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: error.message });
   }
-};
 
 module.exports.AddAdminAccount = async (req, res) => {
   try {
