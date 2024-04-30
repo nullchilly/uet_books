@@ -119,7 +119,7 @@ module.exports.addRental = async (req, res) => {
 
 
 
-    if (result.affectedRows > 0&& addPayment.affectedRows > 0 && updateUserBudget.affectedRows > 0) {
+    if (result.affectedRows > 0 && addPayment.affectedRows > 0 && updateUserBudget.affectedRows > 0) {
         return res.status(200).json({ msg: "addRental success" });
     }
     else {
@@ -193,4 +193,77 @@ module.exports.queryRentalBookByUser = async (req, res) => {
         return res.status(400).json({ msg: "rental not found" });
     }
     return res.status(200).json({ rentalInfo });
+}
+
+module.exports.returnBook = async (req, res) => {
+    const { userId, bookId } = req.body;
+    const rentalInfo = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "SELECT * FROM rental WHERE userId = ? AND bookId = ?;",
+            [userId, bookId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    })
+    if (rentalInfo.length == 0) {
+        return res.status(400).json({ msg: "rental not found" });
+    }
+    const rentalId = rentalInfo[0].id;
+    const paymentInfo = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "SELECT amount FROM payments WHERE rentalId = ?;",
+            [rentalId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    })
+    if (paymentInfo.length == 0) {
+        return res.status(400).json({ msg: "payment not found" });
+    }
+    const paymentAmount = parseFloat(paymentInfo[0].amount);
+    const updateUserBudget = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "UPDATE user SET budget = budget + ? WHERE id = ?;",
+            [paymentAmount, userId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    })
+    const updateReturnDate = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "UPDATE rental SET returnDate = NOW() WHERE id = ?;",
+            [rentalId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+    })
+    if (updateUserBudget.affectedRows > 0) {
+        return res.status(200).json({ msg: "returnBook success" });
+    }
+    else {
+        return res.status(200).json({ msg: "returnBook failed" });
+    }
 }
