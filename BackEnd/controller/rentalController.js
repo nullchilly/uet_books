@@ -171,3 +171,26 @@ module.exports.addBudget = async (req, res) => {
         return res.status(200).json({ msg: "addBudget failed" });
     }
 }
+
+module.exports.queryRentalBookByUser = async (req, res) => {
+    const { userId } = req.body;
+    const rentalInfo = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "SELECT b.mongoId FROM rental r JOIN book b On r.bookId = b.id WHERE r.userId = ?;",
+            [userId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        )
+    })
+    console.log(rentalInfo);
+    if (rentalInfo.length == 0) {
+        return res.status(400).json({ msg: "rental not found" });
+    }
+    return res.status(200).json({ rentalInfo });
+}
