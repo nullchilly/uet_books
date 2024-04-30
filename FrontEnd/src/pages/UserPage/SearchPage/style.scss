@@ -1,0 +1,27 @@
+.container {
+  background-color: #f3f3f7;
+  width: calc(100% - var(--default-layout-width-sidebar));
+  height: calc(100vh - var(--default-layout-height-header));
+  float: right;
+  overflow-x: scroll;
+}
+.BookCardList-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.BookCardList-container-item {
+  flex-grow: 1;
+  overflow: hidden;
+  margin: 0 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  padding: 12px 24px;
+}
