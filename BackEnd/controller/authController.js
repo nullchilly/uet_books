@@ -32,8 +32,8 @@ module.exports.Login = async (req, res) => {
         }
       );
     });
-    console.log(user, "user");
-    console.log(admin, "admin");
+    //console.log(user, "user");
+    //console.log(admin, "admin");
 
     if (user.length === 0 && admin.length === 0) {
       return res.status(400).json({ msg: "User not found" });
@@ -154,7 +154,7 @@ module.exports.UpdateUser = async (req, res) => {
     const updateValues = [];
 
     for (const key in updates) {
-      if (['username', 'phone', 'address', 'email', 'fullName'].includes(key)) {
+      if (["username", "phone", "address", "email", "fullName"].includes(key)) {
         updateClauses.push(`${key} = ?`);
         updateValues.push(updates[key]);
       }
@@ -164,22 +164,18 @@ module.exports.UpdateUser = async (req, res) => {
       return res.status(400).json({ msg: "No valid updates provided" });
     }
 
-    const sqlQuery = `UPDATE user SET ${updateClauses.join(', ')} WHERE id = ?`;
+    const sqlQuery = `UPDATE user SET ${updateClauses.join(", ")} WHERE id = ?`;
     updateValues.push(id);
 
     const updatedUser = await new Promise((resolve, reject) => {
-      sqlConnection.query(
-        sqlQuery,
-        updateValues,
-        (error, result) => {
-          if (error) {
-            console.error("Error executing SQL query:", error);
-            reject(error);
-          } else {
-            resolve(result);
-          }
+      sqlConnection.query(sqlQuery, updateValues, (error, result) => {
+        if (error) {
+          console.error("Error executing SQL query:", error);
+          reject(error);
+        } else {
+          resolve(result);
         }
-      );
+      });
     });
 
     if (updatedUser != null) {
@@ -240,4 +236,57 @@ module.exports.GetUserById = async (req, res) => {
     console.log(error);
     return res.status(500).json({ msg: error.message });
   }
-}
+
+module.exports.AddAdminAccount = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { username, fullName, password, email, address } = req.body;
+    if (!username) {
+      return res.status(400).json({ msg: "Please enter your email" });
+    }
+    if (!fullName) {
+      return res.status(400).json({ msg: "Please enter your name" });
+    }
+    if (!password) {
+      return res.status(400).json({ msg: "Please enter your password" });
+    }
+    if (!email) {
+      return res.status(400).json({ msg: "Please enter your email" });
+    }
+    if (!address) {
+      return res.status(400).json({ msg: "Please enter your address" });
+    }
+    const existingUser = await new Promise((resolve, reject) => {
+      sqlConnection.query(
+        "SELECT * FROM user WHERE username = ?",
+        [username],
+        (error, result) => {
+          if (error) {
+            console.error("Error executing SQL query:", error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+    console.log(existingUser);
+    if (existingUser.length > 0) {
+      return res.status(400).json({ msg: "User already exists" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await sqlConnection.query(
+      "INSERT INTO admin (username, fullName, password, email, address) VALUES (?, ?, ?, ?,?)",
+      [username, fullName, hashedPassword, email, address]
+    );
+
+    if (result != null) {
+      return res.status(200).json({ msg: "Register success" });
+    } else {
+      return res.status(400).json({ msg: "Register failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: error.message });
+  }
+};

@@ -1,85 +1,34 @@
-import Typography from "@mui/material/Typography";
-import logo from "../../../assets/img/poster.jpeg";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
 
 import {
   Box,
   Button,
-  ButtonBase,
+  CardContent,
   Grid,
-  Paper,
   Tab,
   Tabs,
+  Typography,
   styled,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
-const Img = styled("img")({
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
-});
+import axios from "axios";
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
-const data = [
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    description: "This is a description",
-  },
-];
+
+interface BookInterface {
+  name: string;
+  image: string;
+  author: string;
+  description: string;
+  publishYear: string;
+}
+
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
@@ -109,18 +58,42 @@ function MyShelfPage() {
   const [showFullList, setShowFullList] = useState(true); // State to control data display
   const [showFullRecentList, setShowFullRecentList] = useState(false); // State to control data display
   const [value, setValue] = React.useState(0);
+  const [books, setBooks] = useState<BookInterface[]>([]);
+  const getBooks = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/books/all");
+      console.log(res.data);
+      return res.data;
+    } catch (err: any) {
+      console.log("fe : " + err.message);
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allBookList = await getBooks();
+        setBooks(allBookList);
+        console.log("abc");
+      } catch (error) {
+        // Xử lý lỗi nếu có
+      }
+    };
+    console.log("fetching data");
+
+    fetchData();
+  }, []);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  const handleShowAll = () => {
+/*   const handleShowAll = () => {
     setShowFullList(!showFullList); // Update state to show all data
   };
   const handleRecentShowAll = () => {
-    setShowFullRecentList(!showFullRecentList);
+    setShowFullRecentList(!showFullRecentList);¯
     // Update state to show all data
-  };
+  }; */
 
-  const filteredData = showFullList ? data : data.slice(0, 4); // Fil
+  const filteredData = showFullList ? books : books.slice(0, 4); // Fil
 
   return (
     <>
@@ -228,92 +201,95 @@ function MyShelfPage() {
                 flexWrap: "wrap",
               }}
             >
-              <Grid container spacing={3} xs={12}>
-                {filteredData.map((item, index) => (
-                  <Grid key={index} item xs={3}>
-                    {/* Set responsive layout */}
-                    <Paper
-                      sx={{
-                        p: 2,
-                        margin: "auto",
+              {
+                <Grid container spacing={2} xs={12}>
+                  {filteredData.map((item, index) => (
+                    <Grid key={index} item xs={3}>
+                      {/* Set responsive layout */}
+                      <Card sx={{ display: "flex", height: 250 }}>
+                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                          <CardMedia
+                            component="img"
+                            sx={{ width: 130, height: 164, objectFit: "fill" }}
+                            image={item.image}
+                            alt="Live from space album cover"
+                          />
+                          <CardContent sx={{ maxHeight: 24 }}>
+                            <Typography gutterBottom sx={{ fontSize: 14 }}>
+                              {item.name}
+                            </Typography>
+                            {/* <Typography
+                              variant="body2"
+                              sx={{ fontSize: 12 }}
+                              color="text.secondary"
+                            >
+                              {item.author}
+                            </Typography> */}
+                          </CardContent>
+                        </Box>
 
-                        width: 230,
-                        height: 220,
-
-                        backgroundColor: (theme) =>
-                          theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-                      }}
-                    >
-                      <Grid container spacing={2}>
-                        <Grid item>
-                          <ButtonBase sx={{ height: 180, width: 137 }}>
-                            <Img
-                              src={item.img}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <CardContent sx={{ flex: "1 0 auto" }}>
+                            <Typography component="div" variant="subtitle2">
+                              Borrowed on
+                            </Typography>
+                            <Typography variant="caption">
+                              {item.publishYear}
+                            </Typography>
+                            <Typography variant="subtitle2" component="div">
+                              Submission Due
+                            </Typography>
+                            <Typography variant="caption">
+                              {item.publishYear}
+                            </Typography>
+                          </CardContent>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              pl: 1,
+                              pb: 1,
+                            }}
+                          >
+                            <Button
                               sx={{
-                                objectFit: "fill",
-                                marginLeft: -4,
-                                marginTop: -2,
-                              }}
-                            />
-                          </ButtonBase>
-                          <Typography variant="body2" gutterBottom>
-                            {item.title}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {item.author}
-                          </Typography>
-                        </Grid>
-                        <Grid xs={12} sm>
-                          <Typography
-                            variant="subtitle1"
-                            component="div"
-                            sx={{ marginTop: 2 }}
-                          >
-                            Borrowed on
-                          </Typography>
-                          <Typography variant="body2">{item.date}</Typography>
-                          <Typography
-                            variant="subtitle1"
-                            component="div"
-                            sx={{ marginTop: 2 }}
-                          >
-                            Submission Due
-                          </Typography>
-                          <Typography variant="body2">{item.date}</Typography>
-                          <Button
-                            sx={{
-                              backgroundColor: "#42bb4e",
-                              "&:hover": {
-                                backgroundColor: "#16771F",
-                              },
-                              width: 93,
-                              marginTop: 1,
+                                backgroundColor: "#42bb4e",
+                                "&:hover": {
+                                  backgroundColor: "#16771F",
+                                },
+                                width: 93,
+                                marginTop: 1,
 
-                              height: 32,
-                              color: "white",
-                            }}
-                          >
-                            Read
-                          </Button>
-                          <Button
-                            sx={{
-                              backgroundColor: "white",
-                              border: 2,
-                              marginTop: 1,
-                              width: 93,
-                              height: 32,
-                              color: "#F76B56",
-                              fontWeight: "medium",
-                            }}
-                          >
-                            Return
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                ))}
-              </Grid>
+                                height: 32,
+                                color: "white",
+                              }}
+                            >
+                              Read
+                            </Button>
+                            <Button
+                              sx={{
+                                backgroundColor: "white",
+                                border: 2,
+                                marginTop: 1,
+                                width: 93,
+                                height: 32,
+                                color: "#F76B56",
+                                fontWeight: "medium",
+                              }}
+                            >
+                              Return
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              }
             </Box>
           </CustomTabPanel>
         </Box>

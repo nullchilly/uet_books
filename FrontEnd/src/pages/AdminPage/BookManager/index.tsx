@@ -6,7 +6,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button, IconButton, TableFooter, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Input,
+  TableFooter,
+  useTheme,
+} from "@mui/material";
 import { Typography } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -26,7 +33,6 @@ import { Stack } from "@mui/system";
 import React from "react";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import { Input } from "@material-tailwind/react";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 interface TablePaginationActionsProps {
@@ -158,7 +164,9 @@ function BookManagementPage() {
 
   const getAllBooks = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/book/allBooks");
+      const res = await axios.get("http://localhost:3000/books/all");
+      console.log(res.data);
+
       return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
@@ -169,7 +177,6 @@ function BookManagementPage() {
       try {
         const allBookList = await getAllBooks();
         setRows(allBookList);
-        console.log("abc");
       } catch (error) {
         // Xử lý lỗi nếu có
       }
@@ -191,38 +198,41 @@ function BookManagementPage() {
   };
   const handleCreate = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/book/create", {
-        code,
-        name,
-        description,
-        image,
-        category,
-        author,
-        language,
-        publishYear,
+      const res = await axios.post("http://localhost:3000/books/create", {
+        code: code,
+        name: name,
+        description: description,
+        price: 0,
+        image: image,
+        category: category,
+        author: author,
+        language: language,
+        publishYear: publishYear,
       });
       if (res.data.create) {
+        console.log(res.data);
         window.location.reload();
         alert(res.data.msg);
       }
     } catch (err: any) {
-      console.log("Register failed: " + err.message);
+      console.log("Create failed: " + err.message);
     }
   };
 
   // update book
   const handleEdit = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/book/update", {
-        id,
-        code,
-        name,
-        description,
-        image,
-        category,
-        author,
-        language,
-        publishYear,
+      const res = await axios.post("http://localhost:3000/books/update", {
+        id: id,
+        code: code,
+        name: name,
+        description: description,
+        price: 0,
+        image: image,
+        category: category,
+        author: author,
+        language: language,
+        publishYear: publishYear,
       });
       if (res.data.update) {
         window.location.reload();
@@ -234,10 +244,10 @@ function BookManagementPage() {
   };
 
   // delete book
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     try {
-      const res = await axios.post("http://localhost:5001/book/delete", {
-        id,
+      const res = await axios.post("http://localhost:3000/books/delete", {
+        id: id,
       });
       if (res.data.delete) {
         window.location.reload();
@@ -332,9 +342,6 @@ function BookManagementPage() {
                 height: 42,
               }}
               onChange={(e) => setSearchQuery(e.target.value)}
-              crossOrigin={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
             />
             <Button
               sx={{
@@ -807,10 +814,18 @@ function BookManagementPage() {
                 variant="contained"
                 color="error"
                 sx={{ marginLeft: "10px" }}
-                onClick={handleDelete}
+                onClick={() => handleDelete(id)}
               >
                 Delete
               </Button>
+              {/*  <Button
+                variant="contained"
+                color="error"
+                sx={{ marginLeft: "10px" }}
+                onClick={handleDelete(id)}
+              >
+                Delete
+              </Button>  */}
             </Box>
           </Box>
         </Fade>
