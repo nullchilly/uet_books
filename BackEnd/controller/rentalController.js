@@ -185,7 +185,7 @@ module.exports.queryRentalBookByUser = async (req, res) => {
     const userId = req.params.userId;
     const rentalInfo = await new Promise((resolve, reject) => {
         sqlConnection.query(
-            "SELECT b.mongoId FROM rental r JOIN book b On r.bookId = b.id WHERE r.userId = ?;",
+            "SELECT b.mongoId FROM rental r JOIN book b On r.bookId = b.id WHERE r.userId = ? AND r.returnDate IS NULL;",
             [userId],
             (error, result) => {
                 if (error) {
@@ -198,6 +198,7 @@ module.exports.queryRentalBookByUser = async (req, res) => {
         )
     })
     console.log(rentalInfo);
+
     if (rentalInfo.length == 0) {
         return res.status(400).json({ msg: "rental not found" });
     }
