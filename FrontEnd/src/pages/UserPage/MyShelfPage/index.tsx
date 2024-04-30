@@ -1,85 +1,27 @@
-import Typography from "@mui/material/Typography";
-import logo from "../../../assets/img/poster.jpeg";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
 
 import {
   Box,
   Button,
-  ButtonBase,
+  CardContent,
   Grid,
-  Paper,
   Tab,
   Tabs,
+  Typography,
   styled,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
-const Img = styled("img")({
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
-});
+import axios from "axios";
+import AllBooks from "./allBooks";
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
-const data = [
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    date: "2021-10-10",
-    description: "This is a description",
-  },
-  {
-    title: "Lizard",
-    author: "Steve Krug",
-    img: logo,
-    description: "This is a description",
-  },
-];
+
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
@@ -106,21 +48,18 @@ function a11yProps(index: number) {
   };
 }
 function MyShelfPage() {
-  const [showFullList, setShowFullList] = useState(true); // State to control data display
-  const [showFullRecentList, setShowFullRecentList] = useState(false); // State to control data display
   const [value, setValue] = React.useState(0);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  const handleShowAll = () => {
+  /*   const handleShowAll = () => {
     setShowFullList(!showFullList); // Update state to show all data
   };
   const handleRecentShowAll = () => {
-    setShowFullRecentList(!showFullRecentList);
+    setShowFullRecentList(!showFullRecentList);¯
     // Update state to show all data
-  };
-
-  const filteredData = showFullList ? data : data.slice(0, 4); // Fil
+  }; */
 
   return (
     <>
@@ -222,99 +161,13 @@ function MyShelfPage() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "wrap",
-              }}
-            >
-              <Grid container spacing={3} xs={12}>
-                {filteredData.map((item, index) => (
-                  <Grid key={index} item xs={3}>
-                    {/* Set responsive layout */}
-                    <Paper
-                      sx={{
-                        p: 2,
-                        margin: "auto",
-
-                        width: 230,
-                        height: 220,
-
-                        backgroundColor: (theme) =>
-                          theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-                      }}
-                    >
-                      <Grid container spacing={2}>
-                        <Grid item>
-                          <ButtonBase sx={{ height: 180, width: 137 }}>
-                            <Img
-                              src={item.img}
-                              sx={{
-                                objectFit: "fill",
-                                marginLeft: -4,
-                                marginTop: -2,
-                              }}
-                            />
-                          </ButtonBase>
-                          <Typography variant="body2" gutterBottom>
-                            {item.title}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {item.author}
-                          </Typography>
-                        </Grid>
-                        <Grid xs={12} sm>
-                          <Typography
-                            variant="subtitle1"
-                            component="div"
-                            sx={{ marginTop: 2 }}
-                          >
-                            Borrowed on
-                          </Typography>
-                          <Typography variant="body2">{item.date}</Typography>
-                          <Typography
-                            variant="subtitle1"
-                            component="div"
-                            sx={{ marginTop: 2 }}
-                          >
-                            Submission Due
-                          </Typography>
-                          <Typography variant="body2">{item.date}</Typography>
-                          <Button
-                            sx={{
-                              backgroundColor: "#42bb4e",
-                              "&:hover": {
-                                backgroundColor: "#16771F",
-                              },
-                              width: 93,
-                              marginTop: 1,
-
-                              height: 32,
-                              color: "white",
-                            }}
-                          >
-                            Read
-                          </Button>
-                          <Button
-                            sx={{
-                              backgroundColor: "white",
-                              border: 2,
-                              marginTop: 1,
-                              width: 93,
-                              height: 32,
-                              color: "#F76B56",
-                              fontWeight: "medium",
-                            }}
-                          >
-                            Return
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
+            <AllBooks />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <AllBooks />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <AllBooks />
           </CustomTabPanel>
         </Box>
       </Box>

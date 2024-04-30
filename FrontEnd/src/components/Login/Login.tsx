@@ -51,7 +51,7 @@ export default function Login() {
         localStorage.setItem("username", res.data.username);
         localStorage.setItem("email", res.data.email);
         //  localStorage.setItem("idPage", res.data.idPage);
-        if (res.data.role === "admin") navigate("/admin/home");
+        if (res.data.role === "admin") navigate("/admin/bookmanagement");
         else {
           navigate("/user/home");
         }
