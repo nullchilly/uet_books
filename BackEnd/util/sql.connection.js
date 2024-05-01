@@ -4,7 +4,7 @@ require("dotenv").config();
 const sqlConnection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "admin12345",
+  password: "",
   database: "uet_book_db",
 });
 
