@@ -125,14 +125,12 @@ const styleModal = {
 };
 export interface BookInterface {
   _id: string;
-  name: string;
-  code: string;
-  author: string;
-  language: string;
-  publishYear: string;
+  Title: string;
+  Author: string;
+  Language: string;
+  Year: string;
   category: string;
-  image: string;
-  description: string;
+  Coverurl: string;
 }
 function BookManagementPage() {
   const [page, setPage] = React.useState(0);
@@ -146,11 +144,11 @@ function BookManagementPage() {
   const [searchValue, setSearchValue] = useState("");
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [description, setDescription] = React.useState("");
+
   const [image, setImage] = React.useState("");
   const [category, setCategory] = useState("");
   const [author, setAuthor] = React.useState("");
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = React.useState("");
   const [publishYear, setPublishYear] = useState("");
   const [id, setId] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -184,9 +182,21 @@ function BookManagementPage() {
     console.log("fetching data");
 
     fetchData();
-  }, []);
+  }, [searchQuery === '']);
 
   const handleQuery = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/books/search", {
+        params: { keyword: searchQuery },
+      });
+      console.log(res.data);
+      setRows(res.data);
+    } catch (err: any) {
+      console.log("fe : " + err.message);
+    }
+  };
+
+  /* const handleQuery = async () => {
     let allBookList: BookInterface[] = await getAllBooks();
     console.log(allBookList);
     if (searchQuery !== "") {
@@ -195,19 +205,16 @@ function BookManagementPage() {
       );
     }
     setRows(allBookList);
-  };
+  }; */
   const handleCreate = async () => {
     try {
       const res = await axios.post("http://localhost:3000/books/create", {
-        code: code,
-        name: name,
-        description: description,
-        price: 0,
-        image: image,
-        category: category,
-        author: author,
-        language: language,
-        publishYear: publishYear,
+        Title: name,
+        Language: language,
+        Coverurl: image,
+        Author: author,
+        Topic: category,
+        Year: publishYear,
       });
       if (res.data.create) {
         console.log(res.data);
@@ -224,15 +231,12 @@ function BookManagementPage() {
     try {
       const res = await axios.post("http://localhost:3000/books/update", {
         id: id,
-        code: code,
-        name: name,
-        description: description,
-        price: 0,
-        image: image,
-        category: category,
-        author: author,
-        language: language,
-        publishYear: publishYear,
+        Title: name,
+        Language: language,
+        // price: 0,
+        Author: author,
+        Coverurl: image,
+        Year: publishYear,
       });
       if (res.data.update) {
         window.location.reload();
@@ -314,10 +318,9 @@ function BookManagementPage() {
             }}
             onClick={() => {
               setName("");
-              setCode("");
+
               setImage("");
-              setDescription("");
-              setCategory("");
+
               setAuthor("");
               setLanguage("");
               setPublishYear("");
@@ -370,13 +373,13 @@ function BookManagementPage() {
               <TableHead>
                 <TableRow>
                   <TableCell>STT</TableCell>
-                  <TableCell>Code</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Danh mục</TableCell>
-                  <TableCell>Tác giả</TableCell>
-                  <TableCell>Năm xuất bản</TableCell>
-                  <TableCell align="center">Chỉnh sửa</TableCell>
-                  <TableCell align="center">Xóa</TableCell>
+
+                  <TableCell>Title</TableCell>
+                  {/* <TableCell>Danh mục</TableCell> */}
+                  <TableCell>Author</TableCell>
+                  <TableCell>Publish Year</TableCell>
+                  <TableCell align="center">Edit</TableCell>
+                  <TableCell align="center">Delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -386,56 +389,57 @@ function BookManagementPage() {
                       page * rowsPerPage + rowsPerPage
                     )
                   : rows
-                ).map((row, index) => (
-                  <TableRow
-                    id={row._id}
-                    className="row"
-                    key={index}
-                    sx={{ "&:last-child td, &:last-child th": { brent: 0 } }}
-                  >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell component="th" scope="row" sortDirection="desc">
-                      {row.code}
-                    </TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.category}</TableCell>
-                    <TableCell>{row.author}</TableCell>
-                    <TableCell>{row.publishYear}</TableCell>
-                    <TableCell
-                      align="center"
-                      onClick={() => {
-                        setOpenModalEdit(true);
-                        setId(row._id);
-                        setName(row.name);
-                        setCode(row.code);
-                        setCategory(row.category);
-                        setImage(row.image);
-                        setDescription(row.description);
-                        setAuthor(row.author);
-                        setLanguage(row.language);
-                        setPublishYear(row.publishYear);
-                      }}
+                ).map((row, index) => {
+                  const realIndex = page * rowsPerPage + index + 1;
+                  return (
+                    <TableRow
+                      id={row._id}
+                      className="row"
+                      key={index}
+                      sx={{ "&:last-child td, &:last-child th": { brent: 0 } }}
                     >
-                      <Button variant="text">
-                        <EditOutlinedIcon />
-                        Edit
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="text"
-                        color="error"
+                      <TableCell>{realIndex}</TableCell>
+                      <TableCell>{row.Title}</TableCell>
+                      {/*                       <TableCell>{row.category}</TableCell>
+                       */}{" "}
+                      <TableCell>{row.Author}</TableCell>
+                      <TableCell>{row.Year}</TableCell>
+                      <TableCell
+                        align="center"
                         onClick={() => {
-                          setOpenModalDelete(true);
+                          setOpenModalEdit(true);
                           setId(row._id);
+                          setName(row.Title);
+
+                          //setCategory(row.category);
+                          setImage(row.Coverurl);
+                          setLanguage(row.Language);
+                          setAuthor(row.Author);
+
+                          setPublishYear(row.Year);
                         }}
                       >
-                        <DeleteSweepOutlinedIcon />
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <Button variant="text">
+                          <EditOutlinedIcon />
+                          Edit
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="text"
+                          color="error"
+                          onClick={() => {
+                            setOpenModalDelete(true);
+                            setId(row._id);
+                          }}
+                        >
+                          <DeleteSweepOutlinedIcon />
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
@@ -505,23 +509,9 @@ function BookManagementPage() {
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                value={code}
-                name="code"
-                label="Mã sách"
-                variant="standard"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập mã sách"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setCode(e.target.value)
-                }
-              />
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
                 value={name}
                 name="name"
-                label="Tên Sách"
+                label="Title"
                 variant="standard"
                 color="secondary"
                 validators={["required"]}
@@ -531,20 +521,6 @@ function BookManagementPage() {
                 }
               />
 
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
-                value={description}
-                name="description"
-                label="Mô Tả"
-                variant="standard"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập mô tả"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setDescription(e.target.value)
-                }
-              />
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
@@ -564,7 +540,7 @@ function BookManagementPage() {
                 fullWidth
                 value={category}
                 name="category"
-                label="Danh Mục"
+                label="Topic"
                 variant="standard"
                 color="secondary"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -576,7 +552,7 @@ function BookManagementPage() {
                 fullWidth
                 value={author}
                 name="author"
-                label="Tác Giả"
+                label="Author"
                 variant="standard"
                 color="secondary"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -600,7 +576,7 @@ function BookManagementPage() {
                 fullWidth
                 value={publishYear}
                 name="publishYear"
-                label="Năm Xuất Bản"
+                label="Publish Year"
                 variant="standard"
                 color="secondary"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -614,7 +590,7 @@ function BookManagementPage() {
                 fullWidth
                 type="submit"
               >
-                Tạo mới
+                Create
               </Button>
             </ValidatorForm>
           </Box>
@@ -641,20 +617,6 @@ function BookManagementPage() {
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
-                value={code}
-                label="Mã sách"
-                name="code"
-                variant="standard"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập mã sách"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setCode(e.target.value)
-                }
-              />
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
                 value={name}
                 name="name"
                 label="Tên sách"
@@ -667,20 +629,6 @@ function BookManagementPage() {
                 }
               />
 
-              <TextValidator
-                sx={{ marginTop: "10px" }}
-                fullWidth
-                value={description}
-                label="Mô Tả"
-                variant="standard"
-                name="description"
-                color="secondary"
-                validators={["required"]}
-                errorMessages={["Vui lòng nhập mô tả"]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setDescription(e.target.value)
-                }
-              />
               <TextValidator
                 sx={{ marginTop: "10px" }}
                 fullWidth
@@ -724,7 +672,6 @@ function BookManagementPage() {
                 fullWidth
                 value={language}
                 name="language"
-                type="number"
                 label="Ngôn Ngữ"
                 variant="standard"
                 color="secondary"

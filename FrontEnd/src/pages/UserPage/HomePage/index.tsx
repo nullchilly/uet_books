@@ -9,11 +9,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export interface BookInterface {
-  name: string;
-  image: string;
-  author: string;
-  description: string;
-  date: string;
+  Title: string;
+  Coverurl: string;
+  Author: string;
 }
 
 function HomePage() {
@@ -50,7 +48,13 @@ function HomePage() {
 
     fetchData();
   }, []);
-
+  const MAX_TITLE_LENGTH = 30;
+  const shortenTitle = (title: string) => {
+    if (title.length > MAX_TITLE_LENGTH) {
+      return title.slice(0, MAX_TITLE_LENGTH) + "...";
+    }
+    return title;
+  };
   const filteredData = showFullList ? books : books.slice(0, 6); // Fil
   function handleClick() {
     console.log("Button clicked!");
@@ -154,17 +158,24 @@ function HomePage() {
                   <CardActionArea onClick={handleClick}>
                     <CardMedia
                       component="img"
-                      alt={item.name}
-                      height="190"
+                      alt={item.Title}
+                      height="200"
                       sx={{ objectFit: "fill" }}
                       width="123"
-                      src={item.image}
+                      src={
+                        "https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" +
+                        item.Coverurl
+                      }
                     />
                     <CardContent>
-                      {<Typography gutterBottom>{item.name}</Typography>}
-                      <Typography variant="body2" color="text.secondary">
+                      {
+                        <Typography gutterBottom variant="body2">
+                          {shortenTitle(item.Title)}
+                        </Typography>
+                      }
+                      {/* <Typography variant="body2" color="text.secondary">
                         {item.author}
-                      </Typography>
+                      </Typography> */}
                     </CardContent>
                   </CardActionArea>
                 </Card>
@@ -204,14 +215,19 @@ function HomePage() {
                   <CardActionArea>
                     <CardMedia
                       component="img"
-                      alt={item.name}
+                      alt={item.Title}
                       height="190"
                       sx={{ objectFit: "fill" }}
                       width="123"
-                      src={item.image}
+                      src={
+                        "https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" +
+                        item.Coverurl
+                      }
                     />
                     <CardContent>
-                      <Typography gutterBottom>{item.name}</Typography>
+                      <Typography gutterBottom variant="body2">
+                        {shortenTitle(item.Title)}
+                      </Typography>
                       {/*  <Typography variant="body2" color="text.secondary">
                       {item.author}
                     </Typography> */}

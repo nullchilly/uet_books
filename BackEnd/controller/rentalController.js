@@ -185,7 +185,7 @@ module.exports.queryRentalBookByUser = async (req, res) => {
     const userId = req.params.userId;
     const rentalInfo = await new Promise((resolve, reject) => {
         sqlConnection.query(
-            "SELECT b.mongoId FROM rental r JOIN book b On r.bookId = b.id WHERE r.userId = ? AND r.returnDate IS NULL;",
+            "SELECT b.mongoId, r.rentalDate FROM rental r JOIN book b On r.bookId = b.id WHERE r.userId = ? AND r.returnDate IS NULL;",
             [userId],
             (error, result) => {
                 if (error) {

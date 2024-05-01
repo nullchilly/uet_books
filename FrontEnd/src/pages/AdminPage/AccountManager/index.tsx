@@ -418,63 +418,59 @@ function AccountManagementPage() {
                         page * rowsPerPage + rowsPerPage
                       )
                     : rows
-                  ).map((row, index) => (
-                    <TableRow
-                      // id={row._id}
-                      className="row"
-                      key={row.id}
-                      sx={{
-                        "&:last-child td, &:last-child th": { brent: 0 },
-                      }}
-                    >
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sortDirection="desc"
-                      >
-                        {row.fullName}
-                      </TableCell>
-                      <TableCell>{row.email}</TableCell>
-                      {/* <TableCell size="small">{row.password}</TableCell> */}
-                      <TableCell>{row.address}</TableCell>
-                      <TableCell
-                        align="center"
-                        onClick={() => {
-                          setOpenModalEdit(true);
-                          //  console.log(row.id);
-                          setId(row.id);
-                          //  console.log(id);
-                          setFullName(row.fullName);
-
-                          setEmail(row.email);
-                          setAddress(row.address);
+                  ).map((row, index) => {
+                    const realIndex = page * rowsPerPage + index + 1;
+                    return (
+                      <TableRow
+                        // id={row._id}
+                        className="row"
+                        key={row.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { brent: 0 },
                         }}
                       >
-                        <Button variant="text">
-                          <EditOutlinedIcon />
-                          Edit
-                        </Button>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Button
-                          variant="text"
-                          color="error"
+                        <TableCell>{realIndex}</TableCell>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          sortDirection="desc"
+                        >
+                          {row.fullName}
+                        </TableCell>
+                        <TableCell>{row.email}</TableCell>
+                        {/* <TableCell size="small">{row.password}</TableCell> */}
+                        <TableCell>{row.address}</TableCell>
+                        <TableCell
+                          align="center"
                           onClick={() => {
-                            //  console.log(row.id);
-                            setOpenModalDelete(true);
-                            let id = row.id;
-
-                            setId(id);
-                            //  console.log(id);
+                            setOpenModalEdit(true);
+                            setId(row.id);
+                            setFullName(row.fullName);
+                            setEmail(row.email);
+                            setAddress(row.address);
                           }}
                         >
-                          <DeleteSweepOutlinedIcon />
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                          <Button variant="text">
+                            <EditOutlinedIcon />
+                            Edit
+                          </Button>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Button
+                            variant="text"
+                            color="error"
+                            onClick={() => {
+                              setOpenModalDelete(true);
+                              setId(row.id);
+                            }}
+                          >
+                            <DeleteSweepOutlinedIcon />
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
