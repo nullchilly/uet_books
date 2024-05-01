@@ -60,9 +60,7 @@ function BookCardList({
         })}
       </Box>
       <Box className="BookCardList-container-item-availability">
-        <Box
-          sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Checkbox
             checked={true}
             defaultChecked
@@ -74,9 +72,7 @@ function BookCardList({
             E-book
           </Typography>
         </Box>
-        <Box
-          sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Checkbox
             checked={true}
             defaultChecked

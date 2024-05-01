@@ -1,0 +1,22 @@
+.Book-image-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    margin-right: 40px;
+}
+
+.Book-image {
+    width: 200px;
+    height: 100%;
+    border: 1px solid #666;
+}
+
+.Book-author-info {
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+}
