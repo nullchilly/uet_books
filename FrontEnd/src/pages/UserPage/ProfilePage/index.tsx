@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Input } from "@material-tailwind/react";
 import book from "../../../assets/img/book.svg";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+
 import {
   Button,
   Card,
@@ -57,11 +59,15 @@ function ProfilePage() {
   const [address, setAddress] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [amount, setAmount] = React.useState("");
   const Id = localStorage.getItem("id") || "";
   // const [id, setId] = React.useState("");
   // const id = localStorage.getItem("id");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+  const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(event.target.value);
   };
 
   const getData = async (id: string) => {
@@ -94,6 +100,21 @@ function ProfilePage() {
       setUsername(res.data[0].username);
     } catch (err: any) {
       console.log("Fetch data failed: " + err.message);
+    }
+  };
+  const payment = async (id: string, amount: string) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/user/rental/addBudget",
+        {
+          userId: id,
+          amount: amount,
+        }
+      );
+      console.log(res);
+      return res.data;
+    } catch (err: any) {
+      console.log("Payment failed: " + err.message);
     }
   };
   useEffect(() => {
@@ -133,7 +154,7 @@ function ProfilePage() {
                 {...a11yProps(0)}
               />
               <Tab
-                label="Logins & Security"
+                label="Payment"
                 sx={{
                   ":focus": { color: "#f4683c" },
                   ":hover": { color: "#f4683c" },
@@ -378,6 +399,71 @@ function ProfilePage() {
             >
               Update Profile
             </Button>
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <ValidatorForm onSubmit={payment}>
+              <Typography component="h1" sx={{ fontSize: 16 }} mt={3} ml={2}>
+                Full Name
+              </Typography>
+              <Input
+                type="search"
+                style={{
+                  color: "black",
+                  margin: 2,
+                  backgroundColor: "#F0F3F7",
+                  border: 1,
+                  borderColor: "#E0E4EC",
+                  padding: 8,
+                  width: "90%",
+                  height: 42,
+                  marginLeft: 16,
+                }}
+                disabled
+                defaultValue={fullName}
+                crossOrigin={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              />
+              <Typography component="h1" sx={{ fontSize: 16 }} mt={3} ml={2}>
+                Amount
+              </Typography>
+              <Input
+                type="search"
+                style={{
+                  color: "black",
+                  margin: 2,
+                  backgroundColor: "#F0F3F7",
+                  border: 1,
+                  borderColor: "#E0E4EC",
+                  padding: 8,
+                  width: "90%",
+                  height: 42,
+                  marginLeft: 16,
+                }}
+                value={amount}
+                onChange={handleChangeAmount}
+                crossOrigin={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  ml: 2,
+                  fontSize: 16,
+                  backgroundColor: "#FA7C22",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#D54A1E",
+                  },
+                }}
+              >
+                Payment
+              </Button>
+            </ValidatorForm>
           </CustomTabPanel>
         </Box>
       </Box>
