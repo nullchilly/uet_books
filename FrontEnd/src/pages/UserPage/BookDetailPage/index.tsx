@@ -9,7 +9,11 @@ import {
   Rating,
   Checkbox,
   Chip,
+  Tab,
 } from "@mui/material";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import "./style.scss";
 import { DefaultAuthor } from "../../../assets/img";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -37,6 +41,11 @@ function BookDetail() {
   const [bookDetail, setBookDetail] = React.useState(dumpData);
   const [showModalBorrow, setShowModalBorrow] = React.useState(false);
   const [showModalPreview, setShowModalPreview] = React.useState(false);
+  const [value, setValue] = React.useState("1");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   const handleGoBack = () => {
     navigate(-1);
@@ -331,6 +340,35 @@ function BookDetail() {
                   }}
                 />
               </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Box sx={{ width: "100%", typography: "body1" }}>
+              <TabContext value={value}>
+                <Box
+                  sx={{
+                    backgroundColor: "white",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <TabList
+                    onChange={handleChange}
+                    aria-label="lab API tabs example"
+                    variant="fullWidth"
+                  >
+                    <Tab label="Overview" value="1" />
+                    <Tab label="Details" value="2" />
+                    <Tab label="Reviews" value="3" />
+                    <Tab label="Lists" value="4" />
+                    <Tab label="Related Books" value="5" />
+                  </TabList>
+                </Box>
+                <TabPanel value="1">Overview</TabPanel>
+                <TabPanel value="2">Details</TabPanel>
+                <TabPanel value="3">Reviews</TabPanel>
+                <TabPanel value="4">Lists</TabPanel>
+                <TabPanel value="5">Related Books</TabPanel>
+              </TabContext>
             </Box>
           </Grid>
         </Grid>
