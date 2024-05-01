@@ -4,7 +4,7 @@ const {addRental, addBudget, queryRentalBookByUser,returnBook} = require("../con
 
 const addRentalApi = "/addRental";
 const addBudgetApi = "/addBudget";
-const queryRentalBookByUserApi = "/rentaledBookByUser/:userId";
+const queryRentalBookByUserApi = "/rentingBook/:userId";
 const returnBookApi = "/returnBook"
 
 rentalRouter.post(addRentalApi, addRental);
