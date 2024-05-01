@@ -182,9 +182,21 @@ function BookManagementPage() {
     console.log("fetching data");
 
     fetchData();
-  }, []);
+  }, [searchQuery === '']);
 
   const handleQuery = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/books/search", {
+        params: { keyword: searchQuery },
+      });
+      console.log(res.data);
+      setRows(res.data);
+    } catch (err: any) {
+      console.log("fe : " + err.message);
+    }
+  };
+
+  /* const handleQuery = async () => {
     let allBookList: BookInterface[] = await getAllBooks();
     console.log(allBookList);
     if (searchQuery !== "") {
@@ -193,19 +205,16 @@ function BookManagementPage() {
       );
     }
     setRows(allBookList);
-  };
+  }; */
   const handleCreate = async () => {
     try {
       const res = await axios.post("http://localhost:3000/books/create", {
-        code: code,
-        name: name,
-        description: description,
-        price: 0,
-        image: image,
-        category: category,
-        author: author,
-        language: language,
-        publishYear: publishYear,
+        Title: name,
+        Language: language,
+        Coverurl: image,
+        Author: author,
+        Topic: category,
+        Year: publishYear,
       });
       if (res.data.create) {
         console.log(res.data);
@@ -366,11 +375,11 @@ function BookManagementPage() {
                   <TableCell>STT</TableCell>
 
                   <TableCell>Title</TableCell>
-                  <TableCell>Danh mục</TableCell>
-                  <TableCell>Tác giả</TableCell>
-                  <TableCell>Năm xuất bản</TableCell>
-                  <TableCell align="center">Chỉnh sửa</TableCell>
-                  <TableCell align="center">Xóa</TableCell>
+                  {/* <TableCell>Danh mục</TableCell> */}
+                  <TableCell>Author</TableCell>
+                  <TableCell>Publish Year</TableCell>
+                  <TableCell align="center">Edit</TableCell>
+                  <TableCell align="center">Delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -391,7 +400,8 @@ function BookManagementPage() {
                     >
                       <TableCell>{realIndex}</TableCell>
                       <TableCell>{row.Title}</TableCell>
-                      <TableCell>{row.category}</TableCell>
+                      {/*                       <TableCell>{row.category}</TableCell>
+                       */}{" "}
                       <TableCell>{row.Author}</TableCell>
                       <TableCell>{row.Year}</TableCell>
                       <TableCell
@@ -501,7 +511,7 @@ function BookManagementPage() {
                 fullWidth
                 value={name}
                 name="name"
-                label="Tên Sách"
+                label="Title"
                 variant="standard"
                 color="secondary"
                 validators={["required"]}
@@ -530,7 +540,7 @@ function BookManagementPage() {
                 fullWidth
                 value={category}
                 name="category"
-                label="Danh Mục"
+                label="Topic"
                 variant="standard"
                 color="secondary"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -542,7 +552,7 @@ function BookManagementPage() {
                 fullWidth
                 value={author}
                 name="author"
-                label="Tác Giả"
+                label="Author"
                 variant="standard"
                 color="secondary"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -566,7 +576,7 @@ function BookManagementPage() {
                 fullWidth
                 value={publishYear}
                 name="publishYear"
-                label="Năm Xuất Bản"
+                label="Publish Year"
                 variant="standard"
                 color="secondary"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -580,7 +590,7 @@ function BookManagementPage() {
                 fullWidth
                 type="submit"
               >
-                Tạo mới
+                Create
               </Button>
             </ValidatorForm>
           </Box>

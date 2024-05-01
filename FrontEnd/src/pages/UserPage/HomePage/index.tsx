@@ -48,7 +48,13 @@ function HomePage() {
 
     fetchData();
   }, []);
-
+  const MAX_TITLE_LENGTH = 30;
+  const shortenTitle = (title: string) => {
+    if (title.length > MAX_TITLE_LENGTH) {
+      return title.slice(0, MAX_TITLE_LENGTH) + "...";
+    }
+    return title;
+  };
   const filteredData = showFullList ? books : books.slice(0, 6); // Fil
   function handleClick() {
     console.log("Button clicked!");
@@ -157,13 +163,14 @@ function HomePage() {
                       sx={{ objectFit: "fill" }}
                       width="123"
                       src={
-                        "https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630"
+                        "https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" +
+                        item.Coverurl
                       }
                     />
                     <CardContent>
                       {
                         <Typography gutterBottom variant="body2">
-                          {item.Title}
+                          {shortenTitle(item.Title)}
                         </Typography>
                       }
                       {/* <Typography variant="body2" color="text.secondary">
@@ -212,10 +219,15 @@ function HomePage() {
                       height="190"
                       sx={{ objectFit: "fill" }}
                       width="123"
-                      src={item.Coverurl}
+                      src={
+                        "https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" +
+                        item.Coverurl
+                      }
                     />
                     <CardContent>
-                      <Typography gutterBottom>{item.Title}</Typography>
+                      <Typography gutterBottom variant="body2">
+                        {shortenTitle(item.Title)}
+                      </Typography>
                       {/*  <Typography variant="body2" color="text.secondary">
                       {item.author}
                     </Typography> */}

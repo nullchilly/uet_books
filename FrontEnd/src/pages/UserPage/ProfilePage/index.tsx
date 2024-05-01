@@ -249,26 +249,18 @@ function ProfilePage() {
                   >
                     Full Name
                   </Typography>
-                  <Input
-                    type="search"
-                    style={{
-                      color: "black",
-                      backgroundColor: "#F0F3F7",
-
-                      border: 1,
-                      borderColor: "#E0E4EC",
-                      padding: 8,
-
-                      fontSize: 16,
+                  <TextField
+                    id="filled-multiline-static"
+                    fullWidth
+                    multiline
+                    rows={1}
+                    sx={{
+                      margin: 2,
+                      marginTop: 1,
                       width: "90%",
-                      height: 42,
-                      marginLeft: 16,
+                      backgroundColor: "#F0F3F7",
                     }}
-                    defaultValue={fullName}
-                    onChange={undefined}
-                    crossOrigin={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
+                    value={fullName}
                   />
                 </Grid>
                 <Grid xs={8} sx={{ justifyContent: "center" }}>
@@ -280,24 +272,18 @@ function ProfilePage() {
                   >
                     Username
                   </Typography>
-                  <Input
-                    type="search"
-                    style={{
-                      color: "black",
-                      backgroundColor: "#F0F3F7",
-                      border: 1,
-                      borderColor: "#E0E4EC",
-                      padding: 8,
-                      fontSize: 16,
+                  <TextField
+                    id="filled-multiline-static"
+                    fullWidth
+                    multiline
+                    rows={1}
+                    sx={{
+                      margin: 2,
+                      marginTop: 1,
                       width: "90%",
-                      height: 42,
-                      marginLeft: 16,
+                      backgroundColor: "#F0F3F7",
                     }}
-                    defaultValue={username}
-                    onChange={undefined}
-                    crossOrigin={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
+                    value={username}
                   />
                 </Grid>
                 <Grid xs={8} sx={{ justifyContent: "center" }}>
@@ -309,26 +295,18 @@ function ProfilePage() {
                   >
                     Email
                   </Typography>
-                  <Input
-                    type="search"
-                    style={{
-                      color: "black",
-                      backgroundColor: "#F0F3F7",
-
-                      border: 1,
-                      borderColor: "#E0E4EC",
-                      padding: 8,
-
-                      fontSize: 16,
+                  <TextField
+                    id="filled-multiline-static"
+                    fullWidth
+                    multiline
+                    rows={1}
+                    sx={{
+                      margin: 2,
+                      marginTop: 1,
                       width: "90%",
-                      height: 42,
-                      marginLeft: 16,
+                      backgroundColor: "#F0F3F7",
                     }}
-                    defaultValue={email}
-                    onChange={undefined}
-                    crossOrigin={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
+                    value={email}
                   />
                 </Grid>
                 <Grid xs={8} sx={{ justifyContent: "center" }}>
@@ -340,24 +318,18 @@ function ProfilePage() {
                   >
                     Address
                   </Typography>
-                  <Input
-                    type="search"
-                    style={{
-                      color: "black",
+                  <TextField
+                    id="filled-multiline-static"
+                    fullWidth
+                    multiline
+                    rows={1}
+                    sx={{
                       margin: 2,
-                      backgroundColor: "#F0F3F7",
-                      border: 1,
-                      borderColor: "#E0E4EC",
-                      padding: 8,
+                      marginTop: 1,
                       width: "90%",
-                      height: 42,
-                      marginLeft: 16,
+                      backgroundColor: "#F0F3F7",
                     }}
-                    defaultValue={address}
-                    onChange={undefined}
-                    crossOrigin={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
+                    value={address}
                   />
                 </Grid>
 
@@ -381,7 +353,7 @@ function ProfilePage() {
                       width: "95%",
                       backgroundColor: "#F0F3F7",
                     }}
-                    defaultValue={budget}
+                    value={budget}
                   />
                 </Grid>
               </Grid>
