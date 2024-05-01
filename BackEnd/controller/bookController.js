@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const sqlConnection = require("../util/sql.connection");
+// const redis = require("../util/redis.connection");
 
 const bookSchema = new mongoose.Schema({
   ID: { type: Number },
@@ -214,7 +215,7 @@ const bookCtrl = {
     try {
       let books = null
       if (pageSize && pageNumber) {
-        books = await Books.find().limit(pageSize).skip((pageNumber - 1) * pageSize)
+        books = await Books.find().limit(pageSize).skip(pageNumber * pageSize)
       } else {
         limit = limit || 30
         books = await Books.find().limit(limit)
@@ -260,6 +261,7 @@ const bookCtrl = {
     try {
       const { id, keyword } = req.query;
       if (id) {
+        console.log(redis)
         console.log(id);
         const book = await Books.findOne({ ID: id });
         if (book) {
@@ -283,7 +285,7 @@ const bookCtrl = {
   },
   syncWithMysql: async (req, res) => {
     try {
-      const totalCount = await Books.countDocuments();
+      const totalCount = await Books.countDocuments()
       let processedCount = 0;
       let offset = 0;
       const batchSize = 1000;
