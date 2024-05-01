@@ -1,7 +1,7 @@
 const express = require("express");
 const sqlConnection = require("./util/sql.connection");
 const mongoConnection = require("./util/mongo.connection");
-// const redisConnection = require("./util/redis.connection");
+const redisConnection = require("./util/redis.connection");
 const authRoute = require("./route/authRoute");
 const bookRoute = require("./route/bookRoute");
 const userRoute = require("./route/userRoute");
