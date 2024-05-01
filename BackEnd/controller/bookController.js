@@ -52,6 +52,18 @@ const bookSchema = new mongoose.Schema({
 });
 
 const Books = mongoose.model("books", bookSchema, "updated");
+// const Books = mongoose.model("updated", bookSchema);
+
+// const topicSchema = new mongoose.Schema({
+//   topic_descr: { type: String },
+//   lang: { type: String },
+//   kolxoz_code: { type: String },
+//   topic_id: { type: Number },
+//   topic_id_hl: { type: Number }
+// });
+
+// const Topics = mongoose.model("topics", topicSchema, "updated");
+// const Topics = mongoose.model("topics", topicSchema);
 
 const bookCtrl = {
   autocomplete: async (req, res) => {
@@ -92,25 +104,14 @@ const bookCtrl = {
   },
   create: async (req, res) => {
     try {
-      const { code, name, description, image, price, author, category, language, publishYear } = req.body;
+      const { Title, Coverurl, Author, Topic, Language, Year } = req.body;
 
-      const book = await Books.findOne({ code: code });
-      if (book) {
-        console.log(book)
-        return res.json({ msg: "Code book registered", create: false });
-      }
-      const newBook = new Books({
-        code,
-        name,
-        description,
-        image,
-        price,
-        author,
-        category,
-        language,
-        publishYear,
-        lab: [],
-      });
+      // const book = await Books.findOne({ code: code });
+      // if (book) {
+      //   console.log(book)
+      //   return res.json({ msg: "Code book registered", create: false });
+      // }
+      const newBook = new Books({ Title, Coverurl, Author, Topic, Language, Year });
       // Save mongodb
       await newBook.save();
       res.json({ msg: "Created book successfully", create: true });
@@ -202,7 +203,7 @@ const bookCtrl = {
 
   getAllBooks: async (req, res) => {
     try {
-      const books = await Books.find().limit(1000);
+      const books = await Books.find().limit(100);
       console.log(books)
       if (books) {
         res.json(books);
@@ -221,6 +222,20 @@ const bookCtrl = {
         res.json(book);
       } else {
         res.json({ msg: "No book with such id"});
+      }
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
+  getTopicName: async (req, res) => {
+    try {
+      const { id } = req.body;
+      console.log(Topics.find().limit(10))
+      const topic = await Topics.findOne({ topic_id: id });
+      if (topic) {
+        res.json(topic);
+      } else {
+        res.json({ msg: "No topic with such id"});
       }
     } catch (error) {
       return res.status(500).json({ msg: error.message });

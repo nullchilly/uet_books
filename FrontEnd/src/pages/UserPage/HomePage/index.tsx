@@ -156,9 +156,7 @@ function HomePage() {
                       height="200"
                       sx={{ objectFit: "fill" }}
                       width="123"
-                      src={
-                        "https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630"
-                      }
+                      src={"https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" + item.Coverurl}
                     />
                     <CardContent>
                       {
@@ -212,7 +210,7 @@ function HomePage() {
                       height="190"
                       sx={{ objectFit: "fill" }}
                       width="123"
-                      src={item.Coverurl}
+                      src={"https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" + item.Coverurl}
                     />
                     <CardContent>
                       <Typography gutterBottom>{item.Title}</Typography>
