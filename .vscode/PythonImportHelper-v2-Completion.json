@@ -16,6 +16,14 @@
         "documentation": {}
     },
     {
+        "label": "MongoClient",
+        "importPath": "pymongo",
+        "description": "pymongo",
+        "isExtraImport": true,
+        "detail": "pymongo",
+        "documentation": {}
+    },
+    {
         "label": "OperationFailure",
         "importPath": "pymongo.errors",
         "description": "pymongo.errors",
@@ -180,6 +188,42 @@
         "description": "BackEnd.sql2mongo",
         "peekOfCode": "offset = 0\nwhile True:\n    with mysql_conn.cursor() as cursor:\n        cursor.execute(\"SELECT * FROM updated LIMIT %s OFFSET %s\", (chunk_size, offset))\n        chunk_result = cursor.fetchall()\n        if not chunk_result:\n            break\n        mongo_collection.insert_many(chunk_result)\n        offset += chunk_size\n        print(f\"Inserted {min(offset, total_rows)} out of {total_rows} rows\")",
         "detail": "BackEnd.sql2mongo",
+        "documentation": {}
+    },
+    {
+        "label": "mysql_conn",
+        "kind": 5,
+        "importPath": "BackEnd.sql2mongo_topics",
+        "description": "BackEnd.sql2mongo_topics",
+        "peekOfCode": "mysql_conn = pymysql.connect(host='localhost',\n                             user='root',\n                             password='',\n                             db='books',\n                             charset='utf8mb4',\n                             cursorclass=pymysql.cursors.DictCursor)\n# Connect to MongoDB\nmongo_client = MongoClient('localhost:27017')\nmongo_db = mongo_client['topics']\nmongo_collection = mongo_db['updated']",
+        "detail": "BackEnd.sql2mongo_topics",
+        "documentation": {}
+    },
+    {
+        "label": "mongo_client",
+        "kind": 5,
+        "importPath": "BackEnd.sql2mongo_topics",
+        "description": "BackEnd.sql2mongo_topics",
+        "peekOfCode": "mongo_client = MongoClient('localhost:27017')\nmongo_db = mongo_client['topics']\nmongo_collection = mongo_db['updated']\n# Query data from MySQL\nwith mysql_conn.cursor() as cursor:\n    cursor.execute(\"SELECT * FROM topics where lang='en'\")\n    result = cursor.fetchall()\n# Insert data into MongoDB\nmongo_collection.insert_many(result)\n# Close connections",
+        "detail": "BackEnd.sql2mongo_topics",
+        "documentation": {}
+    },
+    {
+        "label": "mongo_db",
+        "kind": 5,
+        "importPath": "BackEnd.sql2mongo_topics",
+        "description": "BackEnd.sql2mongo_topics",
+        "peekOfCode": "mongo_db = mongo_client['topics']\nmongo_collection = mongo_db['updated']\n# Query data from MySQL\nwith mysql_conn.cursor() as cursor:\n    cursor.execute(\"SELECT * FROM topics where lang='en'\")\n    result = cursor.fetchall()\n# Insert data into MongoDB\nmongo_collection.insert_many(result)\n# Close connections\nmysql_conn.close()",
+        "detail": "BackEnd.sql2mongo_topics",
+        "documentation": {}
+    },
+    {
+        "label": "mongo_collection",
+        "kind": 5,
+        "importPath": "BackEnd.sql2mongo_topics",
+        "description": "BackEnd.sql2mongo_topics",
+        "peekOfCode": "mongo_collection = mongo_db['updated']\n# Query data from MySQL\nwith mysql_conn.cursor() as cursor:\n    cursor.execute(\"SELECT * FROM topics where lang='en'\")\n    result = cursor.fetchall()\n# Insert data into MongoDB\nmongo_collection.insert_many(result)\n# Close connections\nmysql_conn.close()\nmongo_client.close()",
+        "detail": "BackEnd.sql2mongo_topics",
         "documentation": {}
     },
     {

@@ -135,5 +135,5 @@ module.exports.getUserInfoByName = async (req, res) => {
     if (result.length == 0) {
         return res.status(400).json({ msg: "user not found" });
     }
-    return res.status(200).json(result[0]);
+    return res.status(200).json(result);
 }
