@@ -71,9 +71,9 @@ const bookCtrl = {
       const keyword = req.query.searchValue;
       const books = await Books.find({
         $or: [
-          { code: { $regex: keyword, $options: 'i' } },
-          { name: { $regex: keyword, $options: 'i' } },
-        ]
+          { code: { $regex: keyword, $options: "i" } },
+          { name: { $regex: keyword, $options: "i" } },
+        ],
       }).limit(5);
       if (books) {
         res.json(books);
@@ -81,15 +81,15 @@ const bookCtrl = {
         const books = await Books.aggregate([
           {
             $search: {
-              "autocomplete": {
-                "query": keyword,
-                "path": ["name", "code"],
-                "fuzzy": {
-                  "maxEdits": 2,
-                  "prefixLength": 2
-                }
-              }
-            }
+              autocomplete: {
+                query: keyword,
+                path: ["name", "code"],
+                fuzzy: {
+                  maxEdits: 2,
+                  prefixLength: 2,
+                },
+              },
+            },
           },
         ]).limit(5);
         if (books) {
@@ -111,7 +111,14 @@ const bookCtrl = {
       //   console.log(book)
       //   return res.json({ msg: "Code book registered", create: false });
       // }
-      const newBook = new Books({ Title, Coverurl, Author, Topic, Language, Year });
+      const newBook = new Books({
+        Title,
+        Coverurl,
+        Author,
+        Topic,
+        Language,
+        Year,
+      });
       // Save mongodb
       await newBook.save();
       res.json({ msg: "Created book successfully", create: true });
@@ -151,7 +158,7 @@ const bookCtrl = {
     try {
       // Check if file exists
       if (!fs.existsSync(filePath)) {
-        console.error('File not found');
+        console.error("File not found");
         return;
       }
 
@@ -163,13 +170,13 @@ const bookCtrl = {
       uploadStream.end(fileBuffer);
 
       // Save book details to MongoDB
-      uploadStream.on('finish', async () => {
+      uploadStream.on("finish", async () => {
         const book = new Book({ title: title, pdfFile: title });
         await book.save();
-        console.log('Book uploaded successfully');
+        console.log("Book uploaded successfully");
       });
 
-      console.log('Book uploading...');
+      console.log("Book uploading...");
     } catch (err) {
       console.error(err);
     }
@@ -179,7 +186,7 @@ const bookCtrl = {
       // Find the book by title
       const book = await Book.findOne({ title: title }).exec();
       if (!book) {
-        console.error('Book not found');
+        console.error("Book not found");
         return;
       }
 
@@ -191,11 +198,11 @@ const bookCtrl = {
       downloadStream.pipe(writeStream);
 
       // Handle download completion
-      writeStream.on('finish', () => {
-        console.log('Book PDF retrieved successfully');
+      writeStream.on("finish", () => {
+        console.log("Book PDF retrieved successfully");
       });
 
-      console.log('Book PDF retrieving');
+      console.log("Book PDF retrieving");
     } catch (err) {
       console.error(err);
     }
@@ -204,7 +211,7 @@ const bookCtrl = {
   getAllBooks: async (req, res) => {
     try {
       const books = await Books.find().limit(100);
-      console.log(books)
+      console.log(books);
       if (books) {
         res.json(books);
       } else {
@@ -221,7 +228,7 @@ const bookCtrl = {
       if (book) {
         res.json(book);
       } else {
-        res.json({ msg: "No book with such id"});
+        res.json({ msg: "No book with such id" });
       }
     } catch (error) {
       return res.status(500).json({ msg: error.message });
@@ -230,34 +237,33 @@ const bookCtrl = {
   getTopicName: async (req, res) => {
     try {
       const { id } = req.body;
-      console.log(Topics.find().limit(10))
+      console.log(Topics.find().limit(10));
       const topic = await Topics.findOne({ topic_id: id });
       if (topic) {
         res.json(topic);
       } else {
-        res.json({ msg: "No topic with such id"});
+        res.json({ msg: "No topic with such id" });
       }
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
   },
+  
   getAllBooksBySearch: async (req, res) => {
     try {
-      const {id, keyword} = req.query;
+      const { id, keyword } = req.query;
       if (id) {
-        console.log(id)
+        console.log(id);
         const book = await Books.findOne({ ID: id });
         if (book) {
           res.json(book);
         } else {
-          res.json({ msg: "No book with such id"});
+          res.json({ msg: "No book with such id" });
         }
         return;
       }
       const books = await Books.find({
-        $or: [
-          { Title: { $regex: keyword, $options: 'i' } },
-        ]
+        $or: [{ Title: { $regex: keyword, $options: "i" } }],
       });
       if (books) {
         res.json(books);

@@ -52,6 +52,13 @@ const AllBooks = () => {
   const [openModalRental, setOpenModalRental] = useState(false);
   const [openModalReturn, setOpenModalReturn] = useState(false);
   let fullName = localStorage.getItem("fullName") || "";
+  const MAX_TITLE_LENGTH = 30; 
+  const shortenTitle = (title: string) => {
+    if (title.length > MAX_TITLE_LENGTH) {
+      return title.slice(0, MAX_TITLE_LENGTH) + '...';
+    }
+    return title;
+  };
   const getBooks = async () => {
     try {
       const res = await axios.get("http://localhost:3000/books/all");
@@ -128,12 +135,12 @@ const AllBooks = () => {
                   <CardMedia
                     component="img"
                     sx={{ width: 130, height: 164, objectFit: "fill" }}
-                    image={item.Coverurl}
+                    src={"https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" + item.Coverurl}
                     alt="Live from space album cover"
                   />
                   <CardContent sx={{ maxHeight: 24 }}>
                     <Typography gutterBottom sx={{ fontSize: 14 }}>
-                      {item.Title}
+                    {shortenTitle(item.Title)}
                     </Typography>
                     {/* <Typography
                     variant="body2"
@@ -156,10 +163,10 @@ const AllBooks = () => {
                       Borrowed on
                     </Typography>
                     <Typography variant="caption">{item.Year}</Typography>
-                    <Typography variant="subtitle2" component="div">
+                    {/* <Typography variant="subtitle2" component="div">
                       Submission Due
                     </Typography>
-                    <Typography variant="caption">{item.Year}</Typography>
+                    <Typography variant="caption">{item.Year}</Typography> */}
                   </CardContent>
                   <Box
                     sx={{
