@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const sqlConnection = require("../util/sql.connection");
-// const redis = require("../util/redis.connection");
+const redis = require("../util/redis.connection");
 
 const bookSchema = new mongoose.Schema({
   ID: { type: Number },
@@ -261,10 +261,14 @@ const bookCtrl = {
     try {
       const { id, keyword } = req.query;
       if (id) {
-        console.log(redis)
-        console.log(id);
+        const cachedValue = await redis.get('ID' + id.toString())
+        if (cachedValue) {
+          res.json(JSON.parse(cachedValue))
+          return;
+        }
         const book = await Books.findOne({ ID: id });
         if (book) {
+          await redis.set('ID' + id.toString(), JSON.stringify(book))
           res.json(book);
         } else {
           res.json({ msg: "No book with such id" });
