@@ -275,26 +275,44 @@ const bookCtrl = {
   },
   syncWithMysql: async (req, res) => {
     try {
-      const bookCount = await Books.find().count();
-      console.log(bookCount);
+      const totalCount = await Books.countDocuments();
+      let processedCount = 0;
+      let offset = 0;
+      const batchSize = 1000;
       
-      for (let bookId = 1; bookId <= bookCount; bookId++) {
+      while (offset < totalCount) {
+        const books = await Books.find().limit(batchSize).skip(offset);
+        
         await new Promise((resolve, reject) => {
-          sqlConnection.query(
-            "INSERT INTO book (mongoId) VALUES (?)",
-            [bookId],
-            (error, result) => {
-              if (error) {
-                console.error("Error executing SQL query:", error);
-                reject(error); // Reject the promise with the error
-              } else {
-                resolve(result); // Resolve the promise with the result
-              }
-            }
-          );
+          const queries = books.map(book => {
+            return new Promise((resolve, reject) => {
+              sqlConnection.query(
+                "INSERT IGNORE INTO book (mongoId) VALUES (?)",
+                [book['ID']],
+                (error, result) => {
+                  if (error) {
+                    reject(error);
+                  } else {
+                    resolve(result);
+                  }
+                }
+              );
+            });
+          });
+  
+          Promise.all(queries)
+            .then(() => {
+              processedCount += books.length;
+              const progress = Math.min(processedCount, totalCount);
+              console.log("Progress:", progress, "out of", totalCount);
+              resolve();
+            })
+            .catch(error => reject(error));
         });
+  
+        offset += batchSize;
       }
-      
+  
       // If all queries succeed, send a success response
       res.status(200).send("Sync with MySQL successful");
     } catch (error) {
