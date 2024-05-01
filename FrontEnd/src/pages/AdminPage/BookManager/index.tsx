@@ -72,6 +72,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   ) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
+
   return (
     <Box sx={{ flexShrink: 0, ml: 2.5 }}>
       <IconButton
@@ -135,7 +136,7 @@ export interface BookInterface {
 }
 function BookManagementPage() {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = useState<BookInterface[]>([]);
   const [openModalCreate, setOpenModalCreate] = React.useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -155,6 +156,15 @@ function BookManagementPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const [limit, setLimit] = useState(100);
+  const bookCount = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/books/count");
+      console.log(res.data, "count");
+      return res.data;
+    } catch (err: any) {
+      console.log("fe : " + err.message);
+    }
+  };
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -172,6 +182,8 @@ function BookManagementPage() {
   const fetchData = async () => {
     try {
       const allBookList = await getAllBooks(rowsPerPage, page);
+      let limit = await bookCount();
+      setLimit(limit);
       setRows(allBookList);
       console.log(allBookList, "update");
     } catch (error) {
@@ -433,14 +445,40 @@ function BookManagementPage() {
                     </TableRow>
                   );
                 })}
-                {emptyRows > 0 && (
+                {/* {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
-                )}
+                )} */}
               </TableBody>
               <TableFooter>
-                <Pagination count={limit} page={page} onChange={handleChange} />
+                {/*  <TablePagination
+                  count={limit}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                /> */}
+                <TablePagination
+                  rowsPerPageOptions={[10, 20, 50, { label: "All", value: -1 }]}
+                  colSpan={5}
+                  count={limit}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  slotProps={{
+                    select: {
+                      inputProps: {
+                        "aria-label": "rows per page",
+                      },
+                      native: true,
+                    },
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+                {/*                 <Pagination count={limit} page={page} onChange={handleChange} />
+                 */}{" "}
               </TableFooter>
             </Table>
           ) : (
