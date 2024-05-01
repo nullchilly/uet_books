@@ -232,7 +232,7 @@ const bookCtrl = {
   },
   getBooksCount: async (req, res) => {
     try {
-      const count = await Books.countDocuments();
+      const count = await Books.estimatedDocumentCount();
       if (count) {
         res.json(count);
       } else {
