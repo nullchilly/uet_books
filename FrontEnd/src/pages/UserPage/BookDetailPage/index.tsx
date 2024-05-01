@@ -10,7 +10,10 @@ import {
   Checkbox,
   Chip,
   Tab,
+  Modal,
+  Fade,
 } from "@mui/material";
+import { Input } from "@material-tailwind/react";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
@@ -23,6 +26,8 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
 import ChromeReaderModeOutlinedIcon from "@mui/icons-material/ChromeReaderModeOutlined";
+import { ValidatorForm } from "react-material-ui-form-validator";
+import axios from "axios";
 
 const dumpData = {
   id: "abc123",
@@ -35,13 +40,32 @@ const dumpData = {
   status: "In-Shelf",
 };
 
+const styleModal = {
+  position: "absolute",
+  justifyContent: "center",
+  radius: 20,
+
+  //textAlign: "center",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 500,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  brentRadius: "10px",
+  p: 3,
+};
+
 function BookDetail() {
   const { book_id } = useParams();
   const navigate = useNavigate();
   const [bookDetail, setBookDetail] = React.useState(dumpData);
-  const [showModalBorrow, setShowModalBorrow] = React.useState(false);
-  const [showModalPreview, setShowModalPreview] = React.useState(false);
+  const [openModalRental, setOpenModalRental] = React.useState(false);
+  const [price, setPrice] = React.useState("30");
+  const [title, setTitle] = React.useState("");
   const [value, setValue] = React.useState("1");
+
+  let fullName = localStorage.getItem("fullName") || "";
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -53,6 +77,25 @@ function BookDetail() {
 
   const handleNavigateToReadingBook = () => {
     navigate(`/user/view/${book_id}`);
+  };
+
+  const handleRental = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/user/rental/addRental",
+        {
+          userId: localStorage.getItem("id"),
+          bookMongoId: book_id,
+          price: price,
+        }
+      );
+      console.log(res.data);
+      alert("Book rented successfully");
+      return res.data;
+    } catch (err: any) {
+      alert("Book already rented");
+      console.log("fe : " + err.message);
+    }
   };
   return (
     <Box id="style-2" className="container">
@@ -259,6 +302,7 @@ function BookDetail() {
               <Button
                 variant="contained"
                 sx={{ backgroundColor: "#F27851", minWidth: "160px" }}
+                onClick={() => setOpenModalRental(true)}
               >
                 Borrow
               </Button>
@@ -377,6 +421,118 @@ function BookDetail() {
             </Box>
           </Grid>
         </Grid>
+        {/* Modal Rental */}
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={openModalRental}
+          onClose={() => setOpenModalRental(false)}
+          closeAfterTransition
+        >
+          <Fade in={openModalRental}>
+            <Box sx={styleModal}>
+              <Typography
+                id="transition-modal-title"
+                sx={{ textAlign: "center" }}
+                variant="h6"
+                component="h2"
+              >
+                Fill Up the details
+              </Typography>
+              <ValidatorForm onSubmit={handleRental}>
+                {/*  <Typography>From: {formattedDate}</Typography> */}
+                <Typography
+                  sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                  variant="subtitle2"
+                >
+                  Book
+                </Typography>
+                <Input
+                  type="search"
+                  style={{
+                    color: "black",
+                    backgroundColor: "#F0F3F7",
+                    border: 1,
+                    borderColor: "#E0E4EC",
+                    padding: 8,
+                    fontSize: 16,
+                    width: "90%",
+                    height: 42,
+                    marginLeft: 16,
+                  }}
+                  defaultValue={title}
+                  disabled
+                  crossOrigin={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                />
+                <Typography
+                  sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                  variant="subtitle2"
+                >
+                  FullName
+                </Typography>
+                <Input
+                  type="search"
+                  style={{
+                    color: "black",
+                    backgroundColor: "#F0F3F7",
+                    border: 1,
+                    borderColor: "#E0E4EC",
+                    padding: 8,
+                    fontSize: 16,
+                    width: "90%",
+                    height: 42,
+                    marginLeft: 16,
+                  }}
+                  defaultValue={fullName}
+                  disabled
+                  crossOrigin={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                />
+                <Typography
+                  sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                  variant="subtitle2"
+                >
+                  Price
+                </Typography>
+                <Input
+                  type="search"
+                  style={{
+                    color: "black",
+                    backgroundColor: "#F0F3F7",
+                    border: 1,
+                    borderColor: "#E0E4EC",
+                    padding: 8,
+                    fontSize: 16,
+                    width: "90%",
+                    height: 42,
+                    marginLeft: 16,
+                  }}
+                  defaultValue={price}
+                  disabled
+                  crossOrigin={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                />
+
+                <Button
+                  sx={{
+                    marginTop: "10px",
+                    backgroundColor: "#F27851",
+                    width: "90%",
+                    marginLeft: 2,
+                  }}
+                  variant="contained"
+                  type="submit"
+                >
+                  Rental
+                </Button>
+              </ValidatorForm>
+            </Box>
+          </Fade>
+        </Modal>
       </Box>
     </Box>
   );
