@@ -230,6 +230,18 @@ const bookCtrl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+  getBooksCount: async (req, res) => {
+    try {
+      const count = await Books.countDocuments();
+      if (count) {
+        res.json(count);
+      } else {
+        res.json({ msg: "No book with such id" });
+      }
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
   getBookById: async (req, res) => {
     try {
       const { id } = req.body;
