@@ -50,6 +50,10 @@ function BookDetail() {
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  const handleNavigateToReadingBook = () => {
+    navigate(`/user/view/${book_id}`);
+  };
   return (
     <Box id="style-2" className="container">
       <Box sx={{ flexGrow: 1, margin: "20px" }}>
@@ -262,6 +266,7 @@ function BookDetail() {
                 variant="contained"
                 endIcon={<ChromeReaderModeOutlinedIcon />}
                 sx={{ backgroundColor: "#41B64D", minWidth: "160px" }}
+                onClick={() => handleNavigateToReadingBook()}
               >
                 Read now
               </Button>
