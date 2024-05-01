@@ -137,6 +137,7 @@ export interface UserInterface {
   address: string;
   email: string;
   fullName: string;
+  budget: string;
 }
 
 function AccountManagementPage() {
@@ -150,7 +151,6 @@ function AccountManagementPage() {
   const [openModalSearch, setOpenModalSearch] = useState(false);
 
   const [searchValue, setSearchValue] = React.useState("");
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const [id, setId] = React.useState("");
   const [fullName, setFullName] = useState<string>("");
@@ -159,12 +159,9 @@ function AccountManagementPage() {
   const [password, setPassword] = React.useState("");
   const [passwordX2, setPasswordX2] = React.useState("");
   const [address, setAddress] = React.useState("");
-
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleSearch = (event: any) => {
-    event.preventDefault();
-  };
   // validate custom
   useEffect(() => {
     ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
@@ -191,7 +188,7 @@ function AccountManagementPage() {
   const fetchData = async () => {
     try {
       const allUserList = await getData();
-      //  console.log(allUserList, "hihi");
+      console.log(allUserList, "USELETS");
       setRows(allUserList.data);
 
       console.log("fetch data success");
@@ -202,20 +199,36 @@ function AccountManagementPage() {
   };
   useEffect(() => {
     fetchData();
-  }, [navigate]);
+  }, [searchQuery=== ""]);
 
-  const handleQuery = async () => {
-    let allUserList: UserInterface[] = await getData();
-    // console.log(allUserList);
-    if (searchQuery !== "") {
-      allUserList = allUserList.filter((row) =>
-        row.username.toLowerCase().includes(searchQuery.toLowerCase())
+  const handleQueryUser = async (fullName: string) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/user/getUserInfo/${fullName}`
       );
+      console.log(res.data, "search");
+      setRows(res.data);
+
+      //return res.data;
+      // setRows(res.data.data);
+    } catch (err: any) {
+      console.log("1");
+      console.log("Search failed: " + err.message);
     }
-    // console.log("huhu");
-    setRows(allUserList);
   };
 
+  const handleSearch = async () => {
+    try {
+      const response = await handleQueryUser(searchQuery);
+      console.log(response, "response");
+      console.log(rows, "rows");
+      console.log("search success");
+      // setRows(response.data);
+    } catch (err: any) {
+      console.log("2");
+      console.log("Search failed: " + err.message);
+    }
+  };
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -375,7 +388,7 @@ function AccountManagementPage() {
                     backgroundColor: "#EC501E",
                   },
                 }}
-                onClick={handleQuery}
+                onClick={handleSearch}
               >
                 Tìm kiếm
               </Button>

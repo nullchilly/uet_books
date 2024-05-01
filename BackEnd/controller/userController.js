@@ -115,3 +115,25 @@ module.exports.DeleteFavouriteBook = async (req, res) => {
 module.exports.getBooks = async (req, res) => {
     return res.status(200).json({ msg: "getBook" });
 }
+
+module.exports.getUserInfoByName = async (req, res) => {
+    const userName = req.params.username;
+    const result = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "SELECT * FROM user WHERE username = ?",
+            [userName],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+    })
+    if (result.length == 0) {
+        return res.status(400).json({ msg: "user not found" });
+    }
+    return res.status(200).json(result);
+}

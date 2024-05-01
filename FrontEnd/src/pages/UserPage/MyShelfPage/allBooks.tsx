@@ -10,10 +10,8 @@ import {
   Button,
   CardContent,
   Grid,
-  Tab,
-  Tabs,
+ 
   Typography,
-  styled,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -116,7 +114,7 @@ const AllBooks = () => {
 
   const filteredData = showFullList ? books : books.slice(0, 4); // Fil
   const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleDateString();
+ // const formattedDate = currentDate.toLocaleDateString();
 
   return (
     <Box
