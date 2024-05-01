@@ -210,7 +210,7 @@ const bookCtrl = {
 
   getAllBooks: async (req, res) => {
     try {
-      const books = await Books.find().limit(100);
+      const books = await Books.find().limit(30);
       console.log(books);
       if (books) {
         res.json(books);
@@ -248,7 +248,6 @@ const bookCtrl = {
       return res.status(500).json({ msg: error.message });
     }
   },
-  
   getAllBooksBySearch: async (req, res) => {
     try {
       const { id, keyword } = req.query;
@@ -274,6 +273,54 @@ const bookCtrl = {
       return res.status(500).json({ msg: error.message });
     }
   },
+  syncWithMysql: async (req, res) => {
+    try {
+      const totalCount = await Books.countDocuments();
+      let processedCount = 0;
+      let offset = 0;
+      const batchSize = 1000;
+      
+      while (offset < totalCount) {
+        const books = await Books.find().limit(batchSize).skip(offset);
+        
+        await new Promise((resolve, reject) => {
+          const queries = books.map(book => {
+            return new Promise((resolve, reject) => {
+              sqlConnection.query(
+                "INSERT IGNORE INTO book (mongoId) VALUES (?)",
+                [book['ID']],
+                (error, result) => {
+                  if (error) {
+                    reject(error);
+                  } else {
+                    resolve(result);
+                  }
+                }
+              );
+            });
+          });
+  
+          Promise.all(queries)
+            .then(() => {
+              processedCount += books.length;
+              const progress = Math.min(processedCount, totalCount);
+              console.log("Progress:", progress, "out of", totalCount);
+              resolve();
+            })
+            .catch(error => reject(error));
+        });
+  
+        offset += batchSize;
+      }
+  
+      // If all queries succeed, send a success response
+      res.status(200).send("Sync with MySQL successful");
+    } catch (error) {
+      // If any error occurs during the process, send an error response
+      console.error("Error during sync with MySQL:", error);
+      res.status(500).send("Error during sync with MySQL");
+    }
+  }
 };
 
 module.exports = bookCtrl;
