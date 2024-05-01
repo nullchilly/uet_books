@@ -9,11 +9,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export interface BookInterface {
-  name: string;
-  image: string;
-  author: string;
-  description: string;
-  date: string;
+  Title: string;
+  Coverurl: string;
+  Author: string;
 }
 
 function HomePage() {
@@ -154,17 +152,23 @@ function HomePage() {
                   <CardActionArea onClick={handleClick}>
                     <CardMedia
                       component="img"
-                      alt={item.name}
-                      height="190"
+                      alt={item.Title}
+                      height="200"
                       sx={{ objectFit: "fill" }}
                       width="123"
-                      src={item.image}
+                      src={
+                        "https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630"
+                      }
                     />
                     <CardContent>
-                      {<Typography gutterBottom>{item.name}</Typography>}
-                      <Typography variant="body2" color="text.secondary">
+                      {
+                        <Typography gutterBottom variant="body2">
+                          {item.Title}
+                        </Typography>
+                      }
+                      {/* <Typography variant="body2" color="text.secondary">
                         {item.author}
-                      </Typography>
+                      </Typography> */}
                     </CardContent>
                   </CardActionArea>
                 </Card>
@@ -204,14 +208,14 @@ function HomePage() {
                   <CardActionArea>
                     <CardMedia
                       component="img"
-                      alt={item.name}
+                      alt={item.Title}
                       height="190"
                       sx={{ objectFit: "fill" }}
                       width="123"
-                      src={item.image}
+                      src={item.Coverurl}
                     />
                     <CardContent>
-                      <Typography gutterBottom>{item.name}</Typography>
+                      <Typography gutterBottom>{item.Title}</Typography>
                       {/*  <Typography variant="body2" color="text.secondary">
                       {item.author}
                     </Typography> */}

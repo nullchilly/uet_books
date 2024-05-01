@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Input } from "@material-tailwind/react";
 import book from "../../../assets/img/book.svg";
+import { ChangeEvent } from "react";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 
 import {
@@ -55,11 +56,13 @@ function a11yProps(index: number) {
 function ProfilePage() {
   const [value, setValue] = React.useState(0);
   const [username, setUsername] = React.useState("");
+
   const [fullName, setFullName] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [amount, setAmount] = React.useState("");
+  const [budget, setBudget] = React.useState("");
   const Id = localStorage.getItem("id") || "";
   // const [id, setId] = React.useState("");
   // const id = localStorage.getItem("id");
@@ -97,21 +100,23 @@ function ProfilePage() {
       setAddress(res.data[0].address);
       setPhone(res.data[0].phone);
       setEmail(res.data[0].email);
+      setBudget(res.data[0].budget);
       setUsername(res.data[0].username);
     } catch (err: any) {
       console.log("Fetch data failed: " + err.message);
     }
   };
-  const payment = async (id: string, amount: string) => {
+  const handlePayment = async () => {
     try {
       const res = await axios.post(
         "http://localhost:3000/user/rental/addBudget",
         {
-          userId: id,
+          userId: Id,
           amount: amount,
         }
       );
-      console.log(res);
+      window.location.reload();
+
       return res.data;
     } catch (err: any) {
       console.log("Payment failed: " + err.message);
@@ -363,20 +368,20 @@ function ProfilePage() {
                     mt={2}
                     ml={2}
                   >
-                    Bio
+                    Money
                   </Typography>
                   <TextField
                     id="filled-multiline-static"
                     fullWidth
                     multiline
-                    rows={4}
+                    rows={1}
                     sx={{
                       margin: 2,
                       marginTop: 1,
                       width: "95%",
                       backgroundColor: "#F0F3F7",
                     }}
-                    defaultValue="I'm a student"
+                    defaultValue={budget}
                   />
                 </Grid>
               </Grid>
@@ -401,50 +406,30 @@ function ProfilePage() {
             </Button>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <ValidatorForm onSubmit={payment}>
-              <Typography component="h1" sx={{ fontSize: 16 }} mt={3} ml={2}>
-                Full Name
-              </Typography>
-              <Input
-                type="search"
-                style={{
-                  color: "black",
-                  margin: 2,
-                  backgroundColor: "#F0F3F7",
-                  border: 1,
-                  borderColor: "#E0E4EC",
-                  padding: 8,
-                  width: "90%",
-                  height: 42,
-                  marginLeft: 16,
-                }}
-                disabled
-                defaultValue={fullName}
-                crossOrigin={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
+            <ValidatorForm onSubmit={handlePayment}>
+              <TextValidator
+                sx={{ marginTop: "10px" }}
+                fullWidth
+                value={fullName}
+                label="Full Name"
+                name="fullName"
+                variant="standard"
+                color="secondary"
+                validators={["required"]}
               />
-              <Typography component="h1" sx={{ fontSize: 16 }} mt={3} ml={2}>
-                Amount
-              </Typography>
-              <Input
-                type="search"
-                style={{
-                  color: "black",
-                  margin: 2,
-                  backgroundColor: "#F0F3F7",
-                  border: 1,
-                  borderColor: "#E0E4EC",
-                  padding: 8,
-                  width: "90%",
-                  height: 42,
-                  marginLeft: 16,
-                }}
+              <TextValidator
+                sx={{ marginTop: "10px" }}
+                fullWidth
                 value={amount}
-                onChange={handleChangeAmount}
-                crossOrigin={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
+                label="Amount"
+                name="amount"
+                variant="standard"
+                color="secondary"
+                validators={["required"]}
+                errorMessages={["Vui lòng nhập số tiền"]}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setAmount(e.target.value)
+                }
               />
               <Button
                 type="submit"

@@ -21,16 +21,18 @@ import axios from "axios";
 import { ValidatorForm } from "react-material-ui-form-validator";
 
 interface BookInterface {
-  name: string;
-  image: string;
-  author: string;
-  description: string;
-  publishYear: string;
+  Title: string;
+  Coverurl: string;
+  Author: string;
+  Year: string;
 }
+
 const styleModal = {
   position: "absolute",
   justifyContent: "center",
-  textAlign: "center",
+  radius: 20,
+
+  //textAlign: "center",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -44,8 +46,12 @@ const AllBooks = () => {
   const [showFullList, setShowFullList] = useState(true); // State to control data display
   const [showFullRecentList, setShowFullRecentList] = useState(false); // State to control data display
   const [books, setBooks] = useState<BookInterface[]>([]);
+  const [title, setTitle] = useState(""); // State to control data display
+
+  const [price, setPrice] = useState("30"); // State to control data display
   const [openModalRental, setOpenModalRental] = useState(false);
   const [openModalReturn, setOpenModalReturn] = useState(false);
+  let fullName = localStorage.getItem("fullName") || "";
   const getBooks = async () => {
     try {
       const res = await axios.get("http://localhost:3000/books/all");
@@ -69,6 +75,38 @@ const AllBooks = () => {
 
     fetchData();
   }, []);
+
+  const handleRental = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/user/rental/addRental", {
+        userId: localStorage.getItem("id"),
+        bookMongoId: "mongo3",
+        price: price,
+      });
+      console.log(res.data);
+      alert("Book rented successfully");
+      return res.data;
+    } catch (err: any) {
+      alert("Book already rented")
+      console.log("fe : " + err.message);
+    }
+  }
+  const handleReturn = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/user/rental/returnBook", {
+        userId: localStorage.getItem("id"),
+        bookId: "5",
+     
+      });
+      console.log(res.data);
+      alert("Book returned successfully");
+      return res.data;
+    } catch (err: any) {
+      alert("Book already returned")
+      console.log("fe : " + err.message);
+    }
+  }
+
   const filteredData = showFullList ? books : books.slice(0, 4); // Fil
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString();
@@ -90,12 +128,12 @@ const AllBooks = () => {
                   <CardMedia
                     component="img"
                     sx={{ width: 130, height: 164, objectFit: "fill" }}
-                    image={item.image}
+                    image={item.Coverurl}
                     alt="Live from space album cover"
                   />
                   <CardContent sx={{ maxHeight: 24 }}>
                     <Typography gutterBottom sx={{ fontSize: 14 }}>
-                      {item.name}
+                      {item.Title}
                     </Typography>
                     {/* <Typography
                     variant="body2"
@@ -117,15 +155,11 @@ const AllBooks = () => {
                     <Typography component="div" variant="subtitle2">
                       Borrowed on
                     </Typography>
-                    <Typography variant="caption">
-                      {item.publishYear}
-                    </Typography>
+                    <Typography variant="caption">{item.Year}</Typography>
                     <Typography variant="subtitle2" component="div">
                       Submission Due
                     </Typography>
-                    <Typography variant="caption">
-                      {item.publishYear}
-                    </Typography>
+                    <Typography variant="caption">{item.Year}</Typography>
                   </CardContent>
                   <Box
                     sx={{
@@ -146,7 +180,10 @@ const AllBooks = () => {
                         height: 32,
                         color: "white",
                       }}
-                      onClick={() => setOpenModalRental(true)}
+                      onClick={() => {
+                        setOpenModalRental(true);
+                        setTitle(item.Title);
+                      }}
                     >
                       Read
                     </Button>
@@ -185,12 +222,22 @@ const AllBooks = () => {
       >
         <Fade in={openModalRental}>
           <Box sx={styleModal}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
+            <Typography
+              id="transition-modal-title"
+              sx={{ textAlign: "center" }}
+              variant="h6"
+              component="h2"
+            >
               Fill Up the details
             </Typography>
-            <ValidatorForm onSubmit={() => {}}>
-              <Typography>From: {formattedDate}</Typography>
-              <Typography>Book</Typography>
+            <ValidatorForm onSubmit={handleRental}>
+              {/*  <Typography>From: {formattedDate}</Typography> */}
+              <Typography
+                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                variant="subtitle2"
+              >
+                Book
+              </Typography>
               <Input
                 type="search"
                 style={{
@@ -204,13 +251,18 @@ const AllBooks = () => {
                   height: 42,
                   marginLeft: 16,
                 }}
-                defaultValue={"Harry Potter"}
-                onChange={undefined}
+                defaultValue={title}
+                disabled
                 crossOrigin={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
               />
-              <Typography>FullName</Typography>
+              <Typography
+                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                variant="subtitle2"
+              >
+                FullName
+              </Typography>
               <Input
                 type="search"
                 style={{
@@ -224,13 +276,18 @@ const AllBooks = () => {
                   height: 42,
                   marginLeft: 16,
                 }}
-                defaultValue={"Sang"}
-                onChange={undefined}
+                defaultValue={fullName}
+                disabled
                 crossOrigin={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
               />
-              <Typography>Price</Typography>
+              <Typography
+                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                variant="subtitle2"
+              >
+                Price
+              </Typography>
               <Input
                 type="search"
                 style={{
@@ -244,8 +301,8 @@ const AllBooks = () => {
                   height: 42,
                   marginLeft: 16,
                 }}
-                defaultValue={"12$"}
-                onChange={undefined}
+                defaultValue={price}
+                disabled
                 crossOrigin={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
@@ -281,13 +338,22 @@ const AllBooks = () => {
       >
         <Fade in={openModalReturn}>
           <Box sx={styleModal}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
+            <Typography
+              id="transition-modal-title"
+              sx={{ textAlign: "center" }}
+              variant="h6"
+              component="h2"
+            >
               Fill Up the details
             </Typography>
-            <ValidatorForm onSubmit={() => {}}>
-              <Typography>From: {formattedDate}</Typography>
-              <Typography>To: {formattedDate}</Typography>
-              <Typography>Book</Typography>
+            <ValidatorForm onSubmit={handleReturn}>
+              {/*  <Typography>From: {formattedDate}</Typography> */}
+              <Typography
+                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                variant="subtitle2"
+              >
+                Book
+              </Typography>
               <Input
                 type="search"
                 style={{
@@ -301,13 +367,18 @@ const AllBooks = () => {
                   height: 42,
                   marginLeft: 16,
                 }}
-                defaultValue={"Harry Potter"}
-                onChange={undefined}
+                defaultValue={title}
+                disabled
                 crossOrigin={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
               />
-              <Typography>FullName</Typography>
+              <Typography
+                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                variant="subtitle2"
+              >
+                FullName
+              </Typography>
               <Input
                 type="search"
                 style={{
@@ -321,13 +392,18 @@ const AllBooks = () => {
                   height: 42,
                   marginLeft: 16,
                 }}
-                defaultValue={"Sang"}
-                onChange={undefined}
+                defaultValue={fullName}
+                disabled
                 crossOrigin={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
               />
-              <Typography>Price</Typography>
+              <Typography
+                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                variant="subtitle2"
+              >
+                Price
+              </Typography>
               <Input
                 type="search"
                 style={{
@@ -341,8 +417,8 @@ const AllBooks = () => {
                   height: 42,
                   marginLeft: 16,
                 }}
-                defaultValue={"12$"}
-                onChange={undefined}
+                defaultValue={price}
+                disabled
                 crossOrigin={undefined}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
