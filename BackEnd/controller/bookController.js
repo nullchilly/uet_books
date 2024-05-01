@@ -209,9 +209,17 @@ const bookCtrl = {
   },
 
   getAllBooks: async (req, res) => {
+    let { pageSize, pageNumber, limit } = req.query;
+    // console.log(pageSize, pageNumber, limit)
     try {
-      const books = await Books.find().limit(30);
-      console.log(books);
+      let books = null
+      if (pageSize && pageNumber) {
+        books = await Books.find().limit(pageSize).skip((pageNumber - 1) * pageSize)
+      } else {
+        limit = limit || 30
+        books = await Books.find().limit(limit)
+      }
+      // console.log(books);
       if (books) {
         res.json(books);
       } else {
