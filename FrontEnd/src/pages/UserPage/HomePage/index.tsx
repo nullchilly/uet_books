@@ -18,6 +18,7 @@ function HomePage() {
   const [showFullList, setShowFullList] = useState(false); // State to control data display
   const [showFullRecentList, setShowFullRecentList] = useState(false); // State to control data display
   const [books, setBooks] = useState<BookInterface[]>([]);
+  const [recommendBooks, setRecommendBooks] = useState<BookInterface[]>([]);
   const handleShowAll = () => {
     setShowFullList(!showFullList); // Update state to show all data
   };
@@ -34,11 +35,24 @@ function HomePage() {
       console.log("fe : " + err.message);
     }
   };
+  const getRecommendBooks = async (rowsPerPage: Number, page: Number) => {
+    try {
+      const res = await axios.get("http://localhost:3000/books/all", {
+        params: { pageSize: rowsPerPage, pageNumber: page },
+      });
+      console.log(res.data);
+      return res.data;
+    } catch (err: any) {
+      console.log("fe : " + err.message);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const allBookList = await getAllBooks();
         setBooks(allBookList);
+        const recommendBooks = await getRecommendBooks(20, 5);
+        setRecommendBooks(recommendBooks);
         console.log("abc");
       } catch (error) {
         // Xử lý lỗi nếu có
@@ -56,6 +70,9 @@ function HomePage() {
     return title;
   };
   const filteredData = showFullList ? books : books.slice(0, 6); // Fil
+  const filteredRecentData = showFullRecentList
+    ? recommendBooks
+    : recommendBooks.slice(0, 6); // Fil
   function handleClick() {
     console.log("Button clicked!");
     alert("Button clicked!");
@@ -208,7 +225,7 @@ function HomePage() {
           }}
         >
           <Grid container spacing={3} xs={24}>
-            {filteredData.map((item, index) => (
+            {filteredRecentData.map((item, index) => (
               <Grid key={index} xs={2} item>
                 {/* Set responsive layout */}
                 <Card sx={{ width: 168, height: 260 }}>

@@ -5,16 +5,8 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Input } from "@material-tailwind/react";
 
-import {
-  Box,
-  Button,
-  CardContent,
-  Grid,
- 
-  Typography,
-} from "@mui/material";
+import { Box, Button, CardContent, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import React from "react";
 import axios from "axios";
 import { ValidatorForm } from "react-material-ui-form-validator";
 
@@ -23,6 +15,7 @@ interface BookInterface {
   Coverurl: string;
   Author: string;
   Year: string;
+  ID: string;
 }
 
 const styleModal = {
@@ -40,82 +33,123 @@ const styleModal = {
   brentRadius: "10px",
   p: 3,
 };
-const AllBooks = () => {
+const data = [
+  { mongoId: "6" },
+  { mongoId: "7" },
+  { mongoId: "8" },
+  { mongoId: "9" },
+  { mongoId: "324" },
+];
+const BorrowingBooks = () => {
   const [showFullList, setShowFullList] = useState(true); // State to control data display
-  const [showFullRecentList, setShowFullRecentList] = useState(false); // State to control data display
   const [books, setBooks] = useState<BookInterface[]>([]);
   const [title, setTitle] = useState(""); // State to control data display
-
+  const [borrowingBooks, setBorrowingBooks] = useState<BookInterface[]>([]);
   const [price, setPrice] = useState("30"); // State to control data display
   const [openModalRental, setOpenModalRental] = useState(false);
   const [openModalReturn, setOpenModalReturn] = useState(false);
   let fullName = localStorage.getItem("fullName") || "";
   let id = localStorage.getItem("id") || "";
-  const MAX_TITLE_LENGTH = 30; 
+  const getBook = async () => {
+    try {
+      let borrowingBooksData = [];
+      for (let i = 0; i < data.length; i++) {
+        const res = await axios.get(`http://localhost:3000/books/search`, {
+          params: {
+            id: data[i].mongoId,
+          },
+        });
+        console.log(res.data);
+        borrowingBooksData.push(res.data);
+        // Thêm dữ liệu vào mảng mới
+      }
+      // Set state với mảng mới đã chứa dữ liệu
+      setBorrowingBooks(borrowingBooksData);
+    } catch (err) {
+      console.log("fail");
+    }
+  };
+
+  const MAX_TITLE_LENGTH = 30;
   const shortenTitle = (title: string) => {
     if (title.length > MAX_TITLE_LENGTH) {
-      return title.slice(0, MAX_TITLE_LENGTH) + '...';
+      return title?.slice(0, MAX_TITLE_LENGTH) + "...";
     }
     return title;
   };
   const getBooks = async (userId: string) => {
     try {
-      const res = await axios.get(`http://localhost:3000/user/rental/rentingBook/${userId}`);
+      const res = await axios.get("http://localhost:3000/books/all");
       console.log(res.data);
       return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
     }
+    /*  try {
+      
+      //const res = await axios.get(`http://localhost:3000/user/rental/rentingBook/${userId}`);
+      console.log(res.data);
+      return res.data;
+    } catch (err: any) {
+      console.log("fe : " + err.message);
+    } */
+  };
+  const fetchData = async () => {
+    try {
+      const allBookList = await getBooks(id);
+      setBooks(allBookList);
+      console.log("abc");
+    } catch (error) {
+      // Xử lý lỗi nếu có
+    }
   };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const allBookList = await getBooks(id);
-        setBooks(allBookList);
-        console.log("abc");
-      } catch (error) {
-        // Xử lý lỗi nếu có
-      }
-    };
-    console.log("fetching data");
-
     fetchData();
+    getBook();
+    console.log(borrowingBooks);
   }, []);
 
   const handleRental = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/user/rental/addRental", {
-        userId: localStorage.getItem("id"),
-        bookMongoId: "mongo3",
-        price: price,
-      });
+      const res = await axios.post(
+        "http://localhost:3000/user/rental/addRental",
+        {
+          userId: localStorage.getItem("id"),
+          bookMongoId: "mongo3",
+          price: price,
+        }
+      );
       console.log(res.data);
       alert("Book rented successfully");
       return res.data;
     } catch (err: any) {
-      alert("Book already rented")
+      alert("Book already rented");
       console.log("fe : " + err.message);
     }
-  }
+  };
   const handleReturn = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/user/rental/returnBook", {
-        userId: localStorage.getItem("id"),
-        bookId: "5",
-     
-      });
+      const res = await axios.post(
+        "http://localhost:3000/user/rental/returnBook",
+        {
+          userId: localStorage.getItem("id"),
+          bookId: "5",
+        }
+      );
       console.log(res.data);
       alert("Book returned successfully");
       return res.data;
     } catch (err: any) {
-      alert("Book already returned")
+      alert("Book already returned");
       console.log("fe : " + err.message);
     }
-  }
+  };
 
-  const filteredData = showFullList ? books : books.slice(0, 4); // Fil
-  const currentDate = new Date();
- // const formattedDate = currentDate.toLocaleDateString();
+  const filteredData = showFullList
+    ? borrowingBooks
+    : borrowingBooks?.slice(0, 4); // Fil
+  //const currentDate = new Date();
+  // const formattedDate = currentDate.toLocaleDateString();
 
   return (
     <Box
@@ -126,7 +160,7 @@ const AllBooks = () => {
     >
       {
         <Grid container spacing={2} xs={12}>
-          {filteredData.map((item, index) => (
+          {filteredData?.map((item, index) => (
             <Grid key={index} item xs={3}>
               {/* Set responsive layout */}
               <Card sx={{ display: "flex", height: 250 }}>
@@ -134,20 +168,16 @@ const AllBooks = () => {
                   <CardMedia
                     component="img"
                     sx={{ width: 130, height: 164, objectFit: "fill" }}
-                    src={"https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" + item.Coverurl}
+                    src={
+                      "https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" +
+                      item.Coverurl
+                    }
                     alt="Live from space album cover"
                   />
                   <CardContent sx={{ maxHeight: 24 }}>
                     <Typography gutterBottom sx={{ fontSize: 14 }}>
-                    {shortenTitle(item.Title)}
+                      {shortenTitle(item.Title)}
                     </Typography>
-                    {/* <Typography
-                    variant="body2"
-                    sx={{ fontSize: 12 }}
-                    color="text.secondary"
-                  >
-                    {item.author}
-                  </Typography> */}
                   </CardContent>
                 </Box>
 
@@ -158,6 +188,13 @@ const AllBooks = () => {
                   }}
                 >
                   <CardContent sx={{ flex: "1 0 auto" }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: 12 }}
+                      color="text.secondary"
+                    >
+                      {item.Author}
+                    </Typography>
                     <Typography component="div" variant="subtitle2">
                       Borrowed on
                     </Typography>
@@ -450,4 +487,4 @@ const AllBooks = () => {
   );
 };
 
-export default AllBooks;
+export default BorrowingBooks;

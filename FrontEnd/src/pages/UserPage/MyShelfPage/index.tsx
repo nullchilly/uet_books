@@ -1,20 +1,6 @@
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
-
-import {
-  Box,
-  Button,
-  CardContent,
-  Grid,
-  Tab,
-  Tabs,
-  Typography,
-  styled,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
-import axios from "axios";
-import AllBooks from "./allBooks";
+import BorrowingBooks from "./BorrowingBooks";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -123,7 +109,7 @@ function MyShelfPage() {
                 {...a11yProps(1)}
               />
               <Tab
-                label="Borrowed Books"
+                label="Borrowing Books"
                 sx={{
                   marginInline: 2,
                   ":focus": { color: "#f4683c" },
@@ -161,13 +147,15 @@ function MyShelfPage() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <AllBooks />
+            <p>allbooks</p>
+            {/*   <AllBooks /> */}
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <AllBooks />
+            <p>favouriteBooks</p>
+            {/*    <AllBooks /> */}
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            <AllBooks />
+            <BorrowingBooks />
           </CustomTabPanel>
         </Box>
       </Box>
