@@ -50,6 +50,7 @@ const AllBooks = () => {
   const [openModalRental, setOpenModalRental] = useState(false);
   const [openModalReturn, setOpenModalReturn] = useState(false);
   let fullName = localStorage.getItem("fullName") || "";
+  let id = localStorage.getItem("id") || "";
   const MAX_TITLE_LENGTH = 30; 
   const shortenTitle = (title: string) => {
     if (title.length > MAX_TITLE_LENGTH) {
@@ -57,9 +58,9 @@ const AllBooks = () => {
     }
     return title;
   };
-  const getBooks = async () => {
+  const getBooks = async (userId: string) => {
     try {
-      const res = await axios.get("http://localhost:3000/books/all");
+      const res = await axios.get(`http://localhost:3000/user/rental/rentingBook/${userId}`);
       console.log(res.data);
       return res.data;
     } catch (err: any) {
@@ -69,7 +70,7 @@ const AllBooks = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const allBookList = await getBooks();
+        const allBookList = await getBooks(id);
         setBooks(allBookList);
         console.log("abc");
       } catch (error) {

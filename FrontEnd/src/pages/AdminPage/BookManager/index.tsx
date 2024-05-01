@@ -11,6 +11,7 @@ import {
   Button,
   IconButton,
   Input,
+  Pagination,
   TableFooter,
   useTheme,
 } from "@mui/material";
@@ -153,36 +154,35 @@ function BookManagementPage() {
   const [id, setId] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  /*   const handleSearch = async () => {
-    const res = await axios.get("http://localhost:5001/book/autoComplete", {
-      params: { searchValue },
-    });
-    setSearchResults(res.data);
-  }; */
-
-  const getAllBooks = async () => {
+  const [limit, setLimit] = useState(100);
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+  const getAllBooks = async (rowsPerPage: Number, page: Number) => {
     try {
-      const res = await axios.get("http://localhost:3000/books/all");
+      const res = await axios.get("http://localhost:3000/books/all", {
+        params: { pageSize: rowsPerPage, pageNumber: page },
+      });
       console.log(res.data);
-
       return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
     }
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const allBookList = await getAllBooks();
-        setRows(allBookList);
-      } catch (error) {
-        // Xử lý lỗi nếu có
-      }
-    };
-    console.log("fetching data");
+  const fetchData = async () => {
+    try {
+      const allBookList = await getAllBooks(rowsPerPage, page);
+      setRows(allBookList);
+      console.log(allBookList, "update");
+    } catch (error) {
+      // Xử lý lỗi nếu có
+    }
+  };
+  console.log("fetching data");
 
+  useEffect(() => {
     fetchData();
-  }, [searchQuery === '']);
+  }, [searchQuery === "", page, rowsPerPage, limit]);
 
   const handleQuery = async () => {
     try {
@@ -373,7 +373,6 @@ function BookManagementPage() {
               <TableHead>
                 <TableRow>
                   <TableCell>STT</TableCell>
-
                   <TableCell>Title</TableCell>
                   {/* <TableCell>Danh mục</TableCell> */}
                   <TableCell>Author</TableCell>
@@ -383,13 +382,7 @@ function BookManagementPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(rowsPerPage > 0
-                  ? rows.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : rows
-                ).map((row, index) => {
+                {rows.map((row, index) => {
                   const realIndex = page * rowsPerPage + index + 1;
                   return (
                     <TableRow
@@ -447,31 +440,7 @@ function BookManagementPage() {
                 )}
               </TableBody>
               <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "All", value: -1 },
-                    ]}
-                    colSpan={5}
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    slotProps={{
-                      select: {
-                        inputProps: {
-                          "aria-label": "rows per page",
-                        },
-                        native: true,
-                      },
-                    }}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </TableRow>
+                <Pagination count={limit} page={page} onChange={handleChange} />
               </TableFooter>
             </Table>
           ) : (
