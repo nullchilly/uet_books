@@ -197,6 +197,7 @@ function AccountManagementPage() {
       console.log("Failed to fetch data: ", error);
     }
   };
+  
   useEffect(() => {
     fetchData();
   }, [searchQuery=== ""]);

@@ -44,7 +44,6 @@ const styleModal = {
   position: "absolute",
   justifyContent: "center",
   radius: 20,
-
   //textAlign: "center",
   top: "50%",
   left: "50%",
@@ -96,6 +95,23 @@ function BookDetail() {
     getDetailBook();
     setTitle(bookDetail.Title);
   }, []);
+  const handleLike = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/user/favourite/addFavourite",
+        {
+          userId: localStorage.getItem("id"),
+          bookMongoId: book_id,
+        }
+      );
+      console.log(res.data);
+      alert("Book added to favourite list successfully");
+      return res.data;
+    } catch (err: any) {
+      alert("Book already added to favourite list");
+      console.log("fe : " + err.message);
+    }
+  };
   const handleRental = async () => {
     try {
       const res = await axios.post(
@@ -108,6 +124,7 @@ function BookDetail() {
       );
       console.log(res.data);
       alert("Book rented successfully");
+      window.location.reload();
       return res.data;
     } catch (err: any) {
       alert("Book already rented");
@@ -312,6 +329,7 @@ function BookDetail() {
                 <Button
                   variant="contained"
                   endIcon={<FavoriteBorderIcon />}
+                  onClick={() => handleLike()}
                   sx={{ marginTop: "28px", backgroundColor: "#555" }}
                 >
                   Add to List
@@ -480,7 +498,7 @@ function BookDetail() {
                     height: 42,
                     marginLeft: 16,
                   }}
-                  defaultValue={title}
+                  defaultValue={bookDetail?.Title}
                   disabled
                   crossOrigin={undefined}
                   onPointerEnterCapture={undefined}
