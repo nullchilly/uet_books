@@ -129,11 +129,11 @@ module.exports.Register = async (req, res) => {
 };
 
 module.exports.DeleteUser = async (req, res) => {
-  if (!req.cookies.token) {
+  if (!req.body.token) {
     return res.json({ status: false, message: "Please login first" });
   }
   try {
-    const token = req.cookies.token;
+    const token = req.body.token;
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
       if (err) {
         return res.status(401).json({ msg: "false" });
@@ -167,11 +167,11 @@ module.exports.DeleteUser = async (req, res) => {
 };
 
 module.exports.UpdateUser = async (req, res) => {
-  if (!req.cookies.token) {
+  if (!req.body.token) {
     return res.json({ status: false, message: "Please login first" });
   }
   try {
-    const token = req.cookies.token;
+    const token = req.body.token;
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
       if (err) {
         return res.status(401).json({ msg: "false" });
@@ -220,12 +220,12 @@ module.exports.UpdateUser = async (req, res) => {
 };
 
 module.exports.GetAllUser = async (req, res) => {
-  if (!req.cookies.token) {
+  if (!req.body.token) {
     return res.json({ status: false, message: "Please login first" });
   }
   console.log(req)
   try {
-    const token = req.cookies.token;
+    const token = req.body.token;
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
       if (err) {
         return res.status(401).json({ msg: "false" });
