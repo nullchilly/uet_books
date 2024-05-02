@@ -209,7 +209,7 @@ module.exports.returnBook = async (req, res) => {
     const { userId, bookId } = req.body;
     const rentalInfo = await new Promise((resolve, reject) => {
         sqlConnection.query(
-            "SELECT * FROM rental WHERE userId = ? AND bookId = ?;",
+            "SELECT r.id FROM rental r JOIN book b ON r.bookId = b.id WHERE r.userId = ? AND b.mongoId = ? AND r.returnDate IS NULL;",
             [userId, bookId],
             (error, result) => {
                 if (error) {
@@ -225,6 +225,7 @@ module.exports.returnBook = async (req, res) => {
         return res.status(400).json({ msg: "rental not found" });
     }
     const rentalId = rentalInfo[0].id;
+    console.log(rentalId);
     const paymentInfo = await new Promise((resolve, reject) => {
         sqlConnection.query(
             "SELECT amount FROM payments WHERE rentalId = ?;",
