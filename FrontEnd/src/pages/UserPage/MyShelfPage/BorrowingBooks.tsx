@@ -9,6 +9,7 @@ import { Box, Button, CardContent, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ValidatorForm } from "react-material-ui-form-validator";
+import { useNavigate } from "react-router-dom";
 
 interface BookInterface {
   Title: string;
@@ -45,6 +46,8 @@ interface rentalInfo {
   rentalDate: string;
 }
 const BorrowingBooks = () => {
+  const navigate = useNavigate();
+
   const [showFullList, setShowFullList] = useState(true); // State to control data display
   const [books, setBooks] = useState<BookInterface[]>([]);
   const [title, setTitle] = useState(""); // State to control data display
@@ -141,18 +144,22 @@ const BorrowingBooks = () => {
         "http://localhost:3000/user/rental/returnBook",
         {
           userId: localStorage.getItem("id"),
-          bookId: "5",
+          bookId: ID,
         }
       );
       console.log(res.data);
       alert("Book returned successfully");
+      window.location.reload();
+
       return res.data;
     } catch (err: any) {
       alert("Book already returned");
       console.log("fe : " + err.message);
     }
   };
-
+  function handleClick(book_id: any) {
+    navigate(`/user/${book_id}`);
+  }
   const filteredData = showFullList
     ? borrowingBooks
     : borrowingBooks?.slice(0, 4); // Fil
@@ -237,10 +244,7 @@ const BorrowingBooks = () => {
                         height: 32,
                         color: "white",
                       }}
-                      onClick={() => {
-                        setTitle(item.Title);
-                        setID(item.ID);
-                      }}
+                      onClick={() => handleClick(item.ID)}
                     >
                       Read
                     </Button>
@@ -254,7 +258,10 @@ const BorrowingBooks = () => {
                         color: "#F76B56",
                         fontWeight: "medium",
                       }}
-                      onClick={() => setOpenModalReturn(true)}
+                      onClick={() => {
+                        setOpenModalReturn(true), setTitle(item.Title);
+                        setID(item.ID);
+                      }}
                     >
                       Return
                     </Button>
@@ -310,6 +317,31 @@ const BorrowingBooks = () => {
                   marginLeft: 16,
                 }}
                 defaultValue={title}
+                disabled
+                crossOrigin={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              />
+              <Typography
+                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
+                variant="subtitle2"
+              >
+                BookID
+              </Typography>
+              <Input
+                type="search"
+                style={{
+                  color: "black",
+                  backgroundColor: "#F0F3F7",
+                  border: 1,
+                  borderColor: "#E0E4EC",
+                  padding: 8,
+                  fontSize: 16,
+                  width: "90%",
+                  height: 42,
+                  marginLeft: 16,
+                }}
+                defaultValue={ID}
                 disabled
                 crossOrigin={undefined}
                 onPointerEnterCapture={undefined}

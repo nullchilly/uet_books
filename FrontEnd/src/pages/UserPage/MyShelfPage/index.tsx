@@ -1,6 +1,7 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
 import BorrowingBooks from "./BorrowingBooks";
+import FavouriteBooks from "./FavouriteBooks";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -39,13 +40,6 @@ function MyShelfPage() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  /*   const handleShowAll = () => {
-    setShowFullList(!showFullList); // Update state to show all data
-  };
-  const handleRecentShowAll = () => {
-    setShowFullRecentList(!showFullRecentList);¯
-    // Update state to show all data
-  }; */
 
   return (
     <>
@@ -91,7 +85,7 @@ function MyShelfPage() {
               centered
             >
               <Tab
-                label="All Books"
+                label="Borrowing Books"
                 sx={{
                   marginInline: 2,
                   ":focus": { color: "#f4683c" },
@@ -108,8 +102,9 @@ function MyShelfPage() {
                 }}
                 {...a11yProps(1)}
               />
+
               <Tab
-                label="Borrowing Books"
+                label="E-books"
                 sx={{
                   marginInline: 2,
                   ":focus": { color: "#f4683c" },
@@ -118,7 +113,7 @@ function MyShelfPage() {
                 {...a11yProps(2)}
               />
               <Tab
-                label="E-books"
+                label="Audio Books"
                 sx={{
                   marginInline: 2,
                   ":focus": { color: "#f4683c" },
@@ -127,7 +122,7 @@ function MyShelfPage() {
                 {...a11yProps(3)}
               />
               <Tab
-                label="Audio Books"
+                label="Articles & Journals"
                 sx={{
                   marginInline: 2,
                   ":focus": { color: "#f4683c" },
@@ -135,27 +130,13 @@ function MyShelfPage() {
                 }}
                 {...a11yProps(4)}
               />
-              <Tab
-                label="Articles & Journals"
-                sx={{
-                  marginInline: 2,
-                  ":focus": { color: "#f4683c" },
-                  ":hover": { color: "#f4683c" },
-                }}
-                {...a11yProps(5)}
-              />
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <p>allbooks</p>
-            {/*   <AllBooks /> */}
+            <BorrowingBooks />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <p>favouriteBooks</p>
-            {/*    <AllBooks /> */}
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            <BorrowingBooks />
+            <FavouriteBooks />
           </CustomTabPanel>
         </Box>
       </Box>
