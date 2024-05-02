@@ -131,8 +131,9 @@ module.exports.getFavouriteBooks = async (req, res) => {
     if (result.length == 0) {
         return res.status(400).json({ msg: "no favourite book" });
     }
-    else{
-        return res.status(200).json(result);}
+    else {
+        return res.status(200).json(result);
+    }
 }
 
 module.exports.getUserInfoByName = async (req, res) => {
@@ -155,4 +156,24 @@ module.exports.getUserInfoByName = async (req, res) => {
         return res.status(400).json({ msg: "user not found" });
     }
     return res.status(200).json(result);
+}
+module.exports.getUserExpense = async (req, res) => {
+    const userId = req.params.userId;
+    sqlConnection.query(
+        "Call calculate_user_rental_expense(?, @total_expense)",
+        userId,
+        (error, result) => {
+            if (error) {
+                console.log("call procedure error", error);
+                return res.status(400).json({ msg: "call procedure error" });
+            }
+            sqlConnection.query("SELECT @total_expense AS total_expense", (error, result) => {
+                if (error) {
+                    console.log("call procedure error", error);
+                    return res.status(400).json({ msg: "call procedure error" });
+                }
+                return res.status(200).json(result);
+            })
+        }
+    )
 }
