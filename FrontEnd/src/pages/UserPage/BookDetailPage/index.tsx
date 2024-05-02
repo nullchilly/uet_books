@@ -44,6 +44,7 @@ const styleModal = {
   position: "absolute",
   justifyContent: "center",
   radius: 20,
+
   //textAlign: "center",
   top: "50%",
   left: "50%",
@@ -98,10 +99,10 @@ function BookDetail() {
   const handleLike = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/user/favourite/addFavourite",
+        "http://localhost:3000/user/addFavouriteBook",
         {
           userId: localStorage.getItem("id"),
-          bookMongoId: book_id,
+          bookId: book_id,
         }
       );
       console.log(res.data);

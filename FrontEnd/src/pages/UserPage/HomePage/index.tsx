@@ -230,7 +230,7 @@ function HomePage() {
               <Grid key={index} xs={2} item>
                 {/* Set responsive layout */}
                 <Card sx={{ width: 168, height: 260 }}>
-                  <CardActionArea>
+                  <CardActionArea onClick={() => handleClick(item.ID)}>
                     <CardMedia
                       component="img"
                       alt={item.Title}

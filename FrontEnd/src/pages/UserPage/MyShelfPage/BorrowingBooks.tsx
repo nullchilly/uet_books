@@ -154,6 +154,7 @@ const BorrowingBooks = () => {
       return res.data;
     } catch (err: any) {
       alert("Book already returned");
+      //window.location.reload();
       console.log("fe : " + err.message);
     }
   };

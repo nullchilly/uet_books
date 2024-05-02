@@ -33,7 +33,7 @@ const FavouriteBooks = () => {
       );
       console.log(res.data, "favourite");
 
-      return res.data.rentalInfo;
+      return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
     }
@@ -43,8 +43,6 @@ const FavouriteBooks = () => {
     try {
       const allBookList = await getListFavourite(id);
       setFavourite(allBookList);
-
-      console.log(allBookList, "HIHI");
     } catch (error) {
       // Xử lý lỗi nếu có
     }
@@ -56,7 +54,7 @@ const FavouriteBooks = () => {
   const getBookList = async () => {
     try {
       let favouriteBooksData = [];
-      console.log("RENTING");
+      console.log("Favorite");
       for (let i = 0; i < favourite.length; i++) {
         const res = await axios.get(`http://localhost:3000/books/search`, {
           params: {
@@ -83,19 +81,19 @@ const FavouriteBooks = () => {
   const handleUnlike = async (ID: string) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/user/rental/returnBook",
+        "http://localhost:3000/user/deleteFavouriteBook",
         {
           userId: localStorage.getItem("id"),
           bookId: ID,
         }
       );
       console.log(res.data);
-      alert("Book returned successfully");
+      alert("Book unlike successfully");
       window.location.reload();
 
       return res.data;
     } catch (err: any) {
-      alert("Book already returned");
+      alert("Book already unliked");
       console.log("fe : " + err.message);
     }
   };
