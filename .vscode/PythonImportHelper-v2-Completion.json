@@ -24,6 +24,14 @@
         "documentation": {}
     },
     {
+        "label": "MongoClient",
+        "importPath": "pymongo",
+        "description": "pymongo",
+        "isExtraImport": true,
+        "detail": "pymongo",
+        "documentation": {}
+    },
+    {
         "label": "OperationFailure",
         "importPath": "pymongo.errors",
         "description": "pymongo.errors",
@@ -46,6 +54,24 @@
         "importPath": "pymysql",
         "description": "pymysql",
         "detail": "pymysql",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.pyplot",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.pyplot",
+        "description": "matplotlib.pyplot",
+        "detail": "matplotlib.pyplot",
         "documentation": {}
     },
     {
@@ -224,6 +250,78 @@
         "description": "BackEnd.sql2mongo_topics",
         "peekOfCode": "mongo_collection = mongo_db['updated']\n# Query data from MySQL\nwith mysql_conn.cursor() as cursor:\n    cursor.execute(\"SELECT * FROM topics where lang='en'\")\n    result = cursor.fetchall()\n# Insert data into MongoDB\nmongo_collection.insert_many(result)\n# Close connections\nmysql_conn.close()\nmongo_client.close()",
         "detail": "BackEnd.sql2mongo_topics",
+        "documentation": {}
+    },
+    {
+        "label": "mysql_conn",
+        "kind": 5,
+        "importPath": "benchmark.sql-mongo",
+        "description": "benchmark.sql-mongo",
+        "peekOfCode": "mysql_conn = pymysql.connect(\n    host='localhost',\n    user='root',\n    password='',\n    database='books',\n    port=3306,\n)\n# MongoDB Connection\nmongo_client = MongoClient('localhost', 27017)\nmongo_db = mongo_client['books']",
+        "detail": "benchmark.sql-mongo",
+        "documentation": {}
+    },
+    {
+        "label": "mongo_client",
+        "kind": 5,
+        "importPath": "benchmark.sql-mongo",
+        "description": "benchmark.sql-mongo",
+        "peekOfCode": "mongo_client = MongoClient('localhost', 27017)\nmongo_db = mongo_client['books']\nmongo_collection = mongo_db['updated']\n# Benchmarking Parameters\nnum_iterations = 10\ntitles = [\"Harry Potter\"]\n# Benchmarking MySQL\nmysql_times = []\nfor title in titles:\n    start_time = time.time()",
+        "detail": "benchmark.sql-mongo",
+        "documentation": {}
+    },
+    {
+        "label": "mongo_db",
+        "kind": 5,
+        "importPath": "benchmark.sql-mongo",
+        "description": "benchmark.sql-mongo",
+        "peekOfCode": "mongo_db = mongo_client['books']\nmongo_collection = mongo_db['updated']\n# Benchmarking Parameters\nnum_iterations = 10\ntitles = [\"Harry Potter\"]\n# Benchmarking MySQL\nmysql_times = []\nfor title in titles:\n    start_time = time.time()\n    with mysql_conn.cursor() as cursor:",
+        "detail": "benchmark.sql-mongo",
+        "documentation": {}
+    },
+    {
+        "label": "mongo_collection",
+        "kind": 5,
+        "importPath": "benchmark.sql-mongo",
+        "description": "benchmark.sql-mongo",
+        "peekOfCode": "mongo_collection = mongo_db['updated']\n# Benchmarking Parameters\nnum_iterations = 10\ntitles = [\"Harry Potter\"]\n# Benchmarking MySQL\nmysql_times = []\nfor title in titles:\n    start_time = time.time()\n    with mysql_conn.cursor() as cursor:\n        cursor.execute(f\"SELECT * FROM updated WHERE Title = '{title}'\")",
+        "detail": "benchmark.sql-mongo",
+        "documentation": {}
+    },
+    {
+        "label": "num_iterations",
+        "kind": 5,
+        "importPath": "benchmark.sql-mongo",
+        "description": "benchmark.sql-mongo",
+        "peekOfCode": "num_iterations = 10\ntitles = [\"Harry Potter\"]\n# Benchmarking MySQL\nmysql_times = []\nfor title in titles:\n    start_time = time.time()\n    with mysql_conn.cursor() as cursor:\n        cursor.execute(f\"SELECT * FROM updated WHERE Title = '{title}'\")\n        result = cursor.fetchall()\n    mysql_times.append(time.time() - start_time)",
+        "detail": "benchmark.sql-mongo",
+        "documentation": {}
+    },
+    {
+        "label": "titles",
+        "kind": 5,
+        "importPath": "benchmark.sql-mongo",
+        "description": "benchmark.sql-mongo",
+        "peekOfCode": "titles = [\"Harry Potter\"]\n# Benchmarking MySQL\nmysql_times = []\nfor title in titles:\n    start_time = time.time()\n    with mysql_conn.cursor() as cursor:\n        cursor.execute(f\"SELECT * FROM updated WHERE Title = '{title}'\")\n        result = cursor.fetchall()\n    mysql_times.append(time.time() - start_time)\n# Benchmarking MongoDB",
+        "detail": "benchmark.sql-mongo",
+        "documentation": {}
+    },
+    {
+        "label": "mysql_times",
+        "kind": 5,
+        "importPath": "benchmark.sql-mongo",
+        "description": "benchmark.sql-mongo",
+        "peekOfCode": "mysql_times = []\nfor title in titles:\n    start_time = time.time()\n    with mysql_conn.cursor() as cursor:\n        cursor.execute(f\"SELECT * FROM updated WHERE Title = '{title}'\")\n        result = cursor.fetchall()\n    mysql_times.append(time.time() - start_time)\n# Benchmarking MongoDB\nmongo_times = []\nfor title in titles:",
+        "detail": "benchmark.sql-mongo",
+        "documentation": {}
+    },
+    {
+        "label": "mongo_times",
+        "kind": 5,
+        "importPath": "benchmark.sql-mongo",
+        "description": "benchmark.sql-mongo",
+        "peekOfCode": "mongo_times = []\nfor title in titles:\n    start_time = time.time()\n    result = mongo_collection.find({\"Title\": title})\n    list(result)\n    mongo_times.append(time.time() - start_time)\n# Plotting\nplt.bar([\"MySQL\", \"MongoDB\"], [sum(mysql_times) / num_iterations, sum(mongo_times) / num_iterations])\nplt.ylabel('Average Execution Time (seconds)')\nplt.title('Benchmarking MySQL vs MongoDB')",
+        "detail": "benchmark.sql-mongo",
         "documentation": {}
     },
     {

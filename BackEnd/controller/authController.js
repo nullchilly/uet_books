@@ -1,6 +1,8 @@
 const sqlConnection = require("../util/sql.connection");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const validator = require("validator");
+const { createSecretRoleToken } = require("../util/SecretToken");
 
 module.exports.Login = async (req, res) => {
   try {
@@ -34,7 +36,11 @@ module.exports.Login = async (req, res) => {
     });
     //console.log(user, "user");
     //console.log(admin, "admin");
-
+    if (user.length === 0) {
+      const token = createSecretRoleToken("admin");
+    } else {
+      const token = createSecretRoleToken("user");
+    }
     if (user.length === 0 && admin.length === 0) {
       return res.status(400).json({ msg: "User not found" });
     }
@@ -191,6 +197,12 @@ module.exports.UpdateUser = async (req, res) => {
 
 module.exports.GetAllUser = async (req, res) => {
   try {
+    const token = req.cookies.token;
+    jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
+      if (err) {
+        return res.status(401).json({ msg: "false" });
+      }
+    })
     const result = await new Promise((resolve, reject) => {
       sqlConnection.query("SELECT * FROM user", (error, result) => {
         if (error) {
