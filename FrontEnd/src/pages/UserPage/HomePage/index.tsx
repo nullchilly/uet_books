@@ -6,15 +6,18 @@ import newarrivals from "../../../assets/img/newarrivals.jpeg";
 
 import { Box, Button, CardActionArea, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export interface BookInterface {
+  ID: string;
   Title: string;
   Coverurl: string;
   Author: string;
 }
 
 function HomePage() {
+  const navigate = useNavigate();
   const [showFullList, setShowFullList] = useState(false); // State to control data display
   const [showFullRecentList, setShowFullRecentList] = useState(false); // State to control data display
   const [books, setBooks] = useState<BookInterface[]>([]);
@@ -59,23 +62,21 @@ function HomePage() {
       }
     };
     console.log("fetching data");
-
     fetchData();
   }, []);
   const MAX_TITLE_LENGTH = 30;
   const shortenTitle = (title: string) => {
     if (title.length > MAX_TITLE_LENGTH) {
-      return title.slice(0, MAX_TITLE_LENGTH) + "...";
+      return title?.slice(0, MAX_TITLE_LENGTH) + "...";
     }
     return title;
   };
-  const filteredData = showFullList ? books : books.slice(0, 6); // Fil
+  const filteredData = showFullList ? books : books?.slice(0, 6); // Fil
   const filteredRecentData = showFullRecentList
     ? recommendBooks
-    : recommendBooks.slice(0, 6); // Fil
-  function handleClick() {
-    console.log("Button clicked!");
-    alert("Button clicked!");
+    : recommendBooks?.slice(0, 6);
+  function handleClick(book_id: any) {
+    navigate(`/user/${book_id}`);
   }
   return (
     <>
@@ -168,11 +169,11 @@ function HomePage() {
           }}
         >
           <Grid container spacing={3} xs={24}>
-            {filteredData.map((item, index) => (
+            {filteredData?.map((item, index) => (
               <Grid key={index} item xs={2}>
                 {/* Set responsive layout */}
                 <Card sx={{ width: 168, height: 260 }}>
-                  <CardActionArea onClick={handleClick}>
+                  <CardActionArea onClick={() => handleClick(item.ID)}>
                     <CardMedia
                       component="img"
                       alt={item.Title}
@@ -225,7 +226,7 @@ function HomePage() {
           }}
         >
           <Grid container spacing={3} xs={24}>
-            {filteredRecentData.map((item, index) => (
+            {filteredRecentData?.map((item, index) => (
               <Grid key={index} xs={2} item>
                 {/* Set responsive layout */}
                 <Card sx={{ width: 168, height: 260 }}>

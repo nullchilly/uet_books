@@ -6,7 +6,7 @@ import Fade from "@mui/material/Fade";
 import { Input } from "@material-tailwind/react";
 
 import { Box, Button, CardContent, Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ValidatorForm } from "react-material-ui-form-validator";
 
@@ -46,7 +46,6 @@ const BorrowingBooks = () => {
   const [title, setTitle] = useState(""); // State to control data display
   const [borrowingBooks, setBorrowingBooks] = useState<BookInterface[]>([]);
   const [price, setPrice] = useState("30"); // State to control data display
-  const [openModalRental, setOpenModalRental] = useState(false);
   const [openModalReturn, setOpenModalReturn] = useState(false);
   let fullName = localStorage.getItem("fullName") || "";
   let id = localStorage.getItem("id") || "";
@@ -109,24 +108,6 @@ const BorrowingBooks = () => {
     console.log(borrowingBooks);
   }, []);
 
-  const handleRental = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:3000/user/rental/addRental",
-        {
-          userId: localStorage.getItem("id"),
-          bookMongoId: "mongo3",
-          price: price,
-        }
-      );
-      console.log(res.data);
-      alert("Book rented successfully");
-      return res.data;
-    } catch (err: any) {
-      alert("Book already rented");
-      console.log("fe : " + err.message);
-    }
-  };
   const handleReturn = async () => {
     try {
       const res = await axios.post(
@@ -224,7 +205,6 @@ const BorrowingBooks = () => {
                         color: "white",
                       }}
                       onClick={() => {
-                        setOpenModalRental(true);
                         setTitle(item.Title);
                       }}
                     >
@@ -251,122 +231,7 @@ const BorrowingBooks = () => {
           ))}
         </Grid>
       }
-      {/* Modal Rental */}
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openModalRental}
-        onClose={() => setOpenModalRental(false)}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={openModalRental}>
-          <Box sx={styleModal}>
-            <Typography
-              id="transition-modal-title"
-              sx={{ textAlign: "center" }}
-              variant="h6"
-              component="h2"
-            >
-              Fill Up the details
-            </Typography>
-            <ValidatorForm onSubmit={handleRental}>
-              {/*  <Typography>From: {formattedDate}</Typography> */}
-              <Typography
-                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
-                variant="subtitle2"
-              >
-                Book
-              </Typography>
-              <Input
-                type="search"
-                style={{
-                  color: "black",
-                  backgroundColor: "#F0F3F7",
-                  border: 1,
-                  borderColor: "#E0E4EC",
-                  padding: 8,
-                  fontSize: 16,
-                  width: "90%",
-                  height: 42,
-                  marginLeft: 16,
-                }}
-                defaultValue={title}
-                disabled
-                crossOrigin={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
-              <Typography
-                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
-                variant="subtitle2"
-              >
-                FullName
-              </Typography>
-              <Input
-                type="search"
-                style={{
-                  color: "black",
-                  backgroundColor: "#F0F3F7",
-                  border: 1,
-                  borderColor: "#E0E4EC",
-                  padding: 8,
-                  fontSize: 16,
-                  width: "90%",
-                  height: 42,
-                  marginLeft: 16,
-                }}
-                defaultValue={fullName}
-                disabled
-                crossOrigin={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
-              <Typography
-                sx={{ marginLeft: 2, marginBottom: 1, marginTop: 1 }}
-                variant="subtitle2"
-              >
-                Price
-              </Typography>
-              <Input
-                type="search"
-                style={{
-                  color: "black",
-                  backgroundColor: "#F0F3F7",
-                  border: 1,
-                  borderColor: "#E0E4EC",
-                  padding: 8,
-                  fontSize: 16,
-                  width: "90%",
-                  height: 42,
-                  marginLeft: 16,
-                }}
-                defaultValue={price}
-                disabled
-                crossOrigin={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
 
-              <Button
-                sx={{
-                  marginTop: "10px",
-                  backgroundColor: "#F27851",
-                  width: "90%",
-                  marginLeft: 2,
-                }}
-                variant="contained"
-                type="submit"
-              >
-                Rental
-              </Button>
-            </ValidatorForm>
-          </Box>
-        </Fade>
-      </Modal>
       {/* Modal Return */}
       <Modal
         aria-labelledby="transition-modal-title"
