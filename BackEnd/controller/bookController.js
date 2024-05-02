@@ -63,7 +63,7 @@ const Books = mongoose.model("books", bookSchema, "updated");
 //   topic_id_hl: { type: Number }
 // });
 
-// const Topics = mongoose.model("topics", topicSchema, "updated");
+// const Topics = mongoose.model("books", topicSchema, "topics");
 // const Topics = mongoose.model("topics", topicSchema);
 
 const bookCtrl = {
@@ -271,30 +271,55 @@ const bookCtrl = {
   },
   getAllBooksBySearch: async (req, res) => {
     try {
-      const { id, keyword } = req.query;
+      const { id, keyword, topic } = req.query;
       if (id) {
-        const cachedValue = await redis.get('ID' + id.toString())
+        const cachedValue = await redis.get('ID' + id.toString());
         if (cachedValue) {
-          res.json(JSON.parse(cachedValue))
+          res.json(JSON.parse(cachedValue));
           return;
         }
         const book = await Books.findOne({ ID: id });
         if (book) {
-          await redis.set('ID' + id.toString(), JSON.stringify(book))
+          await redis.set('ID' + id.toString(), JSON.stringify(book));
           res.json(book);
         } else {
           res.json({ msg: "No book with such id" });
         }
         return;
       }
-      const books = await Books.find({
-        $or: [{ Title: { $regex: keyword, $options: "i" } }],
-      });
-      if (books) {
-        res.json(books);
-      } else {
-        res.json({ msg: "No such book" });
+      if (topic > 0 && keyword) {
+        const booksByTopicAndKeyword = await Books.find({
+          Topic: topic,
+          Title: { $regex: keyword, $options: "i" }
+        });
+        if (booksByTopicAndKeyword.length > 0) {
+          res.json(booksByTopicAndKeyword);
+        } else {
+          res.json({ msg: "No books found for the specified topic and keyword" });
+        }
+        return;
       }
+      if (topic > 0) {
+        const booksByTopic = await Books.find({ Topic: topic });
+        if (booksByTopic.length > 0) {
+          res.json(booksByTopic);
+        } else {
+          res.json({ msg: "No books found for the specified topic" });
+        }
+        return;
+      }
+      if (keyword) {
+        const booksByKeyword = await Books.find({
+          Title: { $regex: keyword, $options: "i" }
+        });
+        if (booksByKeyword.length > 0) {
+          res.json(booksByKeyword);
+        } else {
+          res.json({ msg: "No books found for the specified keyword" });
+        }
+        return;
+      }
+      res.json({ msg: "Please provide a valid search parameter" });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
