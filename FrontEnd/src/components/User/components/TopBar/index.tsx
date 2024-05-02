@@ -15,6 +15,7 @@ import Tippy from "@tippyjs/react/headless";
 import { Topics } from "../../../../constant/topic";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
+import { SearchStoreHook } from "../../../../redux/hooks/SearchStoreHook";
 
 const LegitTopics = Object.entries(Topics).map(([id, label]) => ({
   label,
@@ -23,6 +24,7 @@ const LegitTopics = Object.entries(Topics).map(([id, label]) => ({
 
 function TopBarUser() {
   const navigate = useNavigate();
+  const { getAllSerchData, setBookSearchData } = SearchStoreHook();
   // open profile user
   const [visible, setVisible] = useState(false);
   const show = () => setVisible(true);
@@ -49,14 +51,15 @@ function TopBarUser() {
     try {
       const res = await axios.get(`http://localhost:3000/books/search`, {
         params: {
-          keyword: queryValue,
+          keyword: queryValue.toString(),
           topic: topicValue.id,
         },
       });
 
-      console.log(res.data);
+      // console.log(res.data);
+      setBookSearchData(res.data);
     } catch (err: any) {
-      console.log("fe : " + err.message);
+      console.log("fe error search: " + err.message);
     }
   };
 

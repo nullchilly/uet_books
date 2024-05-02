@@ -1,52 +1,56 @@
 import React from "react";
 import { Box, Typography, Checkbox, Chip, Button } from "@mui/material";
+import CardMedia from "@mui/material/CardMedia";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
+import { Topics } from "../../../constant/topic";
 
 type PropsType = {
-  id: string;
-  book_img_url: string;
-  name: string;
-  author: string;
-  publish_year: number;
+  ID: string;
+  Coverurl: string;
+  Title: string;
+  Author: string;
+  Year: string;
   rating: number;
-  category: any;
+  Topic: any;
   status: string;
 };
 
 function BookCardList({
-  id,
-  book_img_url,
-  name,
-  author,
-  publish_year,
+  ID,
+  Coverurl,
+  Title,
+  Author,
+  Year,
   rating,
-  category,
+  Topic,
   status,
 }: PropsType) {
   const navigate = useNavigate();
 
   const handleOpenBook = () => {
-    navigate(`/user/${id}`);
+    navigate(`/user/${ID}`);
   };
+
+  console.log(Coverurl);
 
   return (
     <Box className="BookCardList-container-item">
       <Box className="BookCardList-container-item-img-info">
         <img
-          src={book_img_url}
+          src={`https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/${Coverurl}`}
           alt="book image"
           className="BookCardList-container-item-image"
         />
         <Box>
           <Typography sx={{ color: "#4D4D4D", fontWeight: "400" }}>
-            {name}
+            {Title}
           </Typography>
           <Typography sx={{ color: "#4D4D4D", fontSize: "12px" }}>
-            {author},{publish_year}
+            {Author},{Year}
           </Typography>
         </Box>
       </Box>
@@ -55,9 +59,7 @@ function BookCardList({
         <Typography sx={{ color: "#A7A7A7", fontSize: "13px" }}>/5</Typography>
       </Typography>
       <Box className="BookCardList-container-item-category">
-        {category.map((item, index) => {
-          return <Typography key={index}>{item}</Typography>;
-        })}
+        <Typography>{Topics.Topic ?? `null`}</Typography>
       </Box>
       <Box className="BookCardList-container-item-availability">
         <Box sx={{ display: "flex", alignItems: "center" }}>
