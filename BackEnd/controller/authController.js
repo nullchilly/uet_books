@@ -1,3 +1,4 @@
+require("dotenv").config();
 const sqlConnection = require("../util/sql.connection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -36,10 +37,11 @@ module.exports.Login = async (req, res) => {
     });
     //console.log(user, "user");
     //console.log(admin, "admin");
+    let token
     if (user.length === 0) {
-      const token = createSecretRoleToken("admin");
+      token = createSecretRoleToken("admin");
     } else {
-      const token = createSecretRoleToken("user");
+      token = createSecretRoleToken("user");
     }
     if (user.length === 0 && admin.length === 0) {
       return res.status(400).json({ msg: "User not found" });
@@ -51,7 +53,10 @@ module.exports.Login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid Password" });
     }
-
+    res.cookie("token", token, {
+      withCredentials: true,
+      httpOnly: false,
+    });
     return res.status(200).json({
       id: foundUser.id,
       role: user.length !== 0 ? "user" : "admin",
@@ -61,6 +66,7 @@ module.exports.Login = async (req, res) => {
       // idPage: 0,
       // idPage: 0,
       msg: "Login success",
+      token: token,
     });
   } catch (error) {
     console.log(error);
@@ -123,7 +129,16 @@ module.exports.Register = async (req, res) => {
 };
 
 module.exports.DeleteUser = async (req, res) => {
+  if (!req.cookies.token) {
+    return res.json({ status: false, message: "Please login first" });
+  }
   try {
+    const token = req.cookies.token;
+    jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
+      if (err) {
+        return res.status(401).json({ msg: "false" });
+      }
+    })
     const { id } = req.body;
     const result = await new Promise((resolve, reject) => {
       sqlConnection.query(
@@ -152,7 +167,16 @@ module.exports.DeleteUser = async (req, res) => {
 };
 
 module.exports.UpdateUser = async (req, res) => {
+  if (!req.cookies.token) {
+    return res.json({ status: false, message: "Please login first" });
+  }
   try {
+    const token = req.cookies.token;
+    jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
+      if (err) {
+        return res.status(401).json({ msg: "false" });
+      }
+    })
     console.log(req.body);
     const { id, updates } = req.body;
 
@@ -196,6 +220,10 @@ module.exports.UpdateUser = async (req, res) => {
 };
 
 module.exports.GetAllUser = async (req, res) => {
+  if (!req.cookies.token) {
+    return res.json({ status: false, message: "Please login first" });
+  }
+  console.log(req)
   try {
     const token = req.cookies.token;
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
