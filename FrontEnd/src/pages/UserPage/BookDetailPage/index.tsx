@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -31,10 +31,10 @@ import axios from "axios";
 
 const dumpData = {
   id: "abc123",
-  book_img_url: `https://minh.la/wp-content/uploads/2020/03/Dont-make-me-think.jpg`,
-  name: `Don't Make Me Think`,
-  author: `Steve Krug`,
-  publish_year: 2000,
+  Coverurl: `https://minh.la/wp-content/uploads/2020/03/Dont-make-me-think.jpg`,
+  Title: `Don't Make Me Think`,
+  Author: `Steve Krug`,
+  Year: 2000,
   rating: 4.5,
   category: [12, 49],
   status: "In-Shelf",
@@ -78,7 +78,24 @@ function BookDetail() {
   const handleNavigateToReadingBook = () => {
     navigate(`/user/view/${book_id}`);
   };
+  const getDetailBook = async () => {
+    try {
+      const res = await axios.get(`http://localhost:3000/books/search`, {
+        params: {
+          id: book_id,
+        },
+      });
 
+      console.log(res.data);
+      setBookDetail(res.data);
+    } catch (err: any) {
+      console.log("fe : " + err.message);
+    }
+  };
+  useEffect(() => {
+    getDetailBook();
+    setTitle(bookDetail.Title);
+  }, []);
   const handleRental = async () => {
     try {
       const res = await axios.post(
@@ -122,7 +139,10 @@ function BookDetail() {
           <Grid item xs={3}>
             <Box className="Book-image-container">
               <img
-                src={bookDetail?.book_img_url}
+                src={
+                  "https://raw.githubusercontent.com/nullchilly/libgen_covers/covers/" +
+                  bookDetail?.Coverurl
+                }
                 alt="img book"
                 className="Book-image"
               />
@@ -176,7 +196,7 @@ function BookDetail() {
                 marginBottom: "4px",
               }}
             >
-              {bookDetail.name}
+              {bookDetail.Title}
             </Typography>
             <Typography
               sx={{
@@ -185,7 +205,7 @@ function BookDetail() {
                 color: "#4D4D4D",
                 marginBottom: "8px",
               }}
-            >{`By ${bookDetail.author}, ${bookDetail.publish_year}`}</Typography>
+            >{`By ${bookDetail?.Author}, ${bookDetail?.Year}`}</Typography>
             <Typography
               sx={{ color: "#9A9A9A", marginBottom: "20px", fontSize: "14px" }}
             >{`Second Edition`}</Typography>
@@ -345,7 +365,7 @@ function BookDetail() {
                     marginRight: "60px",
                   }}
                 >
-                  {bookDetail.author}
+                  {bookDetail.Author}
                 </Typography>
                 <img
                   src={DefaultAuthor}
