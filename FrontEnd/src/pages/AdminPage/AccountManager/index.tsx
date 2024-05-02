@@ -177,9 +177,7 @@ function AccountManagementPage() {
   const getData = async () => {
     try {
       console.log("get data");
-      //    console.log(rowsPerPage, "rowsPerPage");
       const res = await axios.get("http://localhost:3000/getAllUser");
-      // console.log(res.data, "getData");
       return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
@@ -197,10 +195,10 @@ function AccountManagementPage() {
       console.log("Failed to fetch data: ", error);
     }
   };
-  
+
   useEffect(() => {
     fetchData();
-  }, [searchQuery=== ""]);
+  }, [searchQuery === ""]);
 
   const handleQueryUser = async (fullName: string) => {
     try {

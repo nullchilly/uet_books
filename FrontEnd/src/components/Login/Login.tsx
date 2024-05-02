@@ -41,16 +41,13 @@ export default function Login() {
       //console.log(res.data);
       setLoading(false);
       if (res.data.msg === "Login success") {
-        /*     setUsername("");
-        setPassword(""); */
         console.log(res.data);
-        console.log("abdc");
         localStorage.setItem("id", res.data.id);
         localStorage.setItem("role", res.data.role);
         localStorage.setItem("fullName", res.data.fullName);
         localStorage.setItem("username", res.data.username);
         localStorage.setItem("email", res.data.email);
-        //  localStorage.setItem("idPage", res.data.idPage);
+        localStorage.setItem("token", res.data.token);
         if (res.data.role === "admin") navigate("/admin/bookmanagement");
         else {
           navigate("/user/home");
