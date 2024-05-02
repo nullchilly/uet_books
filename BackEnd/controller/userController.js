@@ -112,8 +112,27 @@ module.exports.DeleteFavouriteBook = async (req, res) => {
     }
 }
 
-module.exports.getBooks = async (req, res) => {
-    return res.status(200).json({ msg: "getBook" });
+module.exports.getFavouriteBooks = async (req, res) => {
+    const userId = req.params.userId;
+    const result = await new Promise((resolve, reject) => {
+        sqlConnection.query(
+            "SELECT b.mongoId FROM favourite_book f JOIN book b ON f.bookId = b.id WHERE f.userId = ?",
+            [userId],
+            (error, result) => {
+                if (error) {
+                    console.error("Error executing SQL query:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+    })
+    if (result.length == 0) {
+        return res.status(400).json({ msg: "no favourite book" });
+    }
+    else{
+        return res.status(200).json(result);}
 }
 
 module.exports.getUserInfoByName = async (req, res) => {
