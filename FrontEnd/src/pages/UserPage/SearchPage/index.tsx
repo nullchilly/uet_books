@@ -1,7 +1,8 @@
-import React from "react";
-import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Typography } from "@mui/material";
 import "./style.scss";
 import BookCardList from "./BookCardList";
+import { SearchStoreHook } from "../../../redux/hooks/SearchStoreHook";
 
 const dumpList = [
   {
@@ -27,7 +28,13 @@ const dumpList = [
 ];
 
 const SearchPage = () => {
-  const [signatureBook, setSignatureBook] = React.useState(dumpList);
+  const [signatureBook, setSignatureBook] = React.useState([]);
+  const { getAllSerchData } = SearchStoreHook();
+
+  useEffect(() => {
+    setSignatureBook(getAllSerchData());
+  });
+
   return (
     <Box id="style-2" className="container">
       <Box className="BookCardList-container">
@@ -46,14 +53,14 @@ const SearchPage = () => {
               return (
                 <BookCardList
                   key={index}
-                  id={item.id}
-                  book_img_url={item.book_img_url}
-                  name={item.name}
-                  author={item.author}
-                  publish_year={item.publish_year}
-                  rating={item.rating}
-                  category={item.category}
-                  status={item.status}
+                  ID={item.ID}
+                  Coverurl={item.Coverurl}
+                  Title={item.Title}
+                  Author={item.Author}
+                  Year={item.Year}
+                  rating={Math.floor(3 + Math.random() * 2)}
+                  Topic={+item.Topic}
+                  status="In-Shelf"
                 />
               );
             })}

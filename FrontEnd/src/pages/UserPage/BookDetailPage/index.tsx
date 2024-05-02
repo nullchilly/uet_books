@@ -96,6 +96,7 @@ function BookDetail() {
     getDetailBook();
     setTitle(bookDetail.Title);
   }, []);
+  const rating = Math.floor(3 + Math.random() * 2);
   const handleLike = async () => {
     try {
       const res = await axios.post(
@@ -235,12 +236,7 @@ function BookDetail() {
                 marginBottom: "20px",
               }}
             >
-              <Rating
-                size="small"
-                value={bookDetail.rating}
-                readOnly
-                precision={0.5}
-              />
+              <Rating size="small" value={rating} readOnly precision={0.5} />
               <Typography
                 sx={{
                   fontSize: "13px",
@@ -248,7 +244,7 @@ function BookDetail() {
                   color: "#4D4D4D",
                   marginRight: "16px",
                 }}
-              >{`${bookDetail.rating} Ratings`}</Typography>
+              >{`${rating} Ratings`}</Typography>
               <Typography
                 sx={{
                   fontSize: "13px",
@@ -311,7 +307,7 @@ function BookDetail() {
                 <Box
                   sx={{ display: "flex", flexDirection: "column", gap: "12px" }}
                 >
-                  <Chip label={`${bookDetail.status}`} color="success" />
+                  <Chip label={`In-Shelf`} color="success" />
                   <Box
                     sx={{
                       display: "flex",
