@@ -208,16 +208,6 @@ function BookManagementPage() {
     }
   };
 
-  /* const handleQuery = async () => {
-    let allBookList: BookInterface[] = await getAllBooks();
-    console.log(allBookList);
-    if (searchQuery !== "") {
-      allBookList = allBookList.filter((row) =>
-        row.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    setRows(allBookList);
-  }; */
   const handleCreate = async () => {
     try {
       const res = await axios.post("http://localhost:3000/books/create", {

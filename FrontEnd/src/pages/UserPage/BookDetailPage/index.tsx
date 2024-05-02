@@ -108,6 +108,7 @@ function BookDetail() {
       );
       console.log(res.data);
       alert("Book rented successfully");
+      window.location.reload();
       return res.data;
     } catch (err: any) {
       alert("Book already rented");
@@ -480,7 +481,7 @@ function BookDetail() {
                     height: 42,
                     marginLeft: 16,
                   }}
-                  defaultValue={title}
+                  defaultValue={bookDetail?.Title}
                   disabled
                   crossOrigin={undefined}
                   onPointerEnterCapture={undefined}
