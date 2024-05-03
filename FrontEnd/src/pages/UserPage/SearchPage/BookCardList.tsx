@@ -35,7 +35,7 @@ function BookCardList({
     navigate(`/user/${ID}`);
   };
 
-  console.log(Coverurl);
+  console.log(`https://libgen.is/covers/${Coverurl}`);
 
   return (
     <Box className="BookCardList-container-item">

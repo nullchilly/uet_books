@@ -273,14 +273,15 @@ const bookCtrl = {
     try {
       const { id, keyword, topic } = req.query;
       if (id) {
-        const cachedValue = await redis.get('ID' + id.toString());
-        if (cachedValue) {
-          res.json(JSON.parse(cachedValue));
-          return;
-        }
+        // const cachedValue = await redis.get('ID' + id.toString());
+        // if (cachedValue) {
+        //   res.json(JSON.parse(cachedValue));
+        //   return;
+        // }
+        console.log("what")
         const book = await Books.findOne({ ID: id });
         if (book) {
-          await redis.set('ID' + id.toString(), JSON.stringify(book));
+          // await redis.set('ID' + id.toString(), JSON.stringify(book));
           res.json(book);
         } else {
           res.json({ msg: "No book with such id" });
