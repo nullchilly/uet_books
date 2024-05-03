@@ -161,7 +161,7 @@ function AccountManagementPage() {
   const [address, setAddress] = React.useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-
+  let token = localStorage.getItem("token") || "";
   // validate custom
   useEffect(() => {
     ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
@@ -174,10 +174,10 @@ function AccountManagementPage() {
 
   // Get data
 
-  const getData = async () => {
+  const getData = async (token: string) => {
     try {
       console.log("get data");
-      const res = await axios.get("http://localhost:3000/getAllUser");
+      const res = await axios.get(`http://localhost:3000/getAllUser/${token}`);
       return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
@@ -185,7 +185,7 @@ function AccountManagementPage() {
   };
   const fetchData = async () => {
     try {
-      const allUserList = await getData();
+      const allUserList = await getData(token);
       console.log(allUserList, "USELETS");
       setRows(allUserList.data);
 
