@@ -41,7 +41,7 @@ module.exports.Login = async (req, res) => {
     if (user.length === 0) {
       token = createSecretRoleToken("admin");
     } else {
-      token = createSecretRoleToken("user");
+      token = null;
     }
     if (user.length === 0 && admin.length === 0) {
       return res.status(400).json({ msg: "User not found" });
@@ -136,7 +136,7 @@ module.exports.DeleteUser = async (req, res) => {
     const token = req.body.token;
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
       if (err) {
-        return res.status(401).json({ msg: "false" });
+        return res.status(401).json({ msg: "you are not admin" });
       }
     })
     const { id } = req.body;
@@ -220,12 +220,12 @@ module.exports.UpdateUser = async (req, res) => {
 };
 
 module.exports.GetAllUser = async (req, res) => {
-  if (!req.body.token) {
+  if (!req.params.token) {
     return res.json({ status: false, message: "Please login first" });
   }
   console.log(req)
   try {
-    const token = req.body.token;
+    const token = req.params.token;
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
       if (err) {
         return res.status(401).json({ msg: "false" });
