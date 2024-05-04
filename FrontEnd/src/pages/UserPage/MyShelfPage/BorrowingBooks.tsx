@@ -159,7 +159,7 @@ const BorrowingBooks = () => {
     }
   };
   function handleClick(book_id: any) {
-    navigate(`/user/${book_id}`);
+    navigate(`/user/view/${book_id}`);
   }
   const filteredData = showFullList
     ? borrowingBooks

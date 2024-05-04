@@ -9,10 +9,10 @@ module.exports.Login = async (req, res) => {
   try {
     const sqlInjectionRegex = /[\s"';]/; // Regex để kiểm tra các ký tự đặc biệt phổ biến trong SQL Injection
 
+    const { username, password } = req.body;
     if (sqlInjectionRegex.test(username) || sqlInjectionRegex.test(password)) {
       return res.status(400).json({ msg: "Invalid input" });
     }
-    const { username, password } = req.body;
     console.log(username, password);
     if (!username) {
       return res.status(400).json({ msg: "Invalid Email" });

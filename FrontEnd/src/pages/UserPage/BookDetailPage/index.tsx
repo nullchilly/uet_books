@@ -347,7 +347,7 @@ function BookDetail() {
                 sx={{ backgroundColor: "#41B64D", minWidth: "160px" }}
                 onClick={() => handleNavigateToReadingBook()}
               >
-                Read now
+                Preview
               </Button>
             </Box>
           </Grid>

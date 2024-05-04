@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const sqlConnection = require("../util/sql.connection");
 const redis = require("../util/redis.connection");
+const logger = require('../util/log');
 
 const bookSchema = new mongoose.Schema({
   ID: { type: Number },
@@ -122,6 +123,7 @@ const bookCtrl = {
       });
       // Save mongodb
       await newBook.save();
+      logger.info("Created book successfully")
       res.json({ msg: "Created book successfully", create: true });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
@@ -220,6 +222,7 @@ const bookCtrl = {
         limit = limit || 30
         books = await Books.find().limit(limit)
       }
+      logger.info("Get all books")
       // console.log(books);
       if (books) {
         res.json(books);
@@ -278,7 +281,6 @@ const bookCtrl = {
         //   res.json(JSON.parse(cachedValue));
         //   return;
         // }
-        console.log("what")
         const book = await Books.findOne({ ID: id });
         if (book) {
           // await redis.set('ID' + id.toString(), JSON.stringify(book));

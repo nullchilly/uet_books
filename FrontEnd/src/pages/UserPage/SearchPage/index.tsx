@@ -28,7 +28,7 @@ const dumpList = [
 ];
 
 const SearchPage = () => {
-  const [signatureBook, setSignatureBook] = React.useState([]);
+  const [signatureBook, setSignatureBook] = React.useState([...dumpList]);
   const { getAllSerchData } = SearchStoreHook();
 
   useEffect(() => {
