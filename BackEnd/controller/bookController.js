@@ -274,7 +274,8 @@ const bookCtrl = {
   },
   getAllBooksBySearch: async (req, res) => {
     try {
-      const { id, keyword, topic } = req.query;
+      let { id, keyword, topic, limit } = req.query;
+      limit = limit ?? 100;
       if (id) {
         // const cachedValue = await redis.get('ID' + id.toString());
         // if (cachedValue) {
@@ -314,7 +315,7 @@ const bookCtrl = {
       if (keyword) {
         const booksByKeyword = await Books.find({
           Title: { $regex: keyword, $options: "i" }
-        });
+        }).limit(limit);
         if (booksByKeyword.length > 0) {
           res.json(booksByKeyword);
         } else {

@@ -40,6 +40,7 @@ function TopBarUser() {
   function handleSearch() {
     if (topicValue && queryValue.length >= 2) {
       getDataSearch();
+      navigate(`/user/search`);
     } else {
       alert(
         "Topic field invalid or Query length must be more than 2 characters"
