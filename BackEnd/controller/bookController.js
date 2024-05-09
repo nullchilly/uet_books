@@ -275,7 +275,7 @@ const bookCtrl = {
   getAllBooksBySearch: async (req, res) => {
     try {
       let { id, keyword, topic, limit } = req.query;
-      limit = limit ?? 100;
+      limit = limit ?? 50;
       if (id) {
         // const cachedValue = await redis.get('ID' + id.toString());
         // if (cachedValue) {
