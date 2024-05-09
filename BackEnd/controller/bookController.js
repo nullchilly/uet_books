@@ -245,12 +245,26 @@ const bookCtrl = {
       return res.status(500).json({ msg: error.message });
     }
   },
-  getBookById: async (req, res) => {
+  // getBookById: async (req, res) => {
+  //   try {
+  //     const { id } = req.body;
+  //     const book = await Books.findOne({ ID: id });
+  //     if (book) {
+  //       res.json(book);
+  //     } else {
+  //       res.json({ msg: "No book with such id" });
+  //     }
+  //   } catch (error) {
+  //     return res.status(500).json({ msg: error.message });
+  //   }
+  // },
+  getMD5ById: async (req, res) => {
     try {
-      const { id } = req.body;
+      const { id } = req.query;
+      console.log(id)
       const book = await Books.findOne({ ID: id });
       if (book) {
-        res.json(book);
+        res.json(book['MD5']);
       } else {
         res.json({ msg: "No book with such id" });
       }
