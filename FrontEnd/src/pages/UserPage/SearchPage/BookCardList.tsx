@@ -15,7 +15,7 @@ type PropsType = {
   Author: string;
   Year: string;
   rating: number;
-  Topic: any;
+  Topic: number;
   status: string;
 };
 
@@ -59,7 +59,7 @@ function BookCardList({
         <Typography sx={{ color: "#A7A7A7", fontSize: "13px" }}>/5</Typography>
       </Typography>
       <Box className="BookCardList-container-item-category">
-        <Typography>{Topics.Topic ?? `null`}</Typography>
+        <Typography>{Topics[Topic] ?? `null`}</Typography>
       </Box>
       <Box className="BookCardList-container-item-availability">
         <Box sx={{ display: "flex", alignItems: "center" }}>
