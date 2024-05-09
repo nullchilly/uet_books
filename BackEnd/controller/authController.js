@@ -118,7 +118,7 @@ module.exports.Register = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await sqlConnection.query(
-      "INSERT INTO user (username, fullName, password, email, address, budget) VALUES (?, ?, ?, ?,?, 0)",
+      "INSERT INTO user (username, fullName, password, email, address, budget) VALUES (?, ?, ?, ?,?, 10000)",
       [username, fullName, hashedPassword, email, address]
     );
 
