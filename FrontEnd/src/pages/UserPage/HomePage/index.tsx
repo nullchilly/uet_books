@@ -40,7 +40,7 @@ function HomePage() {
   };
   const getRecommendBooks = async (rowsPerPage: Number, page: Number) => {
     try {
-      const res = await axios.get("${import.meta.env.VITE_BACKEND}/books/all", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/all`, {
         params: { pageSize: rowsPerPage, pageNumber: page },
       });
       console.log(res.data);
