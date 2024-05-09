@@ -158,7 +158,7 @@ function BookManagementPage() {
   const [limit, setLimit] = useState(100);
   const bookCount = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/books/count");
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/count`);
       console.log(res.data, "count");
       return res.data;
     } catch (err: any) {
@@ -170,7 +170,7 @@ function BookManagementPage() {
   };
   const getAllBooks = async (rowsPerPage: Number, page: Number) => {
     try {
-      const res = await axios.get("http://localhost:3000/books/all", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/all`, {
         params: { pageSize: rowsPerPage, pageNumber: page },
       });
       console.log(res.data);
@@ -198,7 +198,7 @@ function BookManagementPage() {
 
   const handleQuery = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/books/search", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/search`, {
         params: { keyword: searchQuery },
       });
       console.log(res.data);
@@ -210,7 +210,7 @@ function BookManagementPage() {
 
   const handleCreate = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/books/create", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND}/books/create`, {
         Title: name,
         Language: language,
         Coverurl: image,
@@ -231,7 +231,7 @@ function BookManagementPage() {
   // update book
   const handleEdit = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/books/update", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND}/books/update`, {
         id: id,
         Title: name,
         Language: language,
@@ -252,7 +252,7 @@ function BookManagementPage() {
   // delete book
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.post("http://localhost:3000/books/delete", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND}/books/delete`, {
         id: id,
       });
       if (res.data.delete) {

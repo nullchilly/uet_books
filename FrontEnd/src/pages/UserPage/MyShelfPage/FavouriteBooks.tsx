@@ -29,7 +29,7 @@ const FavouriteBooks = () => {
   const getListFavourite = async (userId: string) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/user/getFavouriteBooks/${userId}`
+        `${import.meta.env.VITE_BACKEND}/user/getFavouriteBooks/${userId}`
       );
       console.log(res.data, "favourite");
 
@@ -56,7 +56,7 @@ const FavouriteBooks = () => {
       let favouriteBooksData = [];
       console.log("Favorite");
       for (let i = 0; i < favourite.length; i++) {
-        const res = await axios.get(`http://localhost:3000/books/search`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/search`, {
           params: {
             id: favourite[i].mongoId,
           },
@@ -81,7 +81,7 @@ const FavouriteBooks = () => {
   const handleUnlike = async (ID: string) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/user/deleteFavouriteBook",
+        `${import.meta.env.VITE_BACKEND}/user/deleteFavouriteBook`,
         {
           userId: localStorage.getItem("id"),
           bookId: ID,

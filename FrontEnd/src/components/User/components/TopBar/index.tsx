@@ -49,7 +49,7 @@ function TopBarUser() {
 
   const getDataSearch = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/books/search`, {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/search`, {
         params: {
           keyword: queryValue.toString(),
           topic: topicValue.id,

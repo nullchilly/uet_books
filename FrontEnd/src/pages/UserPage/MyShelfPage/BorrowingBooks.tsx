@@ -65,7 +65,7 @@ const BorrowingBooks = () => {
     try {
       let borrowingBooksData = [];
       for (let i = 0; i < data.length; i++) {
-        const res = await axios.get(`http://localhost:3000/books/search`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/search`, {
           params: {
             id: data[i].mongoId,
           },
@@ -88,7 +88,7 @@ const BorrowingBooks = () => {
   const getListBorrow = async (userId: string) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/user/rental/rentingBook/${userId}`
+        `${import.meta.env.VITE_BACKEND}/user/rental/rentingBook/${userId}`
       );
       console.log(res.data, "renting");
 
@@ -116,7 +116,7 @@ const BorrowingBooks = () => {
       let borrowingBooksData = [];
       console.log("RENTING");
       for (let i = 0; i < renting.length; i++) {
-        const res = await axios.get(`http://localhost:3000/books/search`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/search`, {
           params: {
             id: renting[i].mongoId,
           },
@@ -141,7 +141,7 @@ const BorrowingBooks = () => {
   const handleReturn = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/user/rental/returnBook",
+        `${import.meta.env.VITE_BACKEND}/user/rental/returnBook`,
         {
           userId: localStorage.getItem("id"),
           bookId: ID,

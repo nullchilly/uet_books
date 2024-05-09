@@ -177,7 +177,7 @@ function AccountManagementPage() {
   const getData = async (token: string) => {
     try {
       console.log("get data");
-      const res = await axios.get(`http://localhost:3000/getAllUser/${token}`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/getAllUser/${token}`);
       return res.data;
     } catch (err: any) {
       console.log("fe : " + err.message);
@@ -203,7 +203,7 @@ function AccountManagementPage() {
   const handleQueryUser = async (fullName: string) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/user/getUserInfo/${fullName}`
+        `${import.meta.env.VITE_BACKEND}/user/getUserInfo/${fullName}`
       );
       console.log(res.data, "search");
       setRows(res.data);
@@ -247,7 +247,7 @@ function AccountManagementPage() {
   // Create user
   const handleCreateUser = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/register", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND}/register`, {
         username: userName,
         password: password,
         email: email,
@@ -272,7 +272,7 @@ function AccountManagementPage() {
   // Delete user
   const handleDeleteUser = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/deleteUser", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND}/deleteUser`, {
         id: id,
       });
 
@@ -288,7 +288,7 @@ function AccountManagementPage() {
 
   const handleEditUser = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/updateUser", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND}/updateUser`, {
         id: id,
         updates: {
           fullName: fullName,

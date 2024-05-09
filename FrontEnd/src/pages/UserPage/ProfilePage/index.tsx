@@ -71,7 +71,7 @@ function ProfilePage() {
 
   const getData = async (id: string) => {
     try {
-      const res = await axios.get(`http://localhost:3000/getUserByID/${id}`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/getUserByID/${id}`);
 
       /*  console.log(res.data);
       console.log(res.data.data.fullName);
@@ -104,7 +104,7 @@ function ProfilePage() {
   const handlePayment = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/user/rental/addBudget",
+        `${import.meta.env.VITE_BACKEND}/user/rental/addBudget`,
         {
           userId: Id,
           amount: amount,

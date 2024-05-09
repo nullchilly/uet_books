@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Box from "@mui/material/Box";
@@ -34,7 +33,7 @@ export default function Login() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/login", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND}/login`, {
         username,
         password,
       });

@@ -80,7 +80,7 @@ function BookDetail() {
   };
   const getDetailBook = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/books/search`, {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/search`, {
         params: {
           id: book_id,
         },
@@ -100,7 +100,7 @@ function BookDetail() {
   const handleLike = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/user/addFavouriteBook",
+        `${import.meta.env.VITE_BACKEND}/user/addFavouriteBook`,
         {
           userId: localStorage.getItem("id"),
           bookId: book_id,
@@ -117,7 +117,7 @@ function BookDetail() {
   const handleRental = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/user/rental/addRental",
+        `${import.meta.env.VITE_BACKEND}/user/rental/addRental`,
         {
           userId: localStorage.getItem("id"),
           bookMongoId: book_id,

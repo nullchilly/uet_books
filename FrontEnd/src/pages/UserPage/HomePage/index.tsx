@@ -31,7 +31,7 @@ function HomePage() {
   };
   const getAllBooks = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/books/all");
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND}/books/all`);
       console.log(res.data);
       return res.data;
     } catch (err: any) {
@@ -40,7 +40,7 @@ function HomePage() {
   };
   const getRecommendBooks = async (rowsPerPage: Number, page: Number) => {
     try {
-      const res = await axios.get("http://localhost:3000/books/all", {
+      const res = await axios.get("${import.meta.env.VITE_BACKEND}/books/all", {
         params: { pageSize: rowsPerPage, pageNumber: page },
       });
       console.log(res.data);
