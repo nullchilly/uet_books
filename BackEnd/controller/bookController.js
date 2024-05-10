@@ -104,31 +104,52 @@ const bookCtrl = {
       return res.status(500).json({ msg: error.message });
     }
   },
-  create: async (req, res) => {
-    try {
-      const { Title, Coverurl, Author, Topic, Language, Year } = req.body;
+create: async (req, res) => {
+  try {
+    const { Title, Coverurl, Author, Topic, Language, Year } = req.body
 
-      // const book = await Books.findOne({ code: code });
-      // if (book) {
-      //   console.log(book)
-      //   return res.json({ msg: "Code book registered", create: false });
-      // }
-      const newBook = new Books({
-        Title,
-        Coverurl,
-        Author,
-        Topic,
-        Language,
-        Year,
+    // Invalidate redis cache cho keyword
+    const keys = await redisKeysAsync('KEYWORD*');
+    if (keys.length > 0) {
+      keys.forEach(key => {
+        redis.del(key, (err, response) => {
+          if (err) {
+            console.error(`Error deleting key ${key}:`, err);
+          } else {
+            console.log(`Deleted key ${key}:`, response);
+          }
+        });
       });
-      // Save mongodb
-      await newBook.save();
-      logger.info("Created book successfully")
-      res.json({ msg: "Created book successfully", create: true });
-    } catch (error) {
-      return res.status(500).json({ msg: error.message });
     }
-  },
+
+    const n = await Books.estimatedDocumentCount();
+    const code = Number(n) + 1;
+    await new Promise((resolve, reject) => {
+      sqlConnection.query(
+        "INSERT IGNORE INTO book (mongoId) VALUES (?)",
+        [code],
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+    });
+    const book = await Books.findOne({ code: code });
+    if (book) {
+      console.log(book)
+      logger.info("Code book already registered")
+      return res.json({ msg: "Code book already registered", create: false });
+    }
+    const newBook = new Books({Title, Coverurl, Author, Topic, Language, Year});
+
+    // Save mongodb
+    await newBook.save();
+    logger.info("Created book successfully")
+    res.json({ msg: "Created book successfully", create: true });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+},
   update: async (req, res) => {
     try {
       const { id } = req.body;
@@ -143,19 +164,30 @@ const bookCtrl = {
     }
   },
 
-  delete: async (req, res) => {
-    try {
-      const { id } = req.body;
-      const book = await Books.findOne({ _id: id });
-      if (!book) {
-        return res.json({ msg: "Book not found" });
-      }
-      await Books.findByIdAndDelete(id);
-      res.json({ msg: "Book deleted", delete: true });
-    } catch (error) {
-      return res.status(500).json({ msg: error.message });
+delete: async (req, res) => {
+  try {
+    const { id } = req.body;
+    const book = await Books.findOne({ _id: id });
+    await new Promise((resolve, reject) => {
+      sqlConnection.query(
+        "DELETE FROM book WHERE mongoId = ?",
+        [id],
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+    });
+    if (!book) {
+      return res.json({ msg: "Book not found" });
     }
-  },
+    await Books.findByIdAndDelete(id);
+    logger.info("Book deleted")
+    res.json({ msg: "Book deleted", delete: true });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+},
 
   upload: async (title, filePath) => {
     try {
@@ -289,6 +321,8 @@ const bookCtrl = {
   getAllBooksBySearch: async (req, res) => {
     try {
       let { id, keyword, topic, limit } = req.query;
+      if (id) logger.info(`Searched for id ${id}`)
+      if (keyword) logger.info(`Searched for keyword ${keyword}`)
       limit = limit ?? 50;
       if (id) {
         const cachedValue = await redis.get('ID' + id.toString());
