@@ -330,6 +330,12 @@ const bookCtrl = {
         const booksByKeyword = await Books.find({
           Title: { $regex: keyword, $options: "i" }
         }).limit(limit);
+        const cachedValue = await redis.get('KEYWORD' + keyword);
+        if (cachedValue) {
+          res.json(JSON.parse(cachedValue));
+          return;
+        }
+        await redis.set('KEYWORD' + keyword, JSON.stringify(booksByKeyword));
         if (booksByKeyword.length > 0) {
           res.json(booksByKeyword);
         } else {
